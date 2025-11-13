@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
+  <title>KGB Arcade — Coming Soon</title>
+  <meta name="description" content="KGB Arcade — Nintendo of the Tactical Underground. Launching soon at kgbarcade.com." />
+  <meta property="og:title" content="KGB Arcade — Coming Soon">
+  <meta property="og:description" content="The Nintendo of the Tactical Underground." />
+  <meta property="og:image" content="kgbarcade-hero.png" />
+  <meta name="theme-color" content="#0c0f17" />
+  <style>
+    :root { --bg:#0b0f16; --fg:#e9f1ff; --accent:#ff3d5a; --accent2:#55c8ff; }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:system-ui,Segoe UI,Roboto,Inter,Arial}
+    .wrap{min-height:80dvh;display:grid;place-items:center;padding:18px}
+    .card{
+      position:relative; width:min(1100px,95vw); aspect-ratio:16/9; border-radius:20px; overflow:hidden;
+      box-shadow:0 20px 80px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.06);
+      background:#0b0f16;
+    }
+    .bg{
+      position:absolute; inset:0; background:#000 center/cover no-repeat;
+      filter:contrast(1.05) saturate(1.05);
+    }
+    .bg img{width:100%;height:100%;object-fit:cover;display:block}
+    .grad{
+      position:absolute; inset:0;
+      background:radial-gradient(80% 80% at 25% 35%, rgba(12,18,30,.0) 0%, rgba(12,18,30,.35) 55%, rgba(12,18,30,.75) 100%),
+                  linear-gradient(180deg, rgba(12,18,30,.0) 0%, rgba(12,18,30,.65) 100%);
+    }
+    .content{
+      position:absolute; inset:0; display:flex; flex-direction:column; justify-content:flex-end; gap:10px;
+      padding:clamp(16px,4vw,28px);
+    }
+    .title{font-weight:900; letter-spacing:.6px; line-height:1.05;
+      font-size:clamp(28px,6vw,56px); text-shadow:0 2px 14px rgba(0,0,0,.55)}
+    .tag{font-weight:700; opacity:.95; font-size:clamp(14px,2.8vw,18px); color:#cfe9ff}
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:8px}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:12px 16px; border-radius:12px; font-weight:900; text-decoration:none; color:#111;
+      background:linear-gradient(180deg, #ffffff, #dfe9ff);
+      box-shadow:0 8px 28px rgba(0,0,0,.35); border:1px solid rgba(255,255,255,.5)
+    }
+    .btn:hover{background:#E314AB; color:fff; box-shadow: 0 0 20px 5px rgba(227, 20, 171, 0.7)}
+    .btn:active{transform:translateY(1px)}
+    .note{opacity:.75; font-size:12px}
+    footer{margin-top:16px; text-align:center; opacity:.6; font-size:12px}
+    /* Small screens use the poster as top + text below */
+    @media (max-aspect-ratio: 1/1){
+      .card{aspect-ratio:auto; height:auto}
+      .content{position:static; padding:16px}
+      .grad{display:none}
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="card" aria-label="KGB Arcade Coming Soon">
+      <div class="bg" aria-hidden="true">
+        <img src="kgbarcade-hero.png" alt="KGB Arcade neon banner">
+      </div>
+      <div class="grad" aria-hidden="true"></div>
+      <div class="content">
+        <div class="title">KGB ARCADE</div>
+        <div class="tag">The Nintendo of the Tactical Underground</div>
+        <div class="row">
+          <a class="btn" href="mailto:team@kgbarcade.com?subject=KGB%20Arcade%20—%20Notify%20Me">Notify me</a>
+          <a style="display:none;" class="btn" href="https://kgbarcade.com">kgbarcade.com</a>
+        </div>
+        <div class="note">Launching soon. Join the list and you’ll be first in.</div>
+      </div>
+    </section>
+  </main>
+  <footer><img src="KGB-Arcade-Logo.png" alt="KGB Arcade neon banner" style="width:100px; height:100px"><br>© <span id="y"></span> KGB Arcade</footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>
