@@ -1,28 +1,103 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
   <title>Thank You — KGB Arcade</title>
+  <link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <style>
+    :root {
+      --bg:#0b0f16;
+      --fg:#e7f4ff;
+      --accent1:#ff3d5a;
+      --accent2:#4bd5ff;
+    }
+
     body {
-      background:#0b0f16;
-      color:#e7f4ff;
-      font-family:system-ui;
-      display:flex;
+      margin:0;
+      background:var(--bg);
+      color:var(--fg);
+      font-family:system-ui,Segoe UI,Roboto,Inter,Arial;
       height:100vh;
-      justify-content:center;
+      display:flex;
+      flex-direction:column;
       align-items:center;
+      justify-content:center;
       text-align:center;
-      padding:20px;
+      padding:24px;
+    }
+
+    h1 {
+      font-size:36px;
+      margin-bottom:10px;
+      font-weight:900;
+      text-shadow:0 4px 20px rgba(0,0,0,.5);
+    }
+
+    p {
+      opacity:.85;
+      font-size:18px;
+      line-height:1.5;
+      max-width:480px;
+      margin:0 auto 28px;
+    }
+
+    .btn {
+      display:inline-block;
+      padding:14px 22px;
+      margin-top:10px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#ffffff,#dfe9ff);
+      color:#0c0f18;
+      font-weight:900;
+      font-size:16px;
+      text-decoration:none;
+      box-shadow:0 8px 24px rgba(0,0,0,.35);
+    }
+
+    .btn:active {
+      transform:translateY(1px);
+    }
+
+    footer {
+      position:fixed;
+      bottom:20px;
+      left:0;
+      right:0;
+      text-align:center;
+      opacity:.6;
+      font-size:14px;
+    }
+
+    footer img {
+      width:60px;
+      height:60px;
+      opacity:.9;
+      margin-bottom:6px;
     }
   </style>
 </head>
+
 <body>
-  <div>
-    <h1 style="font-size:32px; margin-bottom:10px;">You're In.</h1>
-    <p style="opacity:.85;">Welcome to the Tactical Underground.<br>
-    Intel drops will arrive soon.</p>
-  </div>
+
+  <h1>You're In.</h1>
+  <p>
+    Welcome to the Tactical Underground.<br>
+    Intel drops will begin shortly.<br>
+    Stay sharp, operative.
+  </p>
+
+  <a href="index.html" class="btn">Return to Headquarters</a>
+
+  <footer>
+    <img src="KGB-Arcade-Logo.png" alt="KGB Arcade Logo"><br>
+    © <span id="y"></span> KGB Arcade. All Rights Reserved.
+  </footer>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>
