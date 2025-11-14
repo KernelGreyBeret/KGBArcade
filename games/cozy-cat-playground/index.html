@@ -1,1 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Cozy Cat Playground — KGB Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="../KGB-Arcade-Logo.png" type="image/png">
+  <style>
+    /* same base CSS */
+    :root{--bg:#070a12;--fg:#e7f4ff;--accent1:#ff8fb5;--accent2:#4bd5ff;--card:#0b0f18}
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#1b1630 0,#070a12 60%);color:var(--fg);font-family:system-ui,Segoe UI,Roboto,Inter,Arial;display:flex;flex-direction:column;align-items:center;padding:20px}
+    main{width:100%;max-width:960px;margin-top:80px}
+    .card{background:rgba(0,0,0,0.6);border-radius:18px;border:1px solid rgba(255,255,255,0.12);box-shadow:0 0 26px rgba(255,143,181,0.35);overflow:hidden}
+    .banner img{width:100%;display:block}
+    .content{padding:20px 18px 24px}
+    h1{margin:0 0 8px;font-size:28px;font-weight:900}
+    .tagline{opacity:.9;margin-bottom:16px}
+    .subgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:18px}
+    .panel{background:rgba(255,255,255,0.03);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);font-size:14px;line-height:1.5}
+    .panel h2{margin:0 0 6px;font-size:16px;font-weight:800;color:var(--accent2)}
+    .btn-row{margin-top:18px;display:flex;flex-wrap:wrap;gap:12px}
+    .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;font-weight:800;text-decoration:none;cursor:pointer;font-size:15px}
+    .primary{background:linear-gradient(180deg,#ffffff,#ffdff3);color:#0b0f16;box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+    .ghost{border:1px solid rgba(255,255,255,0.4);color:var(--fg);background:rgba(0,0,0,0.3)}
+    footer{margin-top:auto;text-align:center;padding:30px 10px 10px;opacity:.7;font-size:14px}
+    footer img{width:100px;height:100px;margin-bottom:6px}
+    @media(max-width:720px){main{margin-top:70px}.subgrid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <div class="banner">
+      <img src="../Cozy-cat-playground_banner.png" alt="Cozy Cat Playground Banner">
+    </div>
+    <div class="content">
+      <h1>Cozy Cat Playground</h1>
+      <div class="tagline">Jump, climb, and pounce in a tactical feline arena.</div>
 
+      <div class="subgrid">
+        <div class="panel">
+          <h2>Mission Brief</h2>
+          <p>
+            Guide your cat through platforms, toys, and cozy hazards.
+            Designed to be toddler-friendly but still satisfying for grown humans.
+          </p>
+        </div>
+        <div class="panel">
+          <h2>Controls</h2>
+          <p>
+            • Tap / click to jump<br>
+            • Avoid falls and traps<br>
+            • Collect goodies and survive
+          </p>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <a href="../kitty_playground_jump_climb_pounce.html" class="btn primary">Play Now</a>
+        <a href="../index.html" class="btn ghost">Back to Arcade</a>
+      </div>
+    </div>
+  </div>
+</main>
+<footer>
+  <img src="../KGB-Arcade-Logo.png" alt="KGB Arcade Logo"><br>
+  © <span id="y"></span> KGB Arcade. All Rights Reserved.
+</footer>
+<script>document.getElementById('y').textContent=new Date().getFullYear();</script>
+</body>
+</html>
