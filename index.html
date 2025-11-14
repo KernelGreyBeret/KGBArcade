@@ -262,6 +262,32 @@
     line-height:1.6;
     max-width:800px;
   }
+  .section-title {
+    text-align: center;
+    margin: 120px 0 40px;
+    font-family: 'Orbitron', system-ui, sans-serif;
+    text-transform: uppercase;
+  }
+
+.section-title .title-main {
+  display: block;
+  font-size: clamp(38px, 6vw, 56px);
+  font-weight: 900;
+  color: #3bd4ff;
+  letter-spacing: 2px;
+  text-shadow: 0 0 18px rgba(59,212,255,0.65), 0 0 32px rgba(59,212,255,0.35);
+}
+
+.section-title .title-sub {
+  display: block;
+  margin-top: 6px;
+  font-size: clamp(16px, 3vw, 20px);
+  font-weight: 600;
+  opacity: 0.8;
+  color: #a8f5ff;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(168,245,255,0.35);
+}
 
   /* --- Arsenal (Games Preview) --- */
   .arsenal-grid {
@@ -321,9 +347,9 @@
 
     <ul class="nav-links">
       <li><a href="#hero" class="nav-link">Home</a></li>
-      <li><a href="#intel" class="nav-link">Release Intel</a></li>
-      <li><a href="#arsenal" class="nav-link">Game Arsenal</a></li>
-      <li><a href="#contact" class="nav-link">Contact</a></li>
+      <li><a href="#intel" class="nav-link">Intel</a></li>
+      <li><a href="#arsenal" class="nav-link">Arsenal</a></li>
+      <li><a href="#contact" class="nav-link">Comms</a></li>
     </ul>
   </div>
 </nav>
@@ -361,7 +387,10 @@
 
 <!-- INTEL SECTION -->
 <section class="section" id="intel">
-  <h2>Release Intel</h2>
+  <h2 class="section-title">
+    <span class="title-main">Intel</span>
+    <span class="title-sub">Behind the Arcade</span>
+  </h2>
   <p class="intel">
     KGB Arcade is a tactical-ops themed micro-arcade, built for fast-break gameplay, 
     retro-coded precision, and asymmetric fun.<br><br>
@@ -381,7 +410,10 @@
 
 <!-- ARSENAL -->
 <section class="section" id="arsenal">
-  <h2>The Game Arsenal</h2>
+  <h2 class="section-title">
+    <span class="title-main">Arsenal</span>
+    <span class="title-sub">The Game Vault</span>
+  </h2>
   <div class="arsenal-grid">
 
     <div class="game-card">
@@ -436,7 +468,10 @@
 </section>
 
 <section class="section" id="contact">
-  <h2>Contact</h2>
+  <h2 class="section-title">
+    <span class="title-main">Comms</span>
+    <span class="title-sub">Hail the Dev</span>
+  </h2>
   <p class="intel">For mission-critical communication: team@kgbarcade.com</p>
 </section>
 
