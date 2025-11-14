@@ -26,6 +26,106 @@
     overflow-x:hidden;
   }
 
+/* --- NAVBAR --- */
+.nav {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(10px);
+  z-index:999;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+
+.nav-inner {
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.nav-logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.nav-logo img {
+  width:42px;
+  height:42px;
+}
+
+.nav-logo span {
+  font-weight:900;
+  font-size:20px;
+  color:var(--fg);
+  text-shadow:0 0 6px rgba(75,213,255,0.5);
+}
+
+.nav-links {
+  display:flex;
+  list-style:none;
+  gap:26px;
+  margin:0;
+  padding:0;
+}
+
+.nav-link {
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:700;
+  position:relative;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-4px;
+  height:3px;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+  border-radius:3px;
+}
+
+.nav-toggle {
+  display:none;
+  background:none;
+  border:none;
+  font-size:28px;
+  color:var(--fg);
+  cursor:pointer;
+}
+
+/* MOBILE */
+@media (max-width:720px) {
+  .nav-toggle {
+    display:block;
+  }
+
+  .nav-links {
+    position:absolute;
+    top:60px;
+    right:20px;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(12px);
+    flex-direction:column;
+    padding:16px;
+    gap:16px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.12);
+    display:none;
+  }
+
+  .nav-links.open {
+    display:flex;
+  }
+}
+
   /* --- Animated Grid Background --- */
   .bg-grid {
     position:fixed;
@@ -199,11 +299,30 @@
 
 <body>
 
+<!-- TACTICAL NAVBAR -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="KGB-Arcade-Logo.png" alt="KGB Arcade Logo">
+      <span>KGB ARCADE</span>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle Menu">☰</button>
+
+    <ul class="nav-links">
+      <li><a href="#hero" class="nav-link">Home</a></li>
+      <li><a href="#intel" class="nav-link">Intel</a></li>
+      <li><a href="#arsenal" class="nav-link">Arsenal</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
 <div class="bg-grid"></div>
 <div class="particles" id="particles"></div>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-card">
     <div class="hero-img">
       <img src="kgbarcade-hero.png" alt="KGB Arcade Hero" class="hero-img-el">
@@ -231,7 +350,7 @@
 </section>
 
 <!-- INTEL SECTION -->
-<section class="section">
+<section class="section" id="intel">
   <h2>Declassified Intel</h2>
   <p class="intel">
     KGB Arcade is a tactical-ops micro-arcade, built for fast-break gameplay, 
@@ -243,7 +362,7 @@
 </section>
 
 <!-- ARSENAL -->
-<section class="section">
+<section class="section" id="arsenal">
   <h2>The Arsenal</h2>
   <div class="arsenal-grid">
 
@@ -280,6 +399,11 @@
   </div>
 </section>
 
+<section class="section" id="contact">
+  <h2>Contact</h2>
+  <p class="intel">For mission-critical communication: team@kgbarcade.com</p>
+</section>
+
 <footer>
   <img src="KGB-Arcade-Logo.png" alt="KGB Arcade neon banner" style="width:100px; height:100px"><br>© <span id="y"></span> KGB Arcade. All Rights Reserved.
 </footer>
@@ -297,6 +421,37 @@
     p.style.animationDelay = (-Math.random()*12) + 's';
     container.appendChild(p);
   }
+
+// Smooth scroll
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelector(".nav-links").classList.remove("open");
+    });
+  });
+
+  // Mobile toggle
+  document.querySelector(".nav-toggle").addEventListener("click", () => {
+    document.querySelector(".nav-links").classList.toggle("open");
+  });
+
+  // Active link tracking
+  const sections = {
+    hero: document.querySelector("#hero"),
+    intel: document.querySelector("#intel"),
+    arsenal: document.querySelector("#arsenal"),
+    contact: document.querySelector("#contact")
+  };
+
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY + 150;
+    for (const [id, sec] of Object.entries(sections)) {
+      if (sec && sec.offsetTop <= y && sec.offsetTop + sec.offsetHeight > y) {
+        document.querySelectorAll(".nav-link").forEach(a => a.classList.remove("active"));
+        document.querySelector(`.nav-link[href="#${id}"]`)?.classList.add("active");
+      }
+    }
+  });
+
 </script>
 
 </body>
