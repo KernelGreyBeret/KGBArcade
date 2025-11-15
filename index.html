@@ -306,6 +306,20 @@
   height: 40px;
   filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
 }
+.section-icon:hover {
+  transform: scale(1.18);
+  filter: drop-shadow(0 0 12px rgba(255,255,255,0.9));
+  animation: glowPulse 0.9s infinite alternate ease-in-out;
+}
+
+@keyframes glowPulse {
+  from {
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  }
+  to {
+    filter: drop-shadow(0 0 16px rgba(255,255,255,1));
+  }
+}
 
   /* --- Arsenal (Games Preview) --- */
   .arsenal-grid {
