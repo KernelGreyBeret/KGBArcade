@@ -125,6 +125,13 @@
     display:flex;
   }
 }
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.35));
+}
 
   /* --- Animated Grid Background --- */
   .bg-grid {
@@ -288,6 +295,11 @@
   letter-spacing: 1px;
   text-shadow: 0 0 12px rgba(168,245,255,0.35);
 }
+.section-icon {
+  width: 48px;
+  height: 48px;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.25));
+}
 
   /* --- Arsenal (Games Preview) --- */
   .arsenal-grid {
@@ -347,9 +359,9 @@
 
     <ul class="nav-links">
       <li><a href="#hero" class="nav-link">Enlist</a></li>
-      <li><a href="#intel" class="nav-link">Intel</a></li>
-      <li><a href="#arsenal" class="nav-link">Arsenal</a></li>
-      <li><a href="#contact" class="nav-link">Comms</a></li>
+      <li><a href="#intel"><img src="icons-eye_small.png" class="menu-icon"> Intel</a></li>
+      <li><a href="#arsenal"><img src="icons-arcade_small.png" class="menu-icon"> Arsenal</a></li>
+      <li><a href="#comms"><img src="icons-tower_small.png" class="menu-icon"> Comms</a></li>
     </ul>
   </div>
 </nav>
@@ -388,7 +400,7 @@
 <!-- INTEL SECTION -->
 <section class="section" id="intel">
   <h2 class="section-title">
-    <span class="title-main">Intel</span>
+    <img src="icons-eye.png" class="section-icon"><span class="title-main"> Intel</span>
     <span class="title-sub">Behind the Arcade</span>
   </h2>
   <p class="intel">
@@ -411,7 +423,7 @@
 <!-- ARSENAL -->
 <section class="section" id="arsenal">
   <h2 class="section-title">
-    <span class="title-main">Arsenal</span>
+    <img src="icons-arcade.png" class="section-icon"><span class="title-main"> Arsenal</span>
     <span class="title-sub">The Game Vault</span>
   </h2>
   <div class="arsenal-grid">
@@ -469,7 +481,7 @@
 
 <section class="section" id="contact">
   <h2 class="section-title">
-    <span class="title-main">Comms</span>
+    <img src="icons-tower.png" class="section-icon"><span class="title-main"> Comms</span>
     <span class="title-sub">Hail the Dev</span>
   </h2>
   <p class="intel">For mission-critical communication: team@kgbarcade.com</p>
