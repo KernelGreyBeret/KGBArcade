@@ -373,6 +373,26 @@
   color: #bd97f7;
   text-shadow: 0 0 18px #bd97f7;
 }
+  .coming-soon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10; /* forces it above the image */
+  background: rgba(255, 61, 90, 0.88);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.25);
+  box-shadow: 0 0 10px rgba(255, 61, 90, 0.55);
+  text-shadow: 0 0 6px rgba(0,0,0,0.8);
+  pointer-events: none;
+}
+  .card {
+  position: relative; /* needed so the badge anchors to the card */
+}
 </style>
 </head>
 
@@ -509,6 +529,7 @@ Just pure, beautifully engineered arcade action.
   <div class="arsenal-grid">
 
     <div class="game-card">
+      <div class="coming-soon">COMING SOON</div>
       <a href="/games/starwarp/index.html" class="game-summary">
         <h3>StarWarp</h3>
         <p>Galactic reflex combat in a hyperspace lane.</p>
