@@ -196,17 +196,6 @@
     object-fit:contain;
     object-position:center;
   }
-  .hero-panel {
-    background: radial-gradient(circle at top left,
-                rgba(7,10,18,0.92) 0%,
-                rgba(7,10,18,0.88) 40%,
-                rgba(7,10,18,0.75) 100%);
-    border-radius: 18px;
-    padding: 16px 18px 20px;
-    border: 1px solid rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 18px 40px rgba(0,0,0,0.8);
-  }
   .overlay {
     position:absolute; inset:0;
     background:
@@ -413,33 +402,31 @@
 <section class="hero" id="hero">
   <div class="hero-card">
     <div class="hero-img">
-      <img src="kgbarcade-hero_small.png" alt="KGB Arcade Hero" class="hero-img-el">
+      <img src="kgbarcade-hero_small2.png" alt="KGB Arcade Hero" class="hero-img-el">
     </div>
     <div class="overlay"></div>
 
     <div class="hero-content">
-      <div class="hero-panel">
-        <div class="title">KGB ARCADE</div>
-        <div class="tagline">
-          The Arcade of the Tactical Underground.<br>
-          - Fast-load micro-games.<br>
-          - Operator-built precision.<br>
-          - Zero ads. Zero friction. All fun.<br><br>
-          Enlist to get early drops, beta invites, and operator-only intel.
-        </div>
-  
-        <!-- NOTIFY FORM -->
-        <form action="https://formsubmit.co/team@kgbarcade.com" method="POST" class="notify-form">
-          <input type="hidden" name="_subject" value="New KGB Arcade Subscriber">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="hidden" name="_template" value="table">
-          <input type="hidden" name="_next" value="https://kgbarcade.com/thanks.html">
-  
-          <input type="email" name="email" required class="notify-input"
-                 placeholder="Enter your email to join the underground">
-          <button class="notify-btn" type="submit">Notify Me</button>
-        </form>
+      <div class="title">KGB ARCADE</div>
+      <div class="tagline">
+        The Arcade of the Tactical Underground.<br>
+        - Fast-load micro-games.<br>
+        - Operator-built precision.<br>
+        - Zero ads. Zero friction. All fun.<br><br>
+        Enlist to get early drops, beta invites, and operator-only intel.
       </div>
+
+      <!-- NOTIFY FORM -->
+      <form action="https://formsubmit.co/team@kgbarcade.com" method="POST" class="notify-form">
+        <input type="hidden" name="_subject" value="New KGB Arcade Subscriber">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://kgbarcade.com/thanks.html">
+
+        <input type="email" name="email" required class="notify-input"
+               placeholder="Enter your email to join the underground">
+        <button class="notify-btn" type="submit">Notify Me</button>
+      </form>
 
     </div>
   </div>
