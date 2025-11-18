@@ -24,7 +24,7 @@
     overflow-x:hidden;
   }
 
-/* NAV (same pattern as mission) */
+/* --- NAVBAR --- */
 .nav {
   position:fixed;
   top:0;
@@ -37,6 +37,7 @@
   border-bottom:1px solid rgba(255,255,255,0.08);
   box-shadow:0 4px 20px rgba(0,0,0,0.5);
 }
+
 .nav-inner {
   max-width:1200px;
   margin:auto;
@@ -44,21 +45,25 @@
   justify-content:space-between;
   align-items:center;
 }
+
 .nav-logo {
   display:flex;
   align-items:center;
   gap:10px;
 }
+
 .nav-logo img {
   width:42px;
   height:42px;
 }
+
 .nav-logo span {
   font-weight:900;
   font-size:20px;
   color:var(--fg);
   text-shadow:0 0 6px rgba(75,213,255,0.5);
 }
+
 .nav-links {
   display:flex;
   list-style:none;
@@ -66,12 +71,14 @@
   margin:0;
   padding:0;
 }
+
 .nav-link {
   color:var(--fg);
   text-decoration:none;
   font-weight:700;
   position:relative;
 }
+
 .nav-link:hover::after,
 .nav-link.active::after {
   content:"";
@@ -82,6 +89,7 @@
   box-shadow:0 0 12px var(--accent2);
   border-radius:3px;
 }
+
 .nav-toggle {
   display:none;
   background:none;
@@ -91,11 +99,12 @@
   cursor:pointer;
 }
 
-/* MOBILE NAV */
+/* MOBILE */
 @media (max-width:720px) {
   .nav-toggle {
     display:block;
   }
+
   .nav-links {
     position:absolute;
     top:60px;
@@ -109,11 +118,18 @@
     border:1px solid rgba(255,255,255,0.12);
     display:none;
   }
+
   .nav-links.open {
     display:flex;
   }
 }
-
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 8px;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.35));
+}
 /* Background */
 .bg-grid {
   position:fixed;
