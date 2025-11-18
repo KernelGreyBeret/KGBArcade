@@ -373,25 +373,38 @@
   color: #bd97f7;
   text-shadow: 0 0 18px #bd97f7;
 }
-  .coming-soon {
+.coming-soon-stamp {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  z-index: 10; /* forces it above the image */
-  background: rgba(255, 61, 90, 0.88);
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #ffffff;
-  border-radius: 6px;
-  border: 1px solid rgba(255,255,255,0.25);
-  box-shadow: 0 0 10px rgba(255, 61, 90, 0.55);
-  text-shadow: 0 0 6px rgba(0,0,0,0.8);
-  pointer-events: none;
+  top: 12px;
+  left: -40px;
+
+  transform: rotate(-20deg);
+  z-index: 20;
+
+  padding: 6px 80px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-align: center;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.9);
+  background: rgba(255, 61, 90, 0.35); /* semi-transparent neon red */
+  border: 2px solid rgba(255, 61, 90, 0.55);
+
+  border-radius: 4px;
+  backdrop-filter: blur(2px);
+
+  box-shadow:
+    0 0 6px rgba(255, 61, 90, 0.5),
+    0 0 18px rgba(0,0,0,0.6);
+
+  pointer-events: none; /* Never blocks clicking the card */
 }
-  .card {
-  position: relative; /* needed so the badge anchors to the card */
+
+.game-card {
+  position: relative; /* So the stamp anchors to it */
+  overflow: hidden;   /* So diagonal edges don't spill outside */
 }
 </style>
 </head>
@@ -529,7 +542,7 @@ Just pure, beautifully engineered arcade action.
   <div class="arsenal-grid">
 
     <div class="game-card">
-      <div class="coming-soon">COMING SOON</div>
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/starwarp/index.html" class="game-summary">
         <h3>StarWarp</h3>
         <p>Galactic reflex combat in a hyperspace lane.</p>
@@ -538,6 +551,7 @@ Just pure, beautifully engineered arcade action.
     </div>
 
     <div class="game-card">
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/arc-defender/index.html" class="game-summary">
         <h3>Arc Defender — Rhythm Rings</h3>
         <p>Pulsing precision defense through rotating rings.</p>
@@ -546,6 +560,7 @@ Just pure, beautifully engineered arcade action.
     </div>
 
     <div class="game-card">
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/cozy-cat-playground/index.html" class="game-summary">
         <h3>Cozy Cat Playground</h3>
         <p>Jump, climb, and pounce in a tactical feline arena.</p>
@@ -554,6 +569,7 @@ Just pure, beautifully engineered arcade action.
     </div>
 
     <div class="game-card">
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/lawn-mower-mania/index.html" class="game-summary">
         <h3>Lawn Mower Mania</h3>
         <p>High-speed, grass-cutting carnage.</p>
@@ -562,6 +578,7 @@ Just pure, beautifully engineered arcade action.
     </div>
 
     <div class="game-card">
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/firetruck-rescue/index.html" class="game-summary">
         <h3>Firetruck Rescue</h3>
         <p>Emergency response at arcade-speed intensity.</p>
@@ -570,6 +587,7 @@ Just pure, beautifully engineered arcade action.
     </div>
 
     <div class="game-card">
+      <div class="coming-soon-stamp">COMING SOON</div>
       <a href="/games/ tommy-the-tank/index.html" class="game-summary">
         <h3>Tommy the Tank — Asymmetric Mayhem</h3>
         <p>Heavy metal, heavy chaos. Pure asymmetric destruction.</p>
