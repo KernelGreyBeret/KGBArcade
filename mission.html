@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
+<title>KGB Arcade — Mission</title>
+<meta name="description" content="KGB Arcade Mission — The Arcade of the Tactical Underground. A rebellion against ad-cluttered, manipulative gaming.">
+
+<style>
+  :root {
+    --bg: #070a12;
+    --accent1: #ff3d5a;
+    --accent2: #4bd5ff;
+    --fg: #e7f4ff;
+    --border-glow: 0 0 12px rgba(75,213,255,0.4);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family: system-ui,Segoe UI,Roboto,Inter,Arial;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x:hidden;
+  }
+
+/* NAV (same as index) */
+.nav {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(10px);
+  z-index:999;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.nav-inner {
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.nav-logo img {
+  width:42px;
+  height:42px;
+}
+.nav-logo span {
+  font-weight:900;
+  font-size:20px;
+  color:var(--fg);
+  text-shadow:0 0 6px rgba(75,213,255,0.5);
+}
+.nav-links {
+  display:flex;
+  list-style:none;
+  gap:26px;
+  margin:0;
+  padding:0;
+}
+.nav-link {
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:700;
+  position:relative;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-4px;
+  height:3px;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+  border-radius:3px;
+}
+.nav-toggle {
+  display:none;
+  background:none;
+  border:none;
+  font-size:28px;
+  color:var(--fg);
+  cursor:pointer;
+}
+
+/* MOBILE NAV */
+@media (max-width:720px) {
+  .nav-toggle {
+    display:block;
+  }
+  .nav-links {
+    position:absolute;
+    top:60px;
+    right:20px;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(12px);
+    flex-direction:column;
+    padding:16px;
+    gap:16px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.12);
+    display:none;
+  }
+  .nav-links.open {
+    display:flex;
+  }
+}
+
+/* Background grid */
+.bg-grid {
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: drift 60s linear infinite;
+  pointer-events:none;
+  z-index:-2;
+}
+@keyframes drift {
+  from { background-position:0 0, 0 0; }
+  to   { background-position:1000px 1000px, 1000px 1000px; }
+}
+
+.particles {
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+}
+.particle {
+  position:absolute;
+  width:4px; height:4px;
+  background:var(--accent2);
+  opacity:0.25;
+  border-radius:50%;
+  animation: floatUp 12s linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(100vh) translateX(var(--x)); opacity:0.1; }
+  40%  { opacity:0.3; }
+  to   { transform: translateY(-10vh) translateX(var(--x)); opacity:0; }
+}
+
+/* Page content */
+.main {
+  max-width:900px;
+  margin:120px auto 60px;
+  padding:0 20px 40px;
+}
+.badge {
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(75,213,255,0.7);
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:#a8f5ff;
+  margin-bottom:12px;
+}
+h1 {
+  font-size:clamp(30px,5vw,46px);
+  margin:0 0 10px;
+  text-shadow:0 0 16px rgba(75,213,255,0.45);
+}
+.subtitle {
+  font-size:16px;
+  opacity:.85;
+  max-width:520px;
+  margin-bottom:28px;
+}
+.card {
+  background:rgba(0,0,0,0.55);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  padding:22px 20px;
+  box-shadow:var(--border-glow), 0 18px 40px rgba(0,0,0,0.7);
+}
+.card p {
+  line-height:1.7;
+  font-size:16px;
+  opacity:.92;
+}
+.card ul {
+  margin:10px 0 10px 22px;
+  padding:0;
+  font-size:16px;
+  opacity:.92;
+}
+strong {
+  color:#a8f5ff;
+}
+footer {
+  text-align:center;
+  padding:40px 20px;
+  opacity:.6;
+  font-size:14px;
+}
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  color: #4bd5ff;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="KGB-Arcade-Logo.png" alt="KGB Arcade Logo">
+      <span>KGB ARCADE</span>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle Menu">☰</button>
+
+    <ul class="nav-links">
+      <li><a href="index.html#hero" class="nav-link">Enlist</a></li>
+      <li><a href="index.html#intel" class="nav-link">Intel</a></li>
+      <li><a href="index.html#arsenal" class="nav-link">Arsenal</a></li>
+      <li><a href="mission.html" class="nav-link active">Mission</a></li>
+      <li><a href="index.html#contact" class="nav-link">Comms</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<main class="main">
+  <div class="badge">Mission Brief</div>
+  <h1>Mission Statement — KGB Arcade</h1>
+  <div class="subtitle">
+    The Arcade of the Tactical Underground. A clean, handcrafted rebellion against noisy, ad-cluttered gaming.
+  </div>
+
+  <div class="card">
+    <p>
+      <strong>KGB Arcade exists for one purpose:</strong><br>
+      to bring back pure, joyful, honest play.
+    </p>
+
+    <p>
+      Not the modern version of “play” that’s buried under ads, popups, paywalls, and manipulative loops —
+      but the original spirit of gaming: fast, fun, simple, and instantly rewarding.
+    </p>
+
+    <p>
+      This arcade is a rebellion.<br>
+      A countermeasure.<br>
+      A strike back against what gaming became.
+    </p>
+
+    <p><strong>KGB Arcade rejects:</strong></p>
+    <ul>
+      <li>Ads</li>
+      <li>Data tracking</li>
+      <li>Dark patterns &amp; attention traps</li>
+      <li>Microtransactions</li>
+      <li>Account walls and login friction</li>
+      <li>Time-wasting bloat</li>
+    </ul>
+
+    <p><strong>Instead, we deliver:</strong></p>
+    <ul>
+      <li>Instant-load micro-games</li>
+      <li>Zero friction and zero nonsense</li>
+      <li>Clean neon operator aesthetics</li>
+      <li>Handcrafted mechanics and precise feedback</li>
+      <li>Wholesome fun for kids, families, and operators alike</li>
+    </ul>
+
+    <p>
+      Every title is engineered with tactical focus — from timing and reflex loops to clear visual cues and
+      satisfying feel. Every world is built with aesthetic discipline — consistent neon glow, simple controls,
+      and strong identity.
+    </p>
+
+    <p>
+      At the core is a simple idea:
+      <br><br>
+      <strong>Games should respect your time.<br>
+      Games should feel good.<br>
+      Games should just be fun.</strong>
+    </p>
+
+    <p>
+      The Tactical Underground isn’t a place — it’s a mindset. A refusal to accept noisy, extractive systems,
+      and a return to signal. KGB Arcade is its home: a clean, handcrafted arcade you can trust.
+    </p>
+
+    <p>
+      This is the arcade we wanted growing up.<br>
+      This is the arcade our kids deserve.<br>
+      This is the arcade operators approve.
+    </p>
+
+    <p>
+      <strong>This is the Arcade of the Tactical Underground.</strong><br>
+      Suit up. Boot in. Let’s play.
+    </p>
+  </div>
+  <div class="card" style="margin-top:24px;">
+    <div class="badge">Brand Pillars</div>
+
+    <p>
+      These are the principles that guide how every game, page, and decision is made inside KGB Arcade.
+      They’re the rules of engagement for the Arcade of the Tactical Underground.
+    </p>
+
+    <p><strong>1. Asymmetric Precision</strong><br>
+      Games are small, but not shallow. Every mechanic, sound, and visual is tuned by hand so they feel tight,
+      responsive, and satisfying.</p>
+
+    <p><strong>2. Tactical Compassion</strong><br>
+      The arcade is built for kids, parents, and operators. It should feel safe, welcoming, and wholesome —
+      even when the games are intense.</p>
+
+    <p><strong>3. Frictionless Play</strong><br>
+      No ads, no logins, no popups, no dark patterns. You load the page, you play the game. That’s it.</p>
+
+    <p><strong>4. Unified Worlds</strong><br>
+      MiniMission™, 8BitOps™, and TankTots™ look and feel like they belong together — neon, clean, and operator-coded,
+      not a random pile of mismatched games.</p>
+
+    <p><strong>5. Operator Identity</strong><br>
+      KGB Arcade is not a faceless portal. It’s built by a single operator, <span class="mono">TT-KGB</span>,
+      and that identity is part of the experience.</p>
+
+    <p><strong>6. Multi-Mode Inclusion</strong><br>
+      From toddler modes to harder “operator” settings, the arcade is designed so anyone can find a way to enjoy it —
+      without dumbing anything down.</p>
+
+    <p><strong>7. Respect for Time</strong><br>
+      Games are built to fit into real life — five minutes between meetings, a quick moment with your kid, a short break.
+      No grind, no bloat, just play.</p>
+  </div>
+</main>
+
+<footer>
+  © <span id="year"></span> KGB Arcade. All Rights Reserved.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.setProperty('--x', (Math.random()*80-40) + 'px');
+    p.style.animationDelay = (-Math.random()*12) + 's';
+    container.appendChild(p);
+  }
+
+  // Mobile nav toggle
+  document.querySelector(".nav-toggle").addEventListener("click", () => {
+    document.querySelector(".nav-links").classList.toggle("open");
+  });
+
+  // Close mobile menu on click
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelector(".nav-links").classList.remove("open");
+    });
+  });
+</script>
+
+</body>
+</html>

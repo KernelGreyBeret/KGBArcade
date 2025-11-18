@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
+<title>KGB Arcade — Lore of the Tactical Underground</title>
+<meta name="description" content="The lore of the Tactical Underground and the worlds of KGB Arcade.">
+
+<style>
+  :root {
+    --bg: #070a12;
+    --accent1: #ff3d5a;
+    --accent2: #4bd5ff;
+    --fg: #e7f4ff;
+    --border-glow: 0 0 12px rgba(75,213,255,0.4);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family: system-ui,Segoe UI,Roboto,Inter,Arial;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x:hidden;
+  }
+
+/* NAV */
+.nav {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(10px);
+  z-index:999;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.nav-inner {
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.nav-logo img {
+  width:42px;
+  height:42px;
+}
+.nav-logo span {
+  font-weight:900;
+  font-size:20px;
+  color:var(--fg);
+  text-shadow:0 0 6px rgba(75,213,255,0.5);
+}
+.nav-links {
+  display:flex;
+  list-style:none;
+  gap:26px;
+  margin:0;
+  padding:0;
+}
+.nav-link {
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:700;
+  position:relative;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-4px;
+  height:3px;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+  border-radius:3px;
+}
+.nav-toggle {
+  display:none;
+  background:none;
+  border:none;
+  font-size:28px;
+  color:var(--fg);
+  cursor:pointer;
+}
+
+/* MOBILE NAV */
+@media (max-width:720px) {
+  .nav-toggle {
+    display:block;
+  }
+  .nav-links {
+    position:absolute;
+    top:60px;
+    right:20px;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(12px);
+    flex-direction:column;
+    padding:16px;
+    gap:16px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.12);
+    display:none;
+  }
+  .nav-links.open {
+    display:flex;
+  }
+}
+
+/* Background */
+.bg-grid {
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: drift 60s linear infinite;
+  pointer-events:none;
+  z-index:-2;
+}
+@keyframes drift {
+  from { background-position:0 0, 0 0; }
+  to   { background-position:1000px 1000px, 1000px 1000px; }
+}
+.particles {
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+}
+.particle {
+  position:absolute;
+  width:4px; height:4px;
+  background:var(--accent2);
+  opacity:0.25;
+  border-radius:50%;
+  animation: floatUp 12s linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(100vh) translateX(var(--x)); opacity:0.1; }
+  40%  { opacity:0.3; }
+  to   { transform: translateY(-10vh) translateX(var(--x)); opacity:0; }
+}
+
+/* Content */
+.main {
+  max-width:900px;
+  margin:120px auto 60px;
+  padding:0 20px 40px;
+}
+.badge {
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(75,213,255,0.7);
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:#a8f5ff;
+  margin-bottom:12px;
+}
+h1 {
+  font-size:clamp(30px,5vw,46px);
+  margin:0 0 10px;
+  text-shadow:0 0 16px rgba(75,213,255,0.45);
+}
+.subtitle {
+  font-size:16px;
+  opacity:.85;
+  max-width:520px;
+  margin-bottom:28px;
+}
+.card {
+  background:rgba(0,0,0,0.55);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  padding:22px 20px;
+  box-shadow:var(--border-glow), 0 18px 40px rgba(0,0,0,0.7);
+}
+.card p {
+  line-height:1.7;
+  font-size:16px;
+  opacity:.92;
+}
+strong {
+  color:#a8f5ff;
+}
+.section-head {
+  font-size:18px;
+  font-weight:700;
+  margin-top:18px;
+  margin-bottom:8px;
+}
+footer {
+  text-align:center;
+  padding:40px 20px;
+  opacity:.6;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="KGB-Arcade-Logo.png" alt="KGB Arcade Logo">
+      <span>KGB ARCADE</span>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle Menu">☰</button>
+
+    <ul class="nav-links">
+      <li><a href="index.html#hero" class="nav-link">Enlist</a></li>
+      <li><a href="index.html#intel" class="nav-link">Intel</a></li>
+      <li><a href="index.html#arsenal" class="nav-link">Arsenal</a></li>
+      <li><a href="mission.html" class="nav-link">Mission</a></li>
+      <li><a href="operator.html" class="nav-link">Operator</a></li>
+      <li><a href="lore.html" class="nav-link active">Lore</a></li>
+      <li><a href="support.html" class="nav-link">Support</a></li>
+      <li><a href="index.html#contact" class="nav-link">Comms</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<main class="main">
+  <div class="badge">Arcade Lore</div>
+  <h1>Lore of the Tactical Underground</h1>
+  <div class="subtitle">
+    The story behind the Arcade of the Tactical Underground and the three worlds of KGB Arcade.
+  </div>
+
+  <div class="card">
+    <p>
+      Before it was an arcade, it was a hideout — a loose network of operators, tinkerers, coders, and creators
+      who refused to let real play die.
+    </p>
+
+    <p>
+      Above ground, games became corrupted: flooded with ads, paywalls, noisy UIs, and predatory loops. Attention was
+      the new currency, and joy was collateral damage.
+    </p>
+
+    <p>
+      So the Underground went deeper. And deeper. Until the glow of their machines lit the caverns like stars.
+    </p>
+
+    <p class="section-head">The Three Worlds</p>
+
+    <p>
+      Down there, they built three worlds — each one a refuge for a different kind of player:
+    </p>
+
+    <p>
+      <strong>MiniMission™</strong> — serious fun in small doses. Fast, focused drills and micro-ops to sharpen timing,
+      reflexes, and mastery in minutes, not hours.
+    </p>
+
+    <p>
+      <strong>8BitOps™</strong> — built from bits, fueled by grit. Retro battle rigs and neon circuits, pulling power
+      from old-school silicon and pure arcade chaos.
+    </p>
+
+    <p>
+      <strong>TankTots™</strong> — playtime with purpose. Safe zones for little operators in training: big buttons,
+      simple controls, zero-fail vibes, and all-heart fun.
+    </p>
+
+    <p class="section-head">The Operator: TT-KGB</p>
+
+    <p>
+      At the center of it all is one operator — <strong>TT-KGB</strong> (KernelGreyBeret) — who coded the master arcade:
+      a unified platform where anyone can jack in without ads, tracking, or friction.
+    </p>
+
+    <p>
+      Every new title is another console booted in the dark. Another lane lit. Another mission posted to the Underground.
+    </p>
+
+    <p class="section-head">Joining the Underground</p>
+
+    <p>
+      When you play a game here, you’re not just killing time — you’re stepping into that network. Operators, kids,
+      parents, gamers, and day-job warriors all sharing one simple thing:
+      <br><br>
+      <strong>five clean minutes of honest play.</strong>
+    </p>
+
+    <p>
+      The Arcade of the Tactical Underground is open now — and every tap, swipe, and perfect hit helps keep it alive.
+    </p>
+
+    <p>
+      <strong>Welcome to the Tactical Underground.<br>
+      Welcome to your new arcade.</strong>
+    </p>
+  </div>
+</main>
+
+<footer>
+  © <span id="year"></span> KGB Arcade. All Rights Reserved.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.setProperty('--x', (Math.random()*80-40) + 'px');
+    p.style.animationDelay = (-Math.random()*12) + 's';
+    container.appendChild(p);
+  }
+
+  // Mobile nav toggle
+  document.querySelector(".nav-toggle").addEventListener("click", () => {
+    document.querySelector(".nav-links").classList.toggle("open");
+  });
+
+  // Close mobile menu on click
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelector(".nav-links").classList.remove("open");
+    });
+  });
+</script>
+
+</body>
+</html>

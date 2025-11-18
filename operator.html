@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="KGB-Arcade-Logo.png" type="image/png">
+<title>KGB Arcade — Meet the Operator</title>
+<meta name="description" content="Meet KernelGreyBeret (TT-KGB), the operator behind KGB Arcade — the Arcade of the Tactical Underground.">
+
+<style>
+  :root {
+    --bg: #070a12;
+    --accent1: #ff3d5a;
+    --accent2: #4bd5ff;
+    --fg: #e7f4ff;
+    --border-glow: 0 0 12px rgba(75,213,255,0.4);
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    font-family: system-ui,Segoe UI,Roboto,Inter,Arial;
+    background: var(--bg);
+    color: var(--fg);
+    overflow-x:hidden;
+  }
+
+/* NAV (same pattern as mission) */
+.nav {
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  padding:12px 20px;
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(10px);
+  z-index:999;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+}
+.nav-inner {
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.nav-logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.nav-logo img {
+  width:42px;
+  height:42px;
+}
+.nav-logo span {
+  font-weight:900;
+  font-size:20px;
+  color:var(--fg);
+  text-shadow:0 0 6px rgba(75,213,255,0.5);
+}
+.nav-links {
+  display:flex;
+  list-style:none;
+  gap:26px;
+  margin:0;
+  padding:0;
+}
+.nav-link {
+  color:var(--fg);
+  text-decoration:none;
+  font-weight:700;
+  position:relative;
+}
+.nav-link:hover::after,
+.nav-link.active::after {
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:-4px;
+  height:3px;
+  background:var(--accent2);
+  box-shadow:0 0 12px var(--accent2);
+  border-radius:3px;
+}
+.nav-toggle {
+  display:none;
+  background:none;
+  border:none;
+  font-size:28px;
+  color:var(--fg);
+  cursor:pointer;
+}
+
+/* MOBILE NAV */
+@media (max-width:720px) {
+  .nav-toggle {
+    display:block;
+  }
+  .nav-links {
+    position:absolute;
+    top:60px;
+    right:20px;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(12px);
+    flex-direction:column;
+    padding:16px;
+    gap:16px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.12);
+    display:none;
+  }
+  .nav-links.open {
+    display:flex;
+  }
+}
+
+/* Background */
+.bg-grid {
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: drift 60s linear infinite;
+  pointer-events:none;
+  z-index:-2;
+}
+@keyframes drift {
+  from { background-position:0 0, 0 0; }
+  to   { background-position:1000px 1000px, 1000px 1000px; }
+}
+.particles {
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+}
+.particle {
+  position:absolute;
+  width:4px; height:4px;
+  background:var(--accent2);
+  opacity:0.25;
+  border-radius:50%;
+  animation: floatUp 12s linear infinite;
+}
+@keyframes floatUp {
+  from { transform: translateY(100vh) translateX(var(--x)); opacity:0.1; }
+  40%  { opacity:0.3; }
+  to   { transform: translateY(-10vh) translateX(var(--x)); opacity:0; }
+}
+
+/* Content */
+.main {
+  max-width:900px;
+  margin:120px auto 60px;
+  padding:0 20px 40px;
+}
+.badge {
+  display:inline-block;
+  padding:6px 12px;
+  border-radius:999px;
+  border:1px solid rgba(75,213,255,0.7);
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:#a8f5ff;
+  margin-bottom:12px;
+}
+h1 {
+  font-size:clamp(30px,5vw,46px);
+  margin:0 0 10px;
+  text-shadow:0 0 16px rgba(75,213,255,0.45);
+}
+.subtitle {
+  font-size:16px;
+  opacity:.85;
+  max-width:520px;
+  margin-bottom:28px;
+}
+.card {
+  background:rgba(0,0,0,0.55);
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,0.12);
+  padding:22px 20px;
+  box-shadow:var(--border-glow), 0 18px 40px rgba(0,0,0,0.7);
+}
+.card p {
+  line-height:1.7;
+  font-size:16px;
+  opacity:.92;
+}
+strong {
+  color:#a8f5ff;
+}
+.mono {
+  font-family: ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  color:#4bd5ff;
+}
+footer {
+  text-align:center;
+  padding:40px 20px;
+  opacity:.6;
+  font-size:14px;
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <img src="KGB-Arcade-Logo.png" alt="KGB Arcade Logo">
+      <span>KGB ARCADE</span>
+    </div>
+
+    <button class="nav-toggle" aria-label="Toggle Menu">☰</button>
+
+    <ul class="nav-links">
+      <li><a href="index.html#hero" class="nav-link">Enlist</a></li>
+      <li><a href="index.html#intel" class="nav-link">Intel</a></li>
+      <li><a href="index.html#arsenal" class="nav-link">Arsenal</a></li>
+      <li><a href="mission.html" class="nav-link">Mission</a></li>
+      <li><a href="operator.html" class="nav-link active">Operator</a></li>
+      <li><a href="lore.html" class="nav-link">Lore</a></li>
+      <li><a href="support.html" class="nav-link">Support</a></li>
+      <li><a href="index.html#contact" class="nav-link">Comms</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="bg-grid"></div>
+<div class="particles" id="particles"></div>
+
+<main class="main">
+  <div class="badge">OP Profile</div>
+  <h1>Meet the Operator — KernelGreyBeret</h1>
+  <div class="subtitle">
+    OP ID: <span class="mono">TT-KGB</span>. Retired operator, cyber engineer, dad, and the mind behind the Arcade of the Tactical Underground.
+  </div>
+
+  <div class="card">
+    <p>
+      I’ve spent my life building things — systems, tools, cyber ranges, exploits, tactics, and tech that had to work when it mattered.
+      After years in military communications, cyber operations, and Zero Trust engineering, I wanted to build something different:
+    </p>
+    <p><strong>Play.<br>But play done right.</strong></p>
+
+    <p>
+      Modern games are bloated with ads, popups, dark patterns, and clutter. So I built the opposite:
+    </p>
+
+    <ul>
+      <li>Instant-load micro-games</li>
+      <li>Tactically precise mechanics</li>
+      <li>Clean neon, retro-future aesthetics</li>
+      <li>Toddler and family-friendly modes</li>
+      <li>Operator-level challenge for those who want it</li>
+      <li>Zero friction, zero bullshit</li>
+    </ul>
+
+    <p>
+      <strong>KGB Arcade is the forge.</strong> Every game is a mission. Every animation deliberate. Every pixel placed with intent.
+    </p>
+
+    <p>
+      I build because I love it. I share it because play belongs to everyone — kids, parents, operators, gamers, and people
+      who just need five clean minutes between chaos.
+    </p>
+
+    <p>
+      <strong>Welcome to my arcade. Welcome to the Tactical Underground. Let’s make something fun.</strong>
+    </p>
+
+    <p>
+      For comms, bugs, collabs, or ideas:<br>
+      <strong>team@kgbarcade.com</strong>
+    </p>
+  </div>
+  <div class="card" style="margin-top:24px;">
+    <div class="badge">Operator Manifesto</div>
+    <p>
+      I build games the way operators build missions:
+      with intention, precision, and respect for the people who rely on them.
+    </p>
+
+    <p>
+      I believe play should be fast, simple, and joyful.<br>
+      No ads. No tracking. No manipulation. Just clean, honest fun.
+    </p>
+
+    <p>
+      I believe in craftsmanship.<br>
+      In the small details no one notices individually, but everyone feels together — the timing of a jump,
+      the snap of a sound effect, the glow on a button that invites a tap.
+    </p>
+
+    <p>
+      I believe kids deserve a safe place to play.<br>
+      I believe adults deserve a break that doesn’t steal their time.<br>
+      I believe families deserve moments of connection that come without friction.
+    </p>
+
+    <p>
+      I believe in the power of “one more try.”<br>
+      In the satisfaction of mastery.<br>
+      In the joy of a clean, well-built challenge.
+    </p>
+
+    <p>
+      <strong>KGB Arcade is my forge.</strong><br>
+      Every game is a mission. Every world is a story. Every tap is a tiny moment of asymmetric precision.
+    </p>
+
+    <p>
+      <strong>Welcome to the Arcade of the Tactical Underground.</strong><br>
+      Let’s play.
+    </p>
+  </div>
+</main>
+
+<footer>
+  © <span id="year"></span> KGB Arcade. All Rights Reserved.
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.setProperty('--x', (Math.random()*80-40) + 'px');
+    p.style.animationDelay = (-Math.random()*12) + 's';
+    container.appendChild(p);
+  }
+
+  // Mobile nav toggle
+  document.querySelector(".nav-toggle").addEventListener("click", () => {
+    document.querySelector(".nav-links").classList.toggle("open");
+  });
+
+  // Close mobile menu on click
+  document.querySelectorAll(".nav-link").forEach(link => {
+    link.addEventListener("click", () => {
+      document.querySelector(".nav-links").classList.remove("open");
+    });
+  });
+</script>
+
+</body>
+</html>
