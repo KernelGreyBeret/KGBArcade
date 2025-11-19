@@ -105,10 +105,10 @@
         to   { right: calc(100vw + 130px); }
       }
       .np-run-right {
-        animation: np-run-right 6s linear forwards;
+        animation: np-run-right 9s linear forwards;
       }
       .np-run-left {
-        animation: np-run-left 6s linear forwards;
+        animation: np-run-left 9s linear forwards;
       }
 
       /* Zipline diagonals */
@@ -121,10 +121,10 @@
         to   { right: calc(100vw + 130px); top: 70vh; }
       }
       .np-zip-lr {
-        animation: np-zip-lr 5.2s linear forwards;
+        animation: np-zip-lr 8s linear forwards;
       }
       .np-zip-rl {
-        animation: np-zip-rl 5.2s linear forwards;
+        animation: np-zip-rl 8s linear forwards;
       }
 
       /* Tiny hop when dodging cursor */
@@ -253,7 +253,7 @@
   let spawnTimer = null;
 
   function scheduleSpawn(initialDelay) {
-    const delay = initialDelay != null ? initialDelay : rand(15000, 45000); // 15–45s
+    const delay = initialDelay != null ? initialDelay : 500; // 0.5s between pandas // rand(15000, 45000); // 15–45s
     spawnTimer = window.setTimeout(spawnPanda, delay);
   }
 
@@ -394,7 +394,7 @@
         spawnSmoke(rect.left + rect.width / 2, rect.top + rect.height / 2);
         scheduleSpawn();
       }
-    }, 6500);
+    }, 11000);
   }
 
   function fightBack(panda) {
