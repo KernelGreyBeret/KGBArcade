@@ -1,6 +1,6 @@
-// ninja-panda.js — Ninja Panda v2 (routes + cloak + fightback + events)
+// ninja-panda.js — Ninja Panda v3
 (() => {
-  const IMG_URL = "ninja-panda.png"; // update path if needed
+  const IMG_URL = "ninja-panda.png"; // update if needed
 
   function injectStyles() {
     const css = `
@@ -34,7 +34,7 @@
         filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));
       }
 
-      /* simple ninja cloak/body */
+      /* Simple ninja cloak/body */
       .ninja-panda-body {
         position: absolute;
         left: 50%;
@@ -95,7 +95,7 @@
         transform: translate(-50%, -4px);
       }
 
-      /* dash paths */
+      /* Horizontal dash paths */
       @keyframes np-run-right {
         from { left: -130px; }
         to   { left: calc(100vw + 130px); }
@@ -104,7 +104,6 @@
         from { right: -130px; }
         to   { right: calc(100vw + 130px); }
       }
-
       .np-run-right {
         animation: np-run-right 6s linear forwards;
       }
@@ -112,7 +111,23 @@
         animation: np-run-left 6s linear forwards;
       }
 
-      /* tiny hop for "dodge" */
+      /* Zipline diagonals */
+      @keyframes np-zip-lr {
+        from { left: -130px; top: 8vh; }
+        to   { left: calc(100vw + 130px); top: 70vh; }
+      }
+      @keyframes np-zip-rl {
+        from { right: -130px; top: 8vh; }
+        to   { right: calc(100vw + 130px); top: 70vh; }
+      }
+      .np-zip-lr {
+        animation: np-zip-lr 5.2s linear forwards;
+      }
+      .np-zip-rl {
+        animation: np-zip-rl 5.2s linear forwards;
+      }
+
+      /* Tiny hop when dodging cursor */
       .np-hop {
         animation: np-hop 0.22s ease-out;
       }
@@ -122,7 +137,7 @@
         100% { transform: translate3d(0,0,0); }
       }
 
-      /* caught */
+      /* Caught animation */
       .np-caught {
         animation: np-caught 0.55s ease-out forwards;
       }
@@ -133,7 +148,7 @@
         }
       }
 
-      /* smoke bomb */
+      /* Smoke bomb */
       .np-smoke {
         position: fixed;
         width: 60px;
@@ -151,7 +166,44 @@
         to   { transform: scale(1.3); opacity: 0.0; }
       }
 
-      /* toast */
+      /* Shuriken */
+      .np-shuriken {
+        position: fixed;
+        width: 24px;
+        height: 24px;
+        z-index: 9999;
+        pointer-events: none;
+        transform-origin: center center;
+        animation: np-shuriken-throw 0.45s ease-out forwards;
+      }
+      .np-shuriken::before,
+      .np-shuriken::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 4px;
+        height: 20px;
+        background: #4bd5ff;
+        border-radius: 999px;
+        box-shadow: 0 0 6px rgba(75,213,255,0.8);
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+      .np-shuriken::after {
+        transform: translate(-50%, -50%) rotate(-45deg);
+      }
+      @keyframes np-shuriken-throw {
+        from {
+          transform: translate3d(0,0,0) rotate(0deg);
+          opacity: 1;
+        }
+        to {
+          transform: translate3d(var(--dx, 0px), var(--dy, -40px), 0) rotate(540deg);
+          opacity: 0;
+        }
+      }
+
+      /* Toast */
       .np-toast {
         position: fixed;
         left: 50%;
@@ -175,7 +227,7 @@
         transform: translate(-50%, 0);
       }
 
-      /* screen shake */
+      /* Screen shake */
       @keyframes np-shake {
         0% { transform: translate(0, 0); }
         20% { transform: translate(-4px, 2px); }
@@ -214,6 +266,27 @@
     setTimeout(() => s.remove(), 550);
   }
 
+  function shurikenTossFrom(panda, targetX, targetY) {
+    if (!panda) return;
+    const rect = panda.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height * 0.35;
+
+    const sh = document.createElement("div");
+    sh.className = "np-shuriken";
+    sh.style.left = `${cx - 12}px`;
+    sh.style.top = `${cy - 12}px`;
+
+    let dx = (targetX ?? (cx + (Math.random() < 0.5 ? -80 : 80))) - cx;
+    let dy = (targetY ?? (cy + rand(-20, 40))) - cy;
+
+    sh.style.setProperty("--dx", `${dx}px`);
+    sh.style.setProperty("--dy", `${dy}px`);
+
+    document.body.appendChild(sh);
+    setTimeout(() => sh.remove(), 500);
+  }
+
   function spawnPanda() {
     if (activePanda) return;
 
@@ -234,39 +307,45 @@
     document.body.appendChild(panda);
     activePanda = panda;
 
-    // Pick a route: 0=low, 1=mid, 2=rooftop
-    const route = Math.floor(Math.random() * 3);
+    // Choose movement style:
+    // 0–0.6: horizontal routes, 0.6–1: zipline
+    const styleRoll = Math.random();
     const fromLeft = Math.random() < 0.5;
 
-    let topPx;
-    if (route === 0) {
-      // low run
-      topPx = window.innerHeight - rand(110, 150);
-    } else if (route === 1) {
-      // mid run
-      topPx = window.innerHeight * rand(0.3, 0.55);
-    } else {
-      // rooftop-ish
-      topPx = rand(40, 120);
-    }
+    if (styleRoll < 0.6) {
+      // lane-style run: low, mid, rooftop
+      const route = Math.floor(Math.random() * 3);
+      let topPx;
+      if (route === 0) {
+        topPx = window.innerHeight - rand(110, 150); // low
+      } else if (route === 1) {
+        topPx = window.innerHeight * rand(0.3, 0.55); // mid
+      } else {
+        topPx = rand(40, 120); // rooftop
+      }
+      panda.style.top = `${topPx}px`;
 
-    panda.style.top = `${topPx}px`;
-
-    if (fromLeft) {
-      panda.style.left = "-130px";
-      panda.classList.add("np-run-right");
+      if (fromLeft) {
+        panda.style.left = "-130px";
+        panda.classList.add("np-run-right");
+      } else {
+        panda.style.right = "-130px";
+        panda.classList.add("np-run-left");
+      }
     } else {
-      panda.style.right = "-130px";
-      panda.classList.add("np-run-left");
+      // zipline diagonals (top → bottom)
+      if (fromLeft) {
+        panda.classList.add("np-zip-lr");
+      } else {
+        panda.classList.add("np-zip-rl");
+      }
     }
 
     let clickedOnce = false;
     let caught = false;
 
-    // fightback + catch logic
     panda.addEventListener("click", (e) => {
       e.stopPropagation();
-
       if (caught) return;
 
       if (!clickedOnce) {
@@ -278,7 +357,7 @@
       }
     });
 
-    // little dodge when cursor gets super close (desktop only)
+    // Cursor proximity = little hop (desktop)
     let lastMouseMove = 0;
     window.addEventListener(
       "mousemove",
@@ -297,7 +376,7 @@
 
         if (dist < 120) {
           panda.classList.remove("np-hop");
-          // force reflow to restart animation
+          // force reflow
           // eslint-disable-next-line no-unused-expressions
           panda.offsetHeight;
           panda.classList.add("np-hop");
@@ -306,7 +385,7 @@
       { passive: true }
     );
 
-    // if he gets away: smoke bomb
+    // If he escapes, smoke bomb out
     setTimeout(() => {
       if (activePanda === panda) {
         const rect = panda.getBoundingClientRect();
@@ -319,6 +398,7 @@
   }
 
   function fightBack(panda) {
+    // global shake
     document.documentElement.classList.add("np-shake");
     document.body.classList.add("np-shake");
     setTimeout(() => {
@@ -328,7 +408,7 @@
   }
 
   function handleCatch(panda) {
-    panda.classList.remove("np-run-right", "np-run-left");
+    panda.classList.remove("np-run-right", "np-run-left", "np-zip-lr", "np-zip-rl");
     panda.classList.add("np-caught");
 
     const key = "ninjaPandaCatches";
@@ -336,7 +416,7 @@
     const now = prev + 1;
     localStorage.setItem(key, String(now));
 
-    // Global event hook for rewards / intel pages
+    // Event hook for rewards / intel pages
     window.dispatchEvent(
       new CustomEvent("ninjaPandaCaught", { detail: { count: now } })
     );
@@ -369,7 +449,19 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     injectStyles();
-    // first appearance: 10–25s after page load
+
+    // first appearance 10–25s
     scheduleSpawn(rand(10000, 25000));
+
+    // Global "missed click" = shuriken toss
+    document.addEventListener(
+      "click",
+      (e) => {
+        if (!activePanda) return;
+        if (activePanda.contains(e.target)) return; // handled in its own listener
+        shurikenTossFrom(activePanda, e.clientX, e.clientY);
+      },
+      { passive: true }
+    );
   });
 })();
