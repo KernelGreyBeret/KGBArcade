@@ -406,10 +406,53 @@
   position: relative; /* So the stamp anchors to it */
   overflow: hidden;   /* So diagonal edges don't spill outside */
 }
+
+.launch-alert{
+  border-bottom:1px solid rgba(0,255,154,.35);
+  background:
+    linear-gradient(90deg, rgba(0,255,154,.18), rgba(255,174,66,.14), rgba(0,255,154,.18));
+  box-shadow:0 0 24px rgba(0,255,154,.18);
+}
+
+.launch-inner{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:10px var(--pad);
+  text-align:center;
+  font-weight:800;
+}
+
+.launch-inner strong{
+  color:#00FF9A;
+}
+
+.launch-inner a{
+  color:#fff;
+  border:1px solid rgba(0,255,154,.45);
+  background:rgba(0,0,0,.28);
+  border-radius:999px;
+  padding:7px 12px;
+  font-weight:900;
+}
+
+.launch-inner a:hover{
+  filter:brightness(1.12);
+}
 </style>
 </head>
 
 <body>
+
+<section class="launch-alert">
+  <div class="wrap launch-inner">
+    <strong>🚨 NEW GAME LIVE:</strong>
+    <span>Tommy the Tank — Asymmetric Mayhem has deployed to the Arsenal.</span>
+    <a href="/games/ tommy-the-tank/index.html">Play Now →</a>
+  </div>
+</section>
 
 <!-- TACTICAL NAVBAR -->
 <nav class="nav">
