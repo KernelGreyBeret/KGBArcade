@@ -885,17 +885,40 @@
       }
 
       SFX.forEach(([emoji, name, fn], i) => {
-        const btn = document.createElement('button');
-        btn.className = 'sfx-pad';
-        btn.innerHTML = `<span class="emoji">${emoji}</span><span class="sfx-name">${name}</span>`;
-        btn.addEventListener('pointerdown', async (e) => {
-          e.preventDefault();
-          await unlockAudio();
-          pressFlash(btn);
-          fn();
-        }, { passive: false });
-        sfxGrid.appendChild(btn);
-      });
+  const btn = document.createElement('button');
+  btn.className = 'sfx-pad';
+  btn.innerHTML = `<span class="emoji">${emoji}</span><span class="sfx-name">${name}</span>`;
+
+  let holdTimer = null;
+
+  const startSfxHold = async (e) => {
+    e.preventDefault();
+    await unlockAudio();
+
+    pressFlash(btn);
+    fn();
+
+    clearInterval(holdTimer);
+    holdTimer = setInterval(() => {
+      pressFlash(btn);
+      fn();
+    }, 350); // lower = faster repeat, higher = slower repeat
+  };
+
+  const stopSfxHold = (e) => {
+    if (e) e.preventDefault();
+    clearInterval(holdTimer);
+    holdTimer = null;
+    btn.classList.remove('active');
+  };
+
+  btn.addEventListener('pointerdown', startSfxHold, { passive: false });
+  btn.addEventListener('pointerup', stopSfxHold, { passive: false });
+  btn.addEventListener('pointercancel', stopSfxHold, { passive: false });
+  btn.addEventListener('pointerleave', stopSfxHold, { passive: false });
+
+  sfxGrid.appendChild(btn);
+});
 
       window.addEventListener('keydown', async (e) => {
         const key = e.key.toUpperCase();
