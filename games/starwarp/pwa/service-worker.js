@@ -4,11 +4,11 @@ const ASSETS = [
   "./index.html",
   "./manifest.webmanifest",
   "./service-worker.js",
-  "./icons/starwarp-192.png",
-  "./icons/starwarp-512.png",
-  "./icons/starwarp-maskable-512.png",
-  "./icons/starwarp-screenshot-wide.png",
-  "./icons/starwarp-screenshot-narrow.png"
+  "./icons/sw-192.png",
+  "./icons/sw-512.png",
+  "./icons/sw-maskable-512.png",
+  "./icons/sw-screenshot-wide.png",
+  "./icons/sw-screenshot-narrow.png"
 ];
 
 self.addEventListener("install", event => {
