@@ -1,0 +1,36 @@
+{
+  "name": "Tommy the Tank \u2014 Asymmetric Mayhem",
+  "short_name": "Tommy Tank",
+  "description": "KGB Arcade 8-level tank campaign with PWA/offline support.",
+  "id": "/games/tommy-the-tank/",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "any",
+  "background_color": "#120419",
+  "theme_color": "#44e7ff",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "./icons/tommy-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/tommy-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/tommy-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
