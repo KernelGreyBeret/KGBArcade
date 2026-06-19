@@ -2,9 +2,9 @@
   "name": "StarWarp Arena 2014 KGB Arcade",
   "short_name": "StarWarp",
   "description": "Twin-stick hyperspace chaos from KGB Arcade.",
-  "id": "/games/starwarp/",
-  "start_url": "./index.html",
-  "scope": "./",
+  "id": "/games/starwarp/pwa/",
+  "start_url": "/games/starwarp/pwa/",
+  "scope": "/games/starwarp/pwa/"
   "display": "fullscreen",
   "orientation": "any",
   "background_color": "#020408",
