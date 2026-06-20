@@ -1,6 +1,6 @@
 {
   "name": "Tommy the Tank \u2014 Asymmetric Mayhem",
-  "short_name": "Tommy Tank",
+  "short_name": "Tommy the Tank",
   "description": "KGB Arcade 8-level tank campaign with PWA/offline support.",
   "id": "/games/tommy-the-tank/",
   "start_url": "./index.html",
