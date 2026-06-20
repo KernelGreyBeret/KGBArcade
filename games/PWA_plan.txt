@@ -1,0 +1,5 @@
+Each game gets a permanent folder.
+Each game’s PWA starts at index.html.
+Each game HTML has an internal GAME_VERSION.
+The service worker fetches HTML network-first.
+Old builds can go in /archive/ if worth keeping.
