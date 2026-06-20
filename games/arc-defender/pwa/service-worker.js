@@ -1,4 +1,5 @@
-const CACHE_NAME = "kgb-arc-defender-pwa-v1";
+const CACHE_NAME = 'arc-defender-cache-v2';
+
 const ASSETS = [
   "./",
   "./index.html",
@@ -11,7 +12,8 @@ const ASSETS = [
   "./icons/arc-screenshot-narrow.png"
 ];
 
-self.addEventListener("install", event => {
+
+self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(ASSETS))
@@ -19,30 +21,59 @@ self.addEventListener("install", event => {
   );
 });
 
-self.addEventListener("activate", event => {
+self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => Promise.all(
-      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-    )).then(() => self.clients.claim())
+    caches.keys()
+      .then(keys =>
+        Promise.all(
+          keys
+            .filter(key => key !== CACHE_NAME)
+            .map(key => caches.delete(key))
+        )
+      )
+      .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener("fetch", event => {
-  const request = event.request;
-  if (request.method !== "GET") return;
-  const url = new URL(request.url);
+self.addEventListener('fetch', event => {
+  const req = event.request;
+
+  if (req.method !== 'GET') return;
+
+  const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
+  const isHtml =
+    req.mode === 'navigate' ||
+    req.destination === 'document' ||
+    req.headers.get('accept')?.includes('text/html');
+
+  if (isHtml) {
+    event.respondWith(
+      fetch(req, { cache: 'no-store' })
+        .then(res => {
+          if (res && res.status === 200) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
+          }
+          return res;
+        })
+        .catch(() =>
+          caches.match(req).then(cached => cached || caches.match('./index.html'))
+        )
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(request).then(cached => {
-      if (cached) return cached;
-      return fetch(request).then(response => {
-        if (response && response.status === 200) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(request, copy));
+    caches.match(req).then(cached => {
+      return cached || fetch(req).then(res => {
+        if (res && res.status === 200) {
+          const copy = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, copy));
         }
-        return response;
-      }).catch(() => caches.match("./index.html"));
+        return res;
+      });
     })
   );
 });
