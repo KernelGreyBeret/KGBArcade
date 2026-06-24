@@ -9,227 +9,260 @@
     {
       "id": "circle",
       "title": "Circle",
-      "emoji": "\ud83d\udd34",
+      "emoji": "🔴",
       "image": "images/circle.png",
       "spoken": "Circle",
       "soundText": "This is a circle.",
       "prompt": "This is a circle.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Circle"
     },
     {
       "id": "square",
       "title": "Square",
-      "emoji": "\ud83d\udfe7",
+      "emoji": "🟧",
       "image": "images/square.png",
       "spoken": "Square",
       "soundText": "This is a square.",
       "prompt": "This is a square.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Square"
     },
     {
       "id": "triangle",
       "title": "Triangle",
-      "emoji": "\ud83d\udd3a",
+      "emoji": "🔺",
       "image": "images/triangle.png",
       "spoken": "Triangle",
       "soundText": "This is a triangle.",
       "prompt": "This is a triangle.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Triangle"
     },
     {
       "id": "rectangle",
       "title": "Rectangle",
-      "emoji": "\ud83d\udfe9",
+      "emoji": "🟩",
       "image": "images/rectangle.png",
       "spoken": "Rectangle",
       "soundText": "This is a rectangle.",
       "prompt": "This is a rectangle.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Rectangle"
     },
     {
       "id": "oval",
       "title": "Oval",
-      "emoji": "\ud83d\udd35",
+      "emoji": "🔵",
       "image": "images/oval.png",
       "spoken": "Oval",
       "soundText": "This is an oval.",
       "prompt": "This is an oval.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Oval"
     },
     {
       "id": "star",
       "title": "Star",
-      "emoji": "\u2b50",
+      "emoji": "⭐",
       "image": "images/star.png",
       "spoken": "Star",
       "soundText": "This is a star.",
       "prompt": "This is a star.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Star"
     },
     {
       "id": "heart",
       "title": "Heart",
-      "emoji": "\ud83d\udc97",
+      "emoji": "💗",
       "image": "images/heart.png",
       "spoken": "Heart",
       "soundText": "This is a heart.",
       "prompt": "This is a heart.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Heart"
     },
     {
       "id": "diamond",
       "title": "Diamond",
-      "emoji": "\u2666\ufe0f",
+      "emoji": "♦️",
       "image": "images/diamond.png",
       "spoken": "Diamond",
       "soundText": "This is a diamond.",
       "prompt": "This is a diamond.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Diamond"
     },
     {
       "id": "crescent",
       "title": "Crescent",
-      "emoji": "\ud83c\udf19",
+      "emoji": "🌙",
       "image": "images/crescent.png",
       "spoken": "Crescent",
       "soundText": "This is a crescent.",
       "prompt": "This is a crescent.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Crescent"
     },
     {
       "id": "pentagon",
       "title": "Pentagon",
-      "emoji": "\u2b1f",
+      "emoji": "⬟",
       "image": "images/pentagon.png",
       "spoken": "Pentagon",
       "soundText": "This is a pentagon.",
       "prompt": "This is a pentagon.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Pentagon"
     },
     {
       "id": "hexagon",
       "title": "Hexagon",
-      "emoji": "\u2b22",
+      "emoji": "⬢",
       "image": "images/hexagon.png",
       "spoken": "Hexagon",
       "soundText": "This is a hexagon.",
       "prompt": "This is a hexagon.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Hexagon"
     },
     {
       "id": "octagon",
       "title": "Octagon",
-      "emoji": "\ud83d\uded1",
+      "emoji": "🛑",
       "image": "images/octagon.png",
       "spoken": "Octagon",
       "soundText": "This is an octagon.",
       "prompt": "This is an octagon.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Octagon"
     },
     {
       "id": "trapezoid",
       "title": "Trapezoid",
-      "emoji": "\u25b0",
+      "emoji": "▰",
       "image": "images/trapezoid.png",
       "spoken": "Trapezoid",
       "soundText": "This is a trapezoid.",
       "prompt": "This is a trapezoid.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Trapezoid"
     },
     {
       "id": "semicircle",
       "title": "Semicircle",
-      "emoji": "\u25d6",
+      "emoji": "◖",
       "image": "images/semicircle.png",
       "spoken": "Semicircle",
       "soundText": "This is a semicircle.",
       "prompt": "This is a semicircle.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Semicircle"
     },
     {
       "id": "cross",
       "title": "Cross",
-      "emoji": "\u2795",
+      "emoji": "➕",
       "image": "images/cross.png",
       "spoken": "Cross",
       "soundText": "This is a cross.",
       "prompt": "This is a cross.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Cross"
     },
     {
       "id": "arrow",
       "title": "Arrow",
-      "emoji": "\u27a1\ufe0f",
+      "emoji": "➡️",
       "image": "images/arrow.png",
       "spoken": "Arrow",
       "soundText": "This is an arrow.",
       "prompt": "This is an arrow.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Arrow"
     },
     {
       "id": "spiral",
       "title": "Spiral",
-      "emoji": "\ud83c\udf00",
+      "emoji": "🌀",
       "image": "images/spiral.png",
       "spoken": "Spiral",
       "soundText": "This is a spiral.",
       "prompt": "This is a spiral.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Spiral"
     },
     {
       "id": "cube",
       "title": "Cube",
-      "emoji": "\ud83e\uddca",
+      "emoji": "🧊",
       "image": "images/cube.png",
       "spoken": "Cube",
       "soundText": "This is a cube.",
       "prompt": "This is a cube.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Cube"
     },
     {
       "id": "sphere",
       "title": "Sphere",
-      "emoji": "\u26aa",
+      "emoji": "⚪",
       "image": "images/sphere.png",
       "spoken": "Sphere",
       "soundText": "This is a sphere.",
       "prompt": "This is a sphere.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Sphere"
     },
     {
       "id": "cylinder",
       "title": "Cylinder",
-      "emoji": "\ud83e\udd6b",
+      "emoji": "🥫",
       "image": "images/cylinder.png",
       "spoken": "Cylinder",
       "soundText": "This is a cylinder.",
       "prompt": "This is a cylinder.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Cylinder"
     },
     {
       "id": "cone",
       "title": "Cone",
-      "emoji": "\ud83d\udd36",
+      "emoji": "🔶",
       "image": "images/cone.png",
       "spoken": "Cone",
       "soundText": "This is a cone.",
       "prompt": "This is a cone.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Cone"
     },
     {
       "id": "rainbow_bonus",
       "title": "Rainbow Bonus",
-      "emoji": "\ud83c\udf08",
+      "emoji": "🌈",
       "image": "images/rainbow_bonus.png",
       "spoken": "Rainbow Bonus",
       "soundText": "This is a rainbow bonus shape card.",
       "prompt": "This is a rainbow bonus shape card.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Rainbow Bonus"
     }
   ],
   "version": "0.2",
   "cardDefaults": {
     "fps": 8,
     "loop": true
-  }
+  },
+  "spokenTitle": "Shapes!",
+  "question": "What shape is this?",
+  "praise": [
+    "Good job!",
+    "Great work!",
+    "You got it!",
+    "Awesome!",
+    "Way to go!",
+    "Nice one!"
+  ],
+  "funVersion": "0.2.1"
 }
