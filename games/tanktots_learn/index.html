@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#7bdcff">
+  <meta name="description" content="TankTots Learn — toddler-friendly learning decks for colors, shapes, and more.">
+  <title>TankTots Learn</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="assets/pwa/icon_192.png">
+  <link rel="icon" type="image/png" href="assets/pwa/icon_192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar" aria-label="TankTots Learn header">
+      <button class="icon-btn deck-toggle" id="deckToggle" type="button" aria-label="Choose decks">
+        <img src="assets/ui/btn_deck_select.png" alt="">
+      </button>
+      <img class="brand-logo" src="assets/logos/tanktots_learn_logo.png" alt="TankTots Learn">
+      <button class="icon-btn" id="soundToggle" type="button" aria-label="Sound on">
+        <img id="soundIcon" src="assets/ui/btn_sound.png" alt="">
+      </button>
+    </header>
+
+    <main class="stage" id="stage">
+      <section class="deck-panel" id="deckPanel" aria-label="Deck selector">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow">Choose a mission</p>
+            <h1>Pick learning decks</h1>
+          </div>
+          <img class="helper-small" src="assets/ui/cadet_helper_01.png" alt="">
+        </div>
+
+        <div class="mix-tools" aria-label="Deck mixing controls">
+          <button class="mix-btn" id="mixSelectedBtn" type="button">Mix Selected</button>
+          <button class="mix-btn ghost" id="singleModeBtn" type="button">Single Deck</button>
+        </div>
+        <p class="mix-note">Tap a deck to play it. Check multiple decks, then tap Mix Selected to shuffle them together.</p>
+
+        <div class="deck-grid" id="deckGrid"></div>
+      </section>
+
+      <section class="card-panel" id="cardPanel" aria-live="polite">
+        <div class="progress-wrap">
+          <div class="progress-text" id="progressText">Loading decks…</div>
+          <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="learn-card" id="learnCard">
+          <div class="card-sparkle" aria-hidden="true"></div>
+          <div class="image-wrap" id="imageWrap">
+            <img class="card-image" id="cardImage" alt="">
+            <div class="placeholder" id="placeholder" hidden>?</div>
+          </div>
+          <div class="card-copy">
+            <h2 id="cardTitle">TankTots Learn</h2>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <nav class="controls" aria-label="Card controls">
+      <button class="control-btn" id="prevBtn" type="button" aria-label="Previous card">
+        <img src="assets/ui/btn_back.png" alt="">
+      </button>
+      <button class="control-btn" id="randomBtn" type="button" aria-label="Random card">
+        <img src="assets/ui/btn_random.png" alt="">
+      </button>
+      <button class="control-btn big" id="hearBtn" type="button" aria-label="Hear card">
+        <img src="assets/ui/btn_play.png" alt="">
+      </button>
+      <button class="control-btn" id="nextBtn" type="button" aria-label="Next card">
+        <img src="assets/ui/btn_next.png" alt="">
+      </button>
+    </nav>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="game.js" defer></script>
+</body>
+</html>

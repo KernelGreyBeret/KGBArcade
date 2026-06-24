@@ -1,0 +1,23 @@
+{
+  "defaultDeck": "shapes",
+  "decks": [
+    {
+      "id": "colors",
+      "title": "Colors",
+      "subtitle": "Bright colors, color words, and rainbow fun",
+      "path": "decks/colors/deck.json",
+      "cover": "decks/colors/images/cover.png",
+      "age": "2+"
+    },
+    {
+      "id": "shapes",
+      "title": "Shapes",
+      "subtitle": "Simple shapes, 3D shapes, and playful stickers",
+      "path": "decks/shapes/deck.json",
+      "cover": "decks/shapes/images/cover.png",
+      "age": "2+"
+    }
+  ],
+  "version": "0.2-production",
+  "updated": "2026-06-24"
+}
