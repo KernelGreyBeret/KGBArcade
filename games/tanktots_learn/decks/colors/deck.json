@@ -9,277 +9,315 @@
     {
       "id": "red",
       "title": "Red",
-      "emoji": "\u2764\ufe0f",
+      "emoji": "❤️",
       "image": "images/red.png",
       "spoken": "Red",
       "soundText": "This is red.",
       "prompt": "This is red.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Red"
     },
     {
       "id": "blue",
       "title": "Blue",
-      "emoji": "\ud83e\ude75",
+      "emoji": "🩵",
       "image": "images/blue.png",
       "spoken": "Blue",
       "soundText": "This is blue.",
       "prompt": "This is blue.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Blue"
     },
     {
       "id": "yellow",
       "title": "Yellow",
-      "emoji": "\ud83d\udc9b",
+      "emoji": "💛",
       "image": "images/yellow.png",
       "spoken": "Yellow",
       "soundText": "This is yellow.",
       "prompt": "This is yellow.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Yellow"
     },
     {
       "id": "green",
       "title": "Green",
-      "emoji": "\ud83d\udc9a",
+      "emoji": "💚",
       "image": "images/green.png",
       "spoken": "Green",
       "soundText": "This is green.",
       "prompt": "This is green.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Green"
     },
     {
       "id": "orange",
       "title": "Orange",
-      "emoji": "\ud83e\udde1",
+      "emoji": "🧡",
       "image": "images/orange.png",
       "spoken": "Orange",
       "soundText": "This is orange.",
       "prompt": "This is orange.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Orange"
     },
     {
       "id": "purple",
       "title": "Purple",
-      "emoji": "\ud83d\udc9c",
+      "emoji": "💜",
       "image": "images/purple.png",
       "spoken": "Purple",
       "soundText": "This is purple.",
       "prompt": "This is purple.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Purple"
     },
     {
       "id": "pink",
       "title": "Pink",
-      "emoji": "\ud83e\ude77",
+      "emoji": "🩷",
       "image": "images/pink.png",
       "spoken": "Pink",
       "soundText": "This is pink.",
       "prompt": "This is pink.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Pink"
     },
     {
       "id": "black",
       "title": "Black",
-      "emoji": "\ud83d\udda4",
+      "emoji": "🖤",
       "image": "images/black.png",
       "spoken": "Black",
       "soundText": "This is black.",
       "prompt": "This is black.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Black"
     },
     {
       "id": "white",
       "title": "White",
-      "emoji": "\ud83e\udd0d",
+      "emoji": "🤍",
       "image": "images/white.png",
       "spoken": "White",
       "soundText": "This is white.",
       "prompt": "This is white.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "White"
     },
     {
       "id": "brown",
       "title": "Brown",
-      "emoji": "\ud83e\udd0e",
+      "emoji": "🤎",
       "image": "images/brown.png",
       "spoken": "Brown",
       "soundText": "This is brown.",
       "prompt": "This is brown.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Brown"
     },
     {
       "id": "gray",
       "title": "Gray",
-      "emoji": "\ud83e\ude76",
+      "emoji": "🩶",
       "image": "images/gray.png",
       "spoken": "Gray",
       "soundText": "This is gray.",
       "prompt": "This is gray.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Gray"
     },
     {
       "id": "rainbow",
       "title": "Rainbow",
-      "emoji": "\ud83c\udf08",
+      "emoji": "🌈",
       "image": "images/rainbow.png",
       "spoken": "Rainbow",
       "soundText": "A rainbow has many colors!",
       "prompt": "A rainbow has many colors!",
-      "mode": "word"
+      "mode": "word",
+      "answer": "Rainbow"
     },
     {
       "id": "light_blue",
       "title": "Light Blue",
-      "emoji": "\ud83e\ude75",
+      "emoji": "🩵",
       "image": "images/light_blue.png",
       "spoken": "Light blue",
       "soundText": "This is light blue.",
       "prompt": "This is light blue.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Light blue"
     },
     {
       "id": "dark_blue",
       "title": "Dark Blue",
-      "emoji": "\ud83d\udd35",
+      "emoji": "🔵",
       "image": "images/dark_blue.png",
       "spoken": "Dark blue",
       "soundText": "This is dark blue.",
       "prompt": "This is dark blue.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Dark blue"
     },
     {
       "id": "teal",
       "title": "Teal",
-      "emoji": "\ud83d\udfe6",
+      "emoji": "🟦",
       "image": "images/teal.png",
       "spoken": "Teal",
       "soundText": "This is teal.",
       "prompt": "This is teal.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Teal"
     },
     {
       "id": "navy",
       "title": "Navy",
-      "emoji": "\ud83d\udd35",
+      "emoji": "🔵",
       "image": "images/navy.png",
       "spoken": "Navy",
       "soundText": "This is navy.",
       "prompt": "This is navy.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Navy"
     },
     {
       "id": "mint",
       "title": "Mint",
-      "emoji": "\ud83d\udfe9",
+      "emoji": "🟩",
       "image": "images/mint.png",
       "spoken": "Mint",
       "soundText": "This is mint.",
       "prompt": "This is mint.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Mint"
     },
     {
       "id": "lime",
       "title": "Lime",
-      "emoji": "\ud83d\udfe2",
+      "emoji": "🟢",
       "image": "images/lime.png",
       "spoken": "Lime",
       "soundText": "This is lime.",
       "prompt": "This is lime.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Lime"
     },
     {
       "id": "gold",
       "title": "Gold",
-      "emoji": "\ud83c\udfc6",
+      "emoji": "🏆",
       "image": "images/gold.png",
       "spoken": "Gold",
       "soundText": "This is gold.",
       "prompt": "This is gold.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Gold"
     },
     {
       "id": "silver",
       "title": "Silver",
-      "emoji": "\u2b50",
+      "emoji": "⭐",
       "image": "images/silver.png",
       "spoken": "Silver",
       "soundText": "This is silver.",
       "prompt": "This is silver.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Silver"
     },
     {
       "id": "tan",
       "title": "Tan",
-      "emoji": "\ud83d\udfeb",
+      "emoji": "🟫",
       "image": "images/tan.png",
       "spoken": "Tan",
       "soundText": "This is tan.",
       "prompt": "This is tan.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Tan"
     },
     {
       "id": "beige",
       "title": "Beige",
-      "emoji": "\ud83e\udd0e",
+      "emoji": "🤎",
       "image": "images/beige.png",
       "spoken": "Beige",
       "soundText": "This is beige.",
       "prompt": "This is beige.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Beige"
     },
     {
       "id": "maroon",
       "title": "Maroon",
-      "emoji": "\ud83d\udfe5",
+      "emoji": "🟥",
       "image": "images/maroon.png",
       "spoken": "Maroon",
       "soundText": "This is maroon.",
       "prompt": "This is maroon.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Maroon"
     },
     {
       "id": "lavender",
       "title": "Lavender",
-      "emoji": "\ud83d\udc9c",
+      "emoji": "💜",
       "image": "images/lavender.png",
       "spoken": "Lavender",
       "soundText": "This is lavender.",
       "prompt": "This is lavender.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Lavender"
     },
     {
       "id": "peach",
       "title": "Peach",
-      "emoji": "\ud83c\udf51",
+      "emoji": "🍑",
       "image": "images/peach.png",
       "spoken": "Peach",
       "soundText": "This is peach.",
       "prompt": "This is peach.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Peach"
     },
     {
       "id": "turquoise",
       "title": "Turquoise",
-      "emoji": "\ud83e\ude75",
+      "emoji": "🩵",
       "image": "images/turquoise.png",
       "spoken": "Turquoise",
       "soundText": "This is turquoise.",
       "prompt": "This is turquoise.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Turquoise"
     },
     {
       "id": "multicolor",
       "title": "Multicolor",
-      "emoji": "\ud83c\udf08",
+      "emoji": "🌈",
       "image": "images/multicolor.png",
       "spoken": "Multicolor",
       "soundText": "This is multicolor.",
       "prompt": "This is multicolor.",
-      "mode": "name_sound"
+      "mode": "name_sound",
+      "answer": "Multicolor"
     }
   ],
   "version": "0.2",
   "cardDefaults": {
     "fps": 8,
     "loop": true
-  }
+  },
+  "spokenTitle": "Colors!",
+  "question": "What color is this?",
+  "praise": [
+    "Good job!",
+    "Great work!",
+    "You got it!",
+    "Awesome!",
+    "Way to go!",
+    "Nice one!"
+  ],
+  "funVersion": "0.2.1"
 }
