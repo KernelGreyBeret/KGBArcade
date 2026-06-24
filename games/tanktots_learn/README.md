@@ -32,3 +32,13 @@ http://localhost:8000
 ## Deploy
 
 Upload the folder contents to GitHub Pages. Keep `decks/index.json` updated as new decks are added.
+
+
+## v0.2.1 Fun Layer
+
+This build adds toddler-energy runtime events without changing the deck-loading model:
+
+- Deck selection speaks the deck name, such as "Colors!"
+- Each card entrance asks a deck-aware question, such as "What color is this?"
+- The answer button celebrates with a richer phrase, caption, card pop, confetti, sparkles, sticker burst, and a short WebAudio chime.
+- Existing static decks remain compatible. Optional deck/card fields can improve the wording: `spokenTitle`, `question`, `praise`, `answer`, `object`, `answerText`, and `funText`.

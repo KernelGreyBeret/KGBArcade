@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const APP_VERSION = '0.2-production-refresh-2';
+  const APP_VERSION = '0.2.1-fun-layer';
   const $ = (id) => document.getElementById(id);
   const els = {
     deckPanel: $('deckPanel'), deckGrid: $('deckGrid'), deckToggle: $('deckToggle'),
@@ -8,7 +8,8 @@
     cardPanel: $('cardPanel'), learnCard: $('learnCard'), imageWrap: $('imageWrap'), cardImage: $('cardImage'), placeholder: $('placeholder'),
     cardTitle: $('cardTitle'), progressText: $('progressText'), progressFill: $('progressFill'),
     prevBtn: $('prevBtn'), nextBtn: $('nextBtn'), randomBtn: $('randomBtn'), hearBtn: $('hearBtn'),
-    soundToggle: $('soundToggle'), soundIcon: $('soundIcon'), toast: $('toast')
+    soundToggle: $('soundToggle'), soundIcon: $('soundIcon'), toast: $('toast'),
+    fxLayer: $('fxLayer'), questionBubble: $('questionBubble'), rewardSticker: $('rewardSticker'), rewardStickerImg: $('rewardStickerImg')
   };
 
   const state = {
@@ -27,7 +28,12 @@
     activeAudio: null,
     voice: null,
     lastCardKey: '',
-    toastTimer: null
+    toastTimer: null,
+    questionTimer: null,
+    questionDelayTimer: null,
+    ambientTimer: null,
+    funAudioCtx: null,
+    funAudioUnlocked: false
   };
 
   function safeJson(raw, fallback) {
@@ -71,6 +77,279 @@
     els.toast.classList.add('show');
     clearTimeout(state.toastTimer);
     state.toastTimer = setTimeout(() => els.toast.classList.remove('show'), ms);
+  }
+
+
+  const PRAISE = ['Good job!', 'Great work!', 'You got it!', 'Awesome!', 'Way to go!', 'Nice one!'];
+  const REWARD_STICKERS = [
+    'assets/ui/reward_great_job.png',
+    'assets/ui/reward_star.png',
+    'assets/ui/reward_check.png'
+  ];
+
+  function randItem(list) {
+    const arr = Array.isArray(list) && list.length ? list : PRAISE;
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function cleanWord(value) {
+    return String(value || '').trim();
+  }
+
+  function articleFor(word) {
+    return /^[aeiou]/i.test(cleanWord(word)) ? 'an' : 'a';
+  }
+
+  function activeLearningContext(card = currentCard()) {
+    if (!card) return state.deck || {};
+    if (state.mixedMode) {
+      return {
+        id: card.__deckId,
+        title: card.__deckTitle,
+        spokenTitle: card.__deckSpokenTitle,
+        question: card.__deckQuestion,
+        praise: card.__deckPraise,
+        answerTemplate: card.__deckAnswerTemplate
+      };
+    }
+    return state.deck || {};
+  }
+
+  function guessQuestionFromDeck(deck, card = currentCard()) {
+    const title = String(deck?.title || card?.__deckTitle || '').toLowerCase();
+    if (title.includes('color')) return 'What color is this?';
+    if (title.includes('shape')) return 'What shape is this?';
+    if (title.includes('animal')) return 'What animal is this?';
+    if (title.includes('vehicle')) return 'What vehicle is this?';
+    if (title.includes('action')) return 'What are they doing?';
+    return 'What is this?';
+  }
+
+  function getCardAnswer(card) {
+    return cleanWord(card?.answer || card?.spoken || card?.title || 'That');
+  }
+
+  function getCardObject(card) {
+    return cleanWord(card?.object || card?.thing || card?.item || card?.subject || '');
+  }
+
+  function isBoringLegacyText(text) {
+    return /^this is\s+(a\s+|an\s+)?[\w\s-]+\.?$/i.test(cleanWord(text));
+  }
+
+  function buildAnswerPhrase(card, deck = activeLearningContext(card)) {
+    if (!card) return '';
+    if (card.answerText) return card.answerText;
+    if (card.funText) return card.funText;
+    if (card.soundText && !isBoringLegacyText(card.soundText)) return card.soundText;
+
+    const answer = getCardAnswer(card);
+    const object = getCardObject(card);
+    const praise = randItem(deck?.praise || PRAISE);
+    const template = deck?.answerTemplate;
+    if (template) {
+      return template
+        .replaceAll('{answer}', answer)
+        .replaceAll('{object}', object || 'picture')
+        .replaceAll('{article}', articleFor(answer))
+        .replaceAll('{praise}', praise);
+    }
+
+    const title = String(deck?.title || card.__deckTitle || '').toLowerCase();
+    if (object) return `${answer}! The ${object} is ${answer}. ${praise}`;
+    if (title.includes('shape')) return `${answer}! That is ${articleFor(answer)} ${answer}. ${praise}`;
+    if (title.includes('color')) return `${answer}! The color is ${answer}. ${praise}`;
+    return `${answer}! That is ${articleFor(answer)} ${answer}. ${praise}`;
+  }
+
+  function showQuestion(text, ms = 2200) {
+    if (!els.questionBubble || !text) return;
+    clearTimeout(state.questionTimer);
+    els.questionBubble.textContent = text;
+    els.questionBubble.classList.add('show');
+    state.questionTimer = setTimeout(() => els.questionBubble.classList.remove('show'), ms);
+  }
+
+  function showCaption(text, ms = 2900) {
+    setToast(text, ms);
+  }
+
+  function clearQuestionDelay() {
+    clearTimeout(state.questionDelayTimer);
+    state.questionDelayTimer = null;
+  }
+
+  function scheduleQuestion(delay = 650) {
+    clearQuestionDelay();
+    state.questionDelayTimer = setTimeout(() => playQuestionForCard(), delay);
+  }
+
+  function popCard(className = 'card-enter') {
+    if (!els.learnCard) return;
+    els.learnCard.classList.remove('pop', 'bounce', 'card-enter', 'answer-pop');
+    void els.learnCard.offsetWidth;
+    els.learnCard.classList.add(className);
+  }
+
+  function unlockFunAudio() {
+    try {
+      state.funAudioCtx = state.funAudioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (state.funAudioCtx.state === 'running') {
+        state.funAudioUnlocked = true;
+        return;
+      }
+      const resumeResult = state.funAudioCtx.resume?.();
+      if (resumeResult && typeof resumeResult.then === 'function') {
+        resumeResult.then(() => { state.funAudioUnlocked = state.funAudioCtx?.state === 'running'; }).catch(() => {});
+      }
+    } catch (_) {}
+  }
+
+  function tone(freq, dur = 0.12, type = 'sine', vol = 0.15) {
+    if (!state.soundOn || !state.funAudioUnlocked) return;
+    const ac = state.funAudioCtx;
+    if (!ac || ac.state !== 'running') return;
+    const now = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, now);
+    gain.gain.setValueAtTime(0.0001, now);
+    gain.gain.linearRampToValueAtTime(vol, now + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    osc.start(now);
+    osc.stop(now + dur + 0.03);
+  }
+
+  function playUiChime() {
+    tone(523, 0.10, 'triangle', 0.11);
+    setTimeout(() => tone(659, 0.12, 'triangle', 0.11), 85);
+  }
+
+  function playRewardSound() {
+    tone(660, 0.08, 'triangle', 0.13);
+    setTimeout(() => tone(880, 0.09, 'triangle', 0.13), 70);
+    setTimeout(() => tone(1175, 0.13, 'triangle', 0.12), 140);
+  }
+
+  function playCardWhoosh() {
+    tone(330, 0.06, 'sine', 0.06);
+  }
+
+  function speakLine(text, opts = {}) {
+    if (!state.soundOn || !text) return;
+    if (opts.cancel !== false) stopSpeechAndAudio();
+    try {
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = opts.rate ?? 0.86;
+      u.pitch = opts.pitch ?? 0.84;
+      u.volume = opts.volume ?? 1;
+      state.voice = state.voice || chooseVoice();
+      if (state.voice) u.voice = state.voice;
+      speechSynthesis.speak(u);
+    } catch (_) {}
+  }
+
+  function playQuestionForCard() {
+    const card = currentCard();
+    if (!card) return;
+    const deck = activeLearningContext(card);
+    const question = deck?.question || guessQuestionFromDeck(deck, card);
+    showQuestion(question, 2300);
+    speakLine(question, { rate: 0.90, pitch: 0.86 });
+  }
+
+  function announceDeck(deck) {
+    if (!deck) return;
+    const text = deck?.spokenTitle || `${deck?.title || 'Deck'}!`;
+    showQuestion(text, 1800);
+    playUiChime();
+    speakLine(text, { rate: 0.88, pitch: 0.84 });
+  }
+
+  function burstConfetti() {
+    const colors = ['#ff7cc8', '#ffd84d', '#7bdcff', '#8fe847', '#ff9d3f', '#b197fc'];
+    const count = window.matchMedia('(max-width:820px)').matches ? 22 : 30;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight * 0.50;
+    for (let i = 0; i < count; i++) {
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.background = randItem(colors);
+      piece.style.left = `${cx}px`;
+      piece.style.top = `${cy}px`;
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 90 + Math.random() * 180;
+      piece.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      piece.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+      document.body.appendChild(piece);
+      setTimeout(() => piece.remove(), 950);
+    }
+  }
+
+  function burstSparks() {
+    const count = 12;
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight * 0.40;
+    for (let i = 0; i < count; i++) {
+      const spark = document.createElement('div');
+      spark.className = 'fx-spark';
+      spark.style.color = randItem(['#ff7cc8', '#ffd84d', '#7bdcff', '#8fe847']);
+      spark.style.background = 'currentColor';
+      spark.style.left = `${cx}px`;
+      spark.style.top = `${cy}px`;
+      const angle = Math.random() * Math.PI * 2;
+      const distance = 60 + Math.random() * 120;
+      spark.style.setProperty('--dx', `${Math.cos(angle) * distance}px`);
+      spark.style.setProperty('--dy', `${Math.sin(angle) * distance}px`);
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 760);
+    }
+  }
+
+  function flashRewardSticker() {
+    if (!els.rewardSticker) return;
+    if (els.rewardStickerImg) els.rewardStickerImg.src = randItem(REWARD_STICKERS);
+    els.rewardSticker.classList.remove('show');
+    void els.rewardSticker.offsetWidth;
+    els.rewardSticker.classList.add('show');
+  }
+
+  function celebrateCard(card, deck = activeLearningContext(card)) {
+    const phrase = buildAnswerPhrase(card, deck);
+    clearQuestionDelay();
+    showCaption(phrase, 3000);
+    popCard('answer-pop');
+    els.cardPanel?.classList.remove('celebrate');
+    void els.cardPanel?.offsetWidth;
+    els.cardPanel?.classList.add('celebrate');
+    burstConfetti();
+    burstSparks();
+    flashRewardSticker();
+    playRewardSound();
+    return phrase;
+  }
+
+  function startAmbientParticles() {
+    if (!els.fxLayer || state.ambientTimer) return;
+    state.ambientTimer = setInterval(() => {
+      if (document.hidden) return;
+      const maxDots = 24;
+      if (els.fxLayer.children.length > maxDots) els.fxLayer.firstElementChild?.remove();
+      const dot = document.createElement('div');
+      dot.className = 'fx-dot';
+      const size = 8 + Math.random() * 18;
+      dot.style.width = `${size}px`;
+      dot.style.height = `${size}px`;
+      dot.style.left = `${Math.random() * 100}%`;
+      dot.style.bottom = `-${size + 10}px`;
+      dot.style.animationDuration = `${6 + Math.random() * 7}s`;
+      dot.style.opacity = `${0.22 + Math.random() * 0.42}`;
+      els.fxLayer.appendChild(dot);
+      setTimeout(() => dot.remove(), 14000);
+    }, 720);
   }
 
   function setSoundIcon() {
@@ -181,7 +460,7 @@
     if (!card) return;
 
     state.lastCardKey = `${state.deck.id}:${card.__deckId || ''}:${card.id || state.index}:${state.index}`;
-    els.learnCard.classList.remove('pop'); void els.learnCard.offsetWidth; els.learnCard.classList.add('pop');
+    popCard('card-enter');
     els.cardTitle.textContent = card.title || 'TankTots';
 
     const deckLabel = state.mixedMode ? 'Mixed Decks' : (state.deck.title || 'Deck');
@@ -206,6 +485,8 @@
       els.placeholder.textContent = '?';
     }
     preloadNeighbors();
+    scheduleQuestion(650);
+    playCardWhoosh();
   }
 
   function renderDeckGrid() {
@@ -275,13 +556,18 @@
       ...card,
       __deckId: meta.id,
       __deckTitle: deck.title || meta.title || meta.id,
+      __deckSpokenTitle: deck.spokenTitle || `${deck.title || meta.title || meta.id}!`,
+      __deckQuestion: deck.question || '',
+      __deckPraise: deck.praise || PRAISE,
+      __deckAnswerTemplate: deck.answerTemplate || '',
       __meta: meta,
       __deckDefaults: deck.cardDefaults || {},
       __sourceIndex: i
     }));
   }
 
-  async function loadDeck(deckId) {
+  async function loadDeck(deckId, opts = {}) {
+    const announce = opts.announce !== false;
     const meta = (state.registry?.decks || []).find(d => d.id === deckId) || state.registry?.decks?.[0];
     if (!meta) throw new Error('No decks found.');
     state.mixedMode = false;
@@ -294,6 +580,10 @@
     state.index = Math.max(0, Math.min(saved, (state.deck.cards?.length || 1) - 1));
     localStorage.setItem('ttl_last_deck', meta.id);
     await renderCard();
+    if (announce) {
+      announceDeck(state.deck);
+      scheduleQuestion(1350);
+    }
     els.deckPanel.classList.remove('open');
   }
 
@@ -306,7 +596,8 @@
     return out;
   }
 
-  async function loadMixedDeck() {
+  async function loadMixedDeck(opts = {}) {
+    const announce = opts.announce !== false;
     const metas = (state.registry?.decks || []).filter(meta => state.selectedDeckIds.includes(meta.id));
     if (!metas.length) return setToast('Pick at least one deck.');
     const parts = [];
@@ -322,6 +613,10 @@
     state.index = 0;
     updateActiveDeckUI();
     await renderCard();
+    if (announce) {
+      announceDeck({ title: 'Mixed Decks', spokenTitle: 'Mixed decks!' });
+      scheduleQuestion(1350);
+    }
     els.deckPanel.classList.remove('open');
     setToast('Mixed decks shuffled!', 1600);
   }
@@ -386,11 +681,9 @@
   async function speakCard() {
     const card = currentCard();
     if (!card) return;
+    const deck = activeLearningContext(card);
     stopSpeechAndAudio();
-    els.learnCard.classList.remove('bounce'); void els.learnCard.offsetWidth; els.learnCard.classList.add('bounce');
-
-    const text = spokenText(card);
-    if (text) setToast(text, 2800);
+    const phrase = celebrateCard(card, deck);
 
     const audioPath = card.audio ? resolveDeckUrl(card.audio, card.__meta) : '';
     if (state.soundOn && audioPath) {
@@ -402,17 +695,9 @@
       } catch (_) { state.activeAudio = null; }
     }
 
-    if (!state.soundOn || !text) return;
-    try {
-      const u = new SpeechSynthesisUtterance(text);
-      u.rate = 0.84;
-      u.pitch = 0.82;
-      u.volume = 1;
-      state.voice = state.voice || chooseVoice();
-      if (state.voice) u.voice = state.voice;
-      speechSynthesis.speak(u);
-    } catch (_) {}
+    speakLine(phrase, { rate: 0.84, pitch: 0.82, cancel: false });
   }
+
 
   async function init() {
     setSoundIcon();
@@ -420,6 +705,7 @@
       if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
         navigator.serviceWorker.register('./service-worker.js').then(reg => reg.update?.()).catch(() => {});
       }
+      startAmbientParticles();
       state.registry = await fetchJson('decks/index.json', true);
       if (!Array.isArray(state.selectedDeckIds) || !state.selectedDeckIds.length) {
         state.selectedDeckIds = [state.registry.defaultDeck || state.registry.decks?.[0]?.id].filter(Boolean);
@@ -427,8 +713,8 @@
       renderDeckGrid();
       state.voice = chooseVoice();
       const defaultDeck = localStorage.getItem('ttl_last_deck') || state.registry.defaultDeck || state.registry.decks?.[0]?.id;
-      if (state.mixedMode && state.selectedDeckIds.length > 1) await loadMixedDeck();
-      else await loadDeck(defaultDeck);
+      if (state.mixedMode && state.selectedDeckIds.length > 1) await loadMixedDeck({ announce: false });
+      else await loadDeck(defaultDeck, { announce: false });
 
       for (const meta of state.registry.decks || []) {
         if (state.decks.has(meta.id)) continue;
@@ -449,6 +735,10 @@
       console.error(err);
     }
   }
+
+  ['pointerdown', 'touchstart', 'keydown'].forEach(eventName => {
+    document.addEventListener(eventName, unlockFunAudio, { once: true, passive: true });
+  });
 
   els.deckToggle.addEventListener('click', () => els.deckPanel.classList.toggle('open'));
   els.mixSelectedBtn.addEventListener('click', loadMixedDeck);

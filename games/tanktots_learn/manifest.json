@@ -1,7 +1,7 @@
 {
   "name": "TankTots Learn",
   "short_name": "TankTots",
-  "description": "Toddler-friendly learning decks for TankTots.",
+  "description": "TankTots Learn \u2014 toddler-friendly learning decks with animated cards, questions, rewards, and PWA support.",
   "id": "./",
   "start_url": "./index.html",
   "scope": "./",
@@ -33,5 +33,6 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "version": "0.2.1"
 }

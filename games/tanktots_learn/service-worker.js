@@ -1,11 +1,11 @@
-const CACHE_NAME = 'tanktots-learn-v0-2-prod-refresh-2';
+const CACHE_NAME = 'tanktots-learn-v0-2-1-fun-layer';
 const CORE_ASSETS = [
   './', './index.html', './styles.css', './game.js', './manifest.json',
   './assets/logos/tanktots_learn_logo.png', './assets/logos/tanktots_learn_logo_small.png',
   './assets/pwa/icon_192.png', './assets/pwa/icon_512.png', './assets/pwa/icon_512_maskable.png',
   './assets/ui/btn_back.png', './assets/ui/btn_deck_select.png', './assets/ui/btn_mute.png',
   './assets/ui/btn_next.png', './assets/ui/btn_play.png', './assets/ui/btn_random.png', './assets/ui/btn_sound.png',
-  './assets/ui/cadet_helper_01.png'
+  './assets/ui/cadet_helper_01.png', './assets/ui/reward_great_job.png', './assets/ui/reward_star.png', './assets/ui/reward_check.png'
 ];
 
 self.addEventListener('install', event => {
