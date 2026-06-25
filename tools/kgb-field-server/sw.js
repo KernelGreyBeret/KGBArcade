@@ -1,4 +1,4 @@
-const CACHE='kgb-field-server-shell-v1';
+const CACHE='kgb-field-server-shell-v2';
 const DB_NAME='kgb-field-server-v1';
 const STORE='files';
 const SHELL=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];

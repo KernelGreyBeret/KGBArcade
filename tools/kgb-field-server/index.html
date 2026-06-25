@@ -97,19 +97,43 @@ function fmtBytes(n){ if(n<1024) return n+' B'; if(n<1048576) return (n/1024).to
 function cleanPath(p){ return (p||'').replace(/\\/g,'/').replace(/^\/+/, '').replace(/^\.\//,''); }
 function mimeFor(path){ const ext=(path.split('.').pop()||'').toLowerCase(); return ({html:'text/html;charset=utf-8',htm:'text/html;charset=utf-8',js:'text/javascript;charset=utf-8',mjs:'text/javascript;charset=utf-8',css:'text/css;charset=utf-8',json:'application/json;charset=utf-8',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',svg:'image/svg+xml;charset=utf-8',ico:'image/x-icon',mp3:'audio/mpeg',wav:'audio/wav',ogg:'audio/ogg',mp4:'video/mp4',webmanifest:'application/manifest+json',txt:'text/plain;charset=utf-8',wasm:'application/wasm'})[ext] || 'application/octet-stream'; }
 function openDB(){ return new Promise((resolve,reject)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>{ const db=r.result; if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE,{keyPath:'path'}); if(!db.objectStoreNames.contains(META)) db.createObjectStore(META,{keyPath:'key'}); }; r.onsuccess=()=>resolve(r.result); r.onerror=()=>reject(r.error); }); }
-async function tx(mode, fn){ const db=await openDB(); return new Promise((resolve,reject)=>{ const t=db.transaction([STORE,META],mode); const s=t.objectStore(STORE), m=t.objectStore(META); let out; Promise.resolve(fn(s,m)).then(v=>out=v).catch(reject); t.oncomplete=()=>resolve(out); t.onerror=()=>reject(t.error); }); }
 function req(r){ return new Promise((res,rej)=>{ r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error); }); }
-async function clearStore(){ await tx('readwrite',(s,m)=>{s.clear();m.clear();}); files=[]; totalBytes=0; currentEntry=''; render(); }
+async function withStores(mode, fn){
+  const db=await openDB();
+  return new Promise((resolve,reject)=>{
+    let out;
+    const t=db.transaction([STORE,META],mode);
+    t.oncomplete=()=>{ db.close(); resolve(out); };
+    t.onerror=()=>{ db.close(); reject(t.error || new Error('IndexedDB transaction failed.')); };
+    t.onabort=()=>{ db.close(); reject(t.error || new Error('IndexedDB transaction aborted.')); };
+    try{ out = fn(t.objectStore(STORE), t.objectStore(META)); }
+    catch(e){ try{ t.abort(); }catch(_){} reject(e); }
+  });
+}
+async function clearStore(){
+  await withStores('readwrite',(s,m)=>{ s.clear(); m.clear(); });
+  files=[]; totalBytes=0; currentEntry=''; render();
+}
 async function saveFiles(items){
-  await clearStore(); totalBytes=items.reduce((a,f)=>a+f.blob.size,0); files=items.map(f=>({path:f.path,size:f.blob.size,type:f.type||mimeFor(f.path)}));
-  let done=0; showProgress(true,0);
-  await tx('readwrite', async (s,m)=>{
-    for(const f of items){ s.put({path:f.path, blob:f.blob, size:f.blob.size, type:f.type||mimeFor(f.path), updated:Date.now()}); done++; showProgress(true,done/items.length); await new Promise(r=>setTimeout(r,0)); }
-    m.put({key:'manifest', files, totalBytes, saved:Date.now()});
+  await clearStore();
+  totalBytes=items.reduce((a,f)=>a+f.blob.size,0);
+  files=items.map(f=>({path:f.path,size:f.blob.size,type:f.type||mimeFor(f.path)}));
+  showProgress(true,.15);
+  await withStores('readwrite',(s,m)=>{
+    const now=Date.now();
+    for(const f of items){
+      s.put({path:f.path, blob:f.blob, size:f.blob.size, type:f.type||mimeFor(f.path), updated:now});
+    }
+    m.put({key:'manifest', files, totalBytes, saved:now});
   });
   chooseEntry(); render(); showProgress(false,1);
 }
-async function loadMeta(){ try{ const meta=await tx('readonly',(s,m)=>req(m.get('manifest'))); if(meta){ files=meta.files||[]; totalBytes=meta.totalBytes||0; chooseEntry(); render(); } }catch(e){ console.warn(e); } }
+async function loadMeta(){
+  try{
+    const meta=await withStores('readonly',(s,m)=>req(m.get('manifest')));
+    if(meta){ files=meta.files||[]; totalBytes=meta.totalBytes||0; chooseEntry(); render(); }
+  }catch(e){ console.warn(e); }
+}
 function chooseEntry(){ const names=files.map(f=>f.path); currentEntry = names.find(p=>/^index\.html?$/i.test(p.split('/').pop()) && p.split('/').length===1) || names.find(p=>/\/index\.html?$/i.test(p)) || names.find(p=>/\.html?$/i.test(p)) || names[0] || ''; }
 function commonRoot(paths){ if(!paths.length) return ''; const split=paths.map(p=>p.split('/')); let out=[]; for(let i=0;;i++){ const v=split[0][i]; if(!v) break; if(split.every(a=>a[i]===v)) out.push(v); else break; } return out.length?out.join('/')+'/':''; }
 function stripCommonRoot(items){ const root=commonRoot(items.map(x=>x.path)); if(root && !items.some(x=>x.path==='index.html') && items.some(x=>x.path.startsWith(root) && /index\.html?$/i.test(x.path.slice(root.length)))){ return items.map(x=>({...x,path:x.path.slice(root.length)})).filter(x=>x.path); } return items; }

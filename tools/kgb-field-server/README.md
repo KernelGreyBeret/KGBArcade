@@ -1,45 +1,43 @@
-# KGB Field Server
+# KGB Field Server PWA
 
-A tiny PWA for testing local KGB Arcade HTML game builds on a phone before publishing them.
+Tiny phone-side test launcher for KGB Arcade builds.
 
-## How to use
+## What changed in v1.0.1
 
-1. Put this folder somewhere under your site, for example: `/tools/field-server/`.
-2. Visit that URL in Chrome on Android.
-3. Use Chrome menu → Add to Home screen / Install app.
-4. Open the installed app.
-5. Load a game ZIP from Files.
-6. Pick the launch HTML file, usually `index.html`, and press Launch.
+Fixes Android/Chrome ZIP loading error:
 
-## Best ZIP shape
+> Failed to execute 'put' on 'IDBObjectStore': The transaction is not active.
 
-Good:
+The file save routine now queues IndexedDB writes synchronously inside one active transaction instead of yielding during the transaction.
 
-```text
-my-game.zip
-  index.html
-  assets/player.png
-  assets/sfx.wav
-```
+## Install
 
-Also okay; the app strips the common top folder:
+Upload this folder somewhere under your site, for example:
 
 ```text
-my-game.zip
-  my-game/index.html
-  my-game/assets/player.png
+/tools/field-server/
 ```
 
-## What it does
-
-The app stores the ZIP contents in IndexedDB. Its service worker serves files back under:
+Then open:
 
 ```text
-/__game__/index.html
+https://kgbarcade.com/tools/field-server/
 ```
 
-That makes relative image, CSS, JS, audio, JSON, and fetch paths behave like a simple web server.
+In Chrome on Android, use:
 
-## Known limits
+```text
+⋮ menu → Add to Home screen / Install app
+```
 
-Root-absolute paths like `/assets/foo.png` may fail if the PWA is hosted in a subfolder. Prefer relative paths like `assets/foo.png` for portable test builds.
+## Use
+
+1. Zip a game folder.
+2. Open KGB Field Server.
+3. Tap **Load Game ZIP**.
+4. Pick the launch file, usually `index.html`.
+5. Tap **Launch**.
+
+## Notes
+
+This is not a real localhost daemon. It is a PWA virtual server powered by a service worker and IndexedDB. Relative paths are the target. Root paths like `/assets/file.png` may need to become relative paths like `assets/file.png`.
