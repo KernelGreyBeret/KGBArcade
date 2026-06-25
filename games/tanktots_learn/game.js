@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const APP_VERSION = '0.2.1-fun-layer';
+  const APP_VERSION = '0.2.1-fun-layer-question-variants';
   const $ = (id) => document.getElementById(id);
   const els = {
     deckPanel: $('deckPanel'), deckGrid: $('deckGrid'), deckToggle: $('deckToggle'),
@@ -108,6 +108,7 @@
         title: card.__deckTitle,
         spokenTitle: card.__deckSpokenTitle,
         question: card.__deckQuestion,
+        questionVariants: card.__deckQuestionVariants,
         praise: card.__deckPraise,
         answerTemplate: card.__deckAnswerTemplate
       };
@@ -252,11 +253,27 @@
     } catch (_) {}
   }
 
+  function pickQuestionForCard(card, deck = activeLearningContext(card)) {
+    const options = [];
+
+    if (Array.isArray(card?.questionVariants)) options.push(...card.questionVariants);
+    if (card?.question) options.push(card.question);
+    if (Array.isArray(deck?.questionVariants)) options.push(...deck.questionVariants);
+    if (deck?.question) options.push(deck.question);
+
+    const clean = options
+      .map(q => String(q || '').trim())
+      .filter(Boolean);
+
+    if (!clean.length) clean.push(guessQuestionFromDeck(deck, card) || 'What is this?');
+    return randItem(clean);
+  }
+
   function playQuestionForCard() {
     const card = currentCard();
     if (!card) return;
     const deck = activeLearningContext(card);
-    const question = deck?.question || guessQuestionFromDeck(deck, card);
+    const question = pickQuestionForCard(card, deck);
     showQuestion(question, 2300);
     speakLine(question, { rate: 0.90, pitch: 0.86 });
   }
@@ -558,6 +575,7 @@
       __deckTitle: deck.title || meta.title || meta.id,
       __deckSpokenTitle: deck.spokenTitle || `${deck.title || meta.title || meta.id}!`,
       __deckQuestion: deck.question || '',
+      __deckQuestionVariants: deck.questionVariants || [],
       __deckPraise: deck.praise || PRAISE,
       __deckAnswerTemplate: deck.answerTemplate || '',
       __meta: meta,
