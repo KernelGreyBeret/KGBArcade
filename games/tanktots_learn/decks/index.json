@@ -1,21 +1,33 @@
 {
-  "defaultDeck": "shapes",
+  "defaultDeck": "tools",
   "decks": [
     {
       "id": "colors",
       "title": "Colors",
-      "subtitle": "Bright colors, color words, and rainbow fun",
+      "subtitle": "Learn bright colors",
       "path": "decks/colors/deck.json",
-      "cover": "decks/colors/images/cover.png",
-      "age": "2+"
+      "cover": "decks/colors/images/cover.png"
     },
     {
       "id": "shapes",
       "title": "Shapes",
-      "subtitle": "Simple shapes, 3D shapes, and playful stickers",
+      "subtitle": "Learn simple shapes",
       "path": "decks/shapes/deck.json",
-      "cover": "decks/shapes/images/cover.png",
-      "age": "2+"
+      "cover": "decks/shapes/images/cover.png"
+    },
+    {
+      "id": "alphabet",
+      "title": "Alphabet",
+      "subtitle": "Letters, words, and sounds",
+      "path": "decks/alphabet/deck.json",
+      "cover": "decks/alphabet/images/cover.png"
+    },
+    {
+      "id": "tools",
+      "title": "Tools",
+      "subtitle": "Learn helpful tools",
+      "path": "decks/tools/deck.json",
+      "cover": "decks/tools/images/cover.png"
     }
   ],
   "version": "0.2.1-fun-layer",
