@@ -1,24 +1,67 @@
-const CACHE='kgb-field-server-shell-v2';
-const DB_NAME='kgb-field-server-v1';
-const STORE='files';
-const SHELL=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
-self.addEventListener('install',e=>{ e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())); });
-self.addEventListener('activate',e=>{ e.waitUntil(self.clients.claim()); });
-function openDB(){ return new Promise((resolve,reject)=>{ const r=indexedDB.open(DB_NAME,1); r.onupgradeneeded=()=>{ const db=r.result; if(!db.objectStoreNames.contains(STORE)) db.createObjectStore(STORE,{keyPath:'path'}); if(!db.objectStoreNames.contains('meta')) db.createObjectStore('meta',{keyPath:'key'}); }; r.onsuccess=()=>resolve(r.result); r.onerror=()=>reject(r.error); }); }
-function getFile(path){ return openDB().then(db=>new Promise((res,rej)=>{ const tx=db.transaction(STORE,'readonly'); const rq=tx.objectStore(STORE).get(path); rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error); })); }
-function fallbackIndex(path){ if(!path || path.endsWith('/')) return path+'index.html'; return path; }
-self.addEventListener('fetch',e=>{
-  const url=new URL(e.request.url); const scope=new URL(self.registration.scope); if(url.origin!==scope.origin) return;
-  const scopePath=scope.pathname.endsWith('/')?scope.pathname:scope.pathname+'/';
-  if(url.pathname.startsWith(scopePath+'__game__/')){
-    e.respondWith((async()=>{
-      let rel=decodeURIComponent(url.pathname.slice((scopePath+'__game__/').length)); rel=rel.replace(/^\/+/, ''); rel=fallbackIndex(rel);
-      let rec=await getFile(rel);
-      if(!rec && rel.endsWith('/index.html')) rec=await getFile(rel.slice(0,-10));
-      if(!rec && !/\.html?$/i.test(rel)) rec=await getFile(rel.replace(/\/?$/,'')+'/index.html');
-      if(!rec) return new Response(`KGB Field Server: file not found: ${rel}`,{status:404,headers:{'content-type':'text/plain;charset=utf-8'}});
-      return new Response(rec.blob,{status:200,headers:{'content-type':rec.type||'application/octet-stream','cache-control':'no-store'}});
-    })()); return;
+const CACHE = 'kgb-field-server-shell-v102';
+const SHELL = ['./', './index.html', './app.js', './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png'];
+const DB_NAME = 'kgb-field-server-v2';
+const STORE = 'files';
+const VIRTUAL = '/__game__/';
+
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', event => {
+  event.waitUntil(Promise.all([
+    caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))),
+    self.clients.claim()
+  ]));
+});
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onupgradeneeded = () => {
+      if (!request.result.objectStoreNames.contains(STORE)) request.result.createObjectStore(STORE, { keyPath: 'path' });
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+async function getFile(path) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(STORE, 'readonly');
+    const request = tx.objectStore(STORE).get(path);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+    tx.oncomplete = () => db.close();
+    tx.onabort = () => { db.close(); reject(tx.error); };
+  });
+}
+
+function cleanPath(value) {
+  return value.split('?')[0].split('#')[0].replace(/^\/+/, '').replace(/\\/g, '/');
+}
+
+self.addEventListener('fetch', event => {
+  const url = new URL(event.request.url);
+  const marker = url.pathname.indexOf(VIRTUAL);
+  if (url.origin === location.origin && marker !== -1) {
+    event.respondWith((async () => {
+      let path = cleanPath(decodeURIComponent(url.pathname.slice(marker + VIRTUAL.length)));
+      if (!path || path.endsWith('/')) path += 'index.html';
+      const record = await getFile(path);
+      if (!record) return new Response(`File not found: ${path}`, { status: 404, headers: { 'Content-Type': 'text/plain' } });
+      return new Response(record.bytes, {
+        status: 200,
+        headers: {
+          'Content-Type': record.type || 'application/octet-stream',
+          'Cache-Control': 'no-store'
+        }
+      });
+    })());
+    return;
   }
-  e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('./index.html'))));
+  if (event.request.method === 'GET') {
+    event.respondWith(fetch(event.request).catch(() => caches.match(event.request).then(r => r || caches.match('./index.html'))));
+  }
 });

@@ -1,15 +1,15 @@
 {
   "name": "KGB Field Server",
   "short_name": "Field Server",
-  "description": "Installable local test launcher for KGB Arcade HTML games.",
-  "start_url": "./index.html",
+  "description": "Load and test local HTML game packages on your phone.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#071018",
-  "theme_color": "#071018",
+  "background_color": "#07100d",
+  "theme_color": "#07100d",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
