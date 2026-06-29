@@ -252,6 +252,34 @@
     box-shadow:0 8px 24px rgba(0,0,0,0.35);
   }
 
+
+  .hero-actions {
+    margin-top:20px;
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .hero-vault-btn {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 20px;
+    border-radius:12px;
+    border:1px solid rgba(75,213,255,0.62);
+    background:linear-gradient(180deg, rgba(75,213,255,0.22), rgba(189,151,247,0.14));
+    color:#e7f4ff;
+    font-weight:900;
+    letter-spacing:.04em;
+    text-decoration:none;
+    text-transform:uppercase;
+    box-shadow:0 0 18px rgba(75,213,255,0.28), inset 0 0 18px rgba(0,0,0,0.32);
+  }
+  .hero-vault-btn:hover {
+    transform:translateY(-1px);
+    box-shadow:0 0 26px rgba(75,213,255,0.45), inset 0 0 18px rgba(0,0,0,0.32);
+  }
+
   /* --- Sections --- */
   .section {
     padding:50px 24px;
@@ -350,6 +378,92 @@
   .game-summary, .nav-link {
     color: #e7f4ff;
     text-decoration: none;
+  }
+
+  .vault-block {
+    margin-top:42px;
+  }
+  .vault-heading {
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:12px;
+    flex-wrap:wrap;
+    margin:34px 0 8px;
+    padding:14px 0 10px;
+    border-bottom:1px solid rgba(255,255,255,0.10);
+  }
+  .vault-heading h3 {
+    margin:0;
+    font-size:clamp(24px,4vw,34px);
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:#4bd5ff;
+    text-shadow:0 0 18px rgba(75,213,255,0.45);
+  }
+  .vault-heading span {
+    color:#bd97f7;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .vault-copy {
+    opacity:.84;
+    font-size:16px;
+    line-height:1.55;
+    max-width:860px;
+    margin:0 0 18px;
+  }
+  .game-card img {
+    width:100%;
+    border-radius:10px;
+    display:block;
+    margin-top:10px;
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .game-card.disabled-card {
+    opacity:.88;
+  }
+  .game-card.disabled-card:hover {
+    transform:none;
+    box-shadow:0 0 22px rgba(0,0,0,0.4);
+  }
+  .dead-link {
+    cursor:default;
+  }
+  .placeholder-banner {
+    height:112px;
+    margin-top:10px;
+    border-radius:10px;
+    border:1px solid rgba(75,213,255,0.18);
+    background:
+      radial-gradient(circle at 20% 25%, rgba(75,213,255,0.22), transparent 32%),
+      radial-gradient(circle at 80% 70%, rgba(189,151,247,0.20), transparent 32%),
+      linear-gradient(135deg, rgba(255,61,90,0.10), rgba(75,213,255,0.10)),
+      rgba(0,0,0,0.38);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#cfe9ff;
+    font-weight:900;
+    letter-spacing:.14em;
+    text-align:center;
+    text-transform:uppercase;
+    text-shadow:0 0 12px rgba(75,213,255,0.35);
+  }
+  .vault-chip {
+    display:inline-flex;
+    margin:0 0 10px;
+    padding:6px 10px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.12);
+    font-size:12px;
+    font-weight:900;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+    color:#a8f5ff;
+    background:rgba(0,0,0,0.24);
   }
   footer {
     text-align:center;
@@ -502,7 +616,7 @@
     <div class="wrap launch-inner">
       <strong>🚨 NEW GAME LIVE:</strong>
       <span>Tommy the Tank — Asymmetric Mayhem has deployed to the Arsenal.</span>
-      <a href="#arsenal">Play Now →</a>
+      <a href="/games/ tommy-the-tank/index.html">Play Now →</a>
     </div>
   </section>
 </nav>
@@ -526,6 +640,10 @@
         - Operator-built precision.<br>
         - Zero ads. Zero friction. All fun.<br><br>
         Enlist to get early drops, beta invites, and operator-only intel.
+      </div>
+
+      <div class="hero-actions">
+        <a class="hero-vault-btn" href="#arsenal">Browse the Game Vault →</a>
       </div>
 
       <!-- NOTIFY FORM -->
@@ -561,11 +679,11 @@
     <p>Every game is engineered for asymmetric fun: fast loads, smooth controls, crisp feedback, and that old-school
     <em>"one more try"</em> loop that hits just right.</p>
 
-    <p>The arcade is divided into three worlds:</p>
+    <p>The arcade is organized into three vault sections:</p>
 
-    <p><strong>MiniMission™</strong> — serious fun in small doses. Precision micro-games built for timing and mastery.<br>
-    <strong>8BitOps™</strong> — built from bits, fueled by grit. Retro-flavored neon arcade chaos for the modern operator.<br>
-    <strong>TankTots™</strong> — playtime with purpose. Wholesome, kid-friendly fun with big buttons and zero stress.</p>
+    <p><strong>8BitOps™</strong> — built from bits, fueled by grit. The regular arcade bangers: retro-flavored neon chaos for the modern operator.<br>
+    <strong>MiniMissions™</strong> — serious fun in small doses. Tactical control-surface games, hidden systems, and objective-driven micro-ops.<br>
+    <strong>TankTots™</strong> — playtime with purpose. Wholesome, kid-friendly learning and big-button fun.</p>
 
     <p>No ads. No trackers. No bloat. Just clean, honest play.</p>
 
@@ -585,8 +703,8 @@
     <p><strong>Built for kids, parents, and operators alike.</strong><br>
       Toddler-safe modes, approachable gameplay, and higher-difficulty modes for people who want a real challenge.</p>
 
-    <p><strong>Three connected worlds, not random noise.</strong><br>
-      <strong>MiniMission™</strong> for tight drills, <strong>8BitOps™</strong> for neon chaos, and <strong>TankTots™</strong> for wholesome fun.</p>
+    <p><strong>Three connected vault sections, not random noise.</strong><br>
+      <strong>8BitOps™</strong> for arcade chaos, <strong>MiniMissions™</strong> for tactical micro-ops, and <strong>TankTots™</strong> for wholesome learning.</p>
 
     <p><strong>Operator-grade UX.</strong><br>
       Clean menus, big buttons, readable text, and finger-friendly layouts. No clutter, just signal.</p>
@@ -606,67 +724,238 @@
     <img src="icons-arcade_small.png" class="section-icon"><span class="title-main2"> Arsenal</span>
     <span class="title-sub">The Game Vault</span>
   </h2>
-  <p><strong>Your mission roster awaits.</strong>
+  <p class="intel"><strong>Your mission roster awaits.</strong><br>
 Fly hyperspace lanes, master rhythm rings, mow tactical lawns, rescue cities, or unleash armored mayhem.
-Each title lives inside one of three worlds — MiniMission, 8BitOps, or TankTots — united by clean neon aesthetic and operator-grade polish.
+The Game Vault is sorted into three sections — <strong>8BitOps</strong>, <strong>MiniMissions</strong>, and <strong>TankTots</strong> — so each game lands where it belongs.
 <br><br>
-<strong>No ads. No accounts. No nonsense.</strong>
-Just pure, beautifully engineered arcade action.
-  <div class="arsenal-grid">
+<strong>No ads. No accounts. No nonsense.</strong> Just pure, beautifully engineered arcade action.</p>
 
-    <div class="game-card">
-      
-      <div class="featured-stamp">Featured</div>
-      <a href="/games/ tommy-the-tank/index.html" class="game-summary">
-        <h3>Tommy the Tank — Asymmetric Mayhem</h3>
-        <p>Heavy metal, heavy chaos. Pure asymmetric destruction.</p>
-        <img src="/games/ tommy-the-tank/T3-asymmetric-mayhem_banner_small.png" alt="Tommy the Tank Banner">
-      </a>
+  <div class="vault-block" id="8bitops">
+    <div class="vault-heading">
+      <h3>8BitOps</h3>
+      <span>Arcade Bangers</span>
     </div>
+    <p class="vault-copy">The main KGBA arcade line — this is where the fast, loud, replayable, browser-native bangers live.</p>
 
-    <div class="game-card">
-      <a href="/games/starwarp/index.html" class="game-summary">
-        <h3>StarWarp</h3>
-        <p>Galactic reflex combat in a hyperspace lane.</p>
-        <img src="/games/starwarp/Starwarp_banner_small.png" alt="StarWarp Banner">
-      </a>
+    <div class="arsenal-grid">
+      <div class="game-card">
+        <a href="/games/ tommy-the-tank/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Live</span>
+          <h3>Tommy the Tank — Asymmetric Mayhem</h3>
+          <p>Heavy metal, heavy chaos. Pure asymmetric destruction.</p>
+          <img src="/games/ tommy-the-tank/T3-asymmetric-mayhem_banner_small.png" alt="Tommy the Tank Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        <a href="/games/starwarp/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Live</span>
+          <h3>StarWarp</h3>
+          <p>Galactic reflex combat in a hyperspace lane.</p>
+          <img src="/games/starwarp/Starwarp_banner_small.png" alt="StarWarp Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        <a href="/games/arc-defender/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Live</span>
+          <h3>Arc Defender — Rhythm Rings</h3>
+          <p>Pulsing precision defense through rotating rings.</p>
+          <img src="/games/arc-defender/Arc-defender_banner_small.png" alt="Arc Defender Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="/games/cozy-cat-playground/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Landing Page</span>
+          <h3>Cozy Cat Playground</h3>
+          <p>Jump, climb, and pounce in a tactical feline arena.</p>
+          <img src="/games/cozy-cat-playground/Cozy-cat-playground_banner_small.png" alt="Cozy Cat Playground Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="/games/lawn-mower-mania/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Landing Page</span>
+          <h3>Lawn Mower Mania</h3>
+          <p>High-speed, grass-cutting carnage.</p>
+          <img src="/games/lawn-mower-mania/Mower-mania_banner_small.png" alt="Lawn Mower Mania Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="/games/firetruck-rescue/index.html" class="game-summary">
+          <span class="vault-chip">8BitOps · Landing Page</span>
+          <h3>Firetruck Rescue</h3>
+          <p>Emergency response at arcade-speed intensity.</p>
+          <img src="/games/firetruck-rescue/Firetruck-rescue_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Bayou Breakout</h3>
+          <p>Rip through a swamp course while gators leave the banks and join the chase.</p>
+          <img src="/games/bayou-breakout/bayou-breakout_banner_small.png" alt="Bayou Breakout Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Jungle Breakout</h3>
+          <p>Break through a hostile jungle lane packed with hazards, ambushes, and speed pressure.</p>
+          <img src="/games/jungle-breakout/jungle-breakout_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Cluck &amp; Cover</h3>
+          <p>A side-view farm survival arcade game where each day ends with a ridiculous boss fight.</p>
+          <img src="/games/cluck-cover/cluck-cover_banner_small.png" alt="Banner">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Kernel Courier</h3>
+          <p>Deliver critical packets through hostile routes before the network collapses.</p>
+          <img src="/games/kernel-courier/kernel-courier_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Relay Runner</h3>
+          <p>Dash, dodge, and reconnect relay nodes before the whole grid goes dark.</p>
+          <img src="/games/relay-runner/relay-runner_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · On Deck</span>
+          <h3>Sector KGB</h3>
+          <p>A neon sector-defense arcade concept built around survival, escalation, and clean chaos.</p>
+          <img src="/games/sector-kgb/sector-kgb_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">8BitOps · Prototype</span>
+          <h3>Riftwake</h3>
+          <p>Free-fly arena combat with aim modes, rift pressure, and operator-grade movement.</p>
+          <img src="/games/riftwake/riftwake_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
     </div>
+  </div>
 
-    <div class="game-card">
-      <a href="/games/arc-defender/index.html" class="game-summary">
-        <h3>Arc Defender — Rhythm Rings</h3>
-        <p>Pulsing precision defense through rotating rings.</p>
-        <img src="/games/arc-defender/Arc-defender_banner_small.png" alt="Arc Defender Banner">
-      </a>
+  <div class="vault-block" id="minimissions">
+    <div class="vault-heading">
+      <h3>MiniMissions</h3>
+      <span>Tactical Micro-Ops</span>
     </div>
+    <p class="vault-copy">Objective-driven control-surface games built around hidden systems, telemetry, incomplete intelligence, and operator decisions.</p>
 
-    <div class="game-card">
-      <div class="coming-soon-stamp">COMING SOON</div>
-      <a href="/games/cozy-cat-playground/index.html" class="game-summary">
-        <h3>Cozy Cat Playground</h3>
-        <p>Jump, climb, and pounce in a tactical feline arena.</p>
-        <img src="/games/cozy-cat-playground/Cozy-cat-playground_banner_small.png" alt="Cozy Cat Playground Banner">
-      </a>  
+    <div class="arsenal-grid">
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">MiniMissions · On Deck</span>
+          <h3>Command Surface: Outpost Zero</h3>
+          <p>Coordinate teams through radar, telemetry, warnings, and incomplete sensor feeds.</p>
+          <img src="/games/command-surface/command-surface_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">MiniMissions · On Deck</span>
+          <h3>Signal Ghost</h3>
+          <p>Track a hidden enemy by reading outages, stale pings, logs, and signal artifacts.</p>
+          <img src="/games/signal-ghost/signal-ghost_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">MiniMissions · On Deck</span>
+          <h3>The Hive</h3>
+          <p>Read the living system, infer swarm behavior, and contain the threat before it adapts.</p>
+          <img src="/games/the-hive/the-hive_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">MiniMissions · On Deck</span>
+          <h3>Black Box Convoy</h3>
+          <p>Protect a mission convoy using indirect signals, route intelligence, and risk calls.</p>
+          <img src="/games/black-box-convoy/black-box-convoy_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">MiniMissions · On Deck</span>
+          <h3>ZT Breach Loop</h3>
+          <p>Contain suspicious activity by making fast identity, access, policy, and telemetry decisions.</p>
+          <img src="/games/zt-breach-loop/zt-breach-loop_banner_small.png" alt="Banner Image">
+        </a>
+      </div>
     </div>
+  </div>
 
-    <div class="game-card">
-      <div class="coming-soon-stamp">COMING SOON</div>
-      <a href="/games/lawn-mower-mania/index.html" class="game-summary">
-        <h3>Lawn Mower Mania</h3>
-        <p>High-speed, grass-cutting carnage.</p>
-        <img src="/games/lawn-mower-mania/Mower-mania_banner_small.png" alt="Lawn Mower Mania Banner">
-      </a>
+  <div class="vault-block" id="tanktots">
+    <div class="vault-heading">
+      <h3>TankTots</h3>
+      <span>Play &amp; Learn</span>
     </div>
+    <p class="vault-copy">The kid-safe KGBA learning lane: big buttons, cheerful feedback, simple loops, and wholesome discovery.</p>
 
-    <div class="game-card">
-      <div class="coming-soon-stamp">COMING SOON</div>
-      <a href="/games/firetruck-rescue/index.html" class="game-summary">
-        <h3>Firetruck Rescue</h3>
-        <p>Emergency response at arcade-speed intensity.</p>
-        <img src="/games/firetruck-rescue/Firetruck-rescue_banner_small.png" alt="Firetruck Rescue Banner">
-      </a>
+    <div class="arsenal-grid">
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">TankTots · On Deck</span>
+          <h3>TankTots Learn</h3>
+          <p>Deck-based toddler learning with letters, tools, sounds, praise, and playful interaction.</p>
+          <img src="/games/tanktots_learn/assets/logos/tanktots_learn_logo.png" alt="Banner Image">
+        </a>
+      </div>
+
+      <div class="game-card">
+        
+        <a href="javascript:void(0)" class="game-summary">
+          <span class="vault-chip">TankTots · On Deck</span>
+          <h3>Kids Mash</h3>
+          <p>A toddler-safe soundboard and music playground for tapping, holding, and making noise.</p>
+          <img src="games/kids_mash/icons/icon-512.png" alt="Banner Image">
+        </a>
+      </div>
     </div>
-
   </div>
 </section>
 
