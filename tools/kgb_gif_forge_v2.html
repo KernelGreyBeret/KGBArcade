@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KGB GIF Forge v2</title>
+  <style>
+    :root{
+      --bg:#070a0f;
+      --panel:#0f1720;
+      --panel2:#121d28;
+      --line:#26384a;
+      --text:#e8f4ff;
+      --muted:#94a9ba;
+      --accent:#00f5ff;
+      --accent2:#7c3cff;
+      --danger:#ff3b6b;
+      --good:#9cff7a;
+      --shadow:0 0 22px rgba(0,245,255,.13);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(0,245,255,.14), transparent 32vw),
+        radial-gradient(circle at bottom right, rgba(124,60,255,.16), transparent 36vw),
+        var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .wrap{max-width:1180px;margin:0 auto;padding:22px}
+    header{
+      border:1px solid var(--line);
+      background:linear-gradient(135deg,rgba(15,23,32,.94),rgba(8,12,18,.94));
+      border-radius:20px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    h1{margin:0 0 8px;font-size:clamp(28px,5vw,50px);letter-spacing:.04em;text-transform:uppercase}
+    .subtitle{color:var(--muted);max-width:820px;line-height:1.55}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px}
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.side{order:-1}}
+    .card{
+      border:1px solid var(--line);
+      background:rgba(15,23,32,.9);
+      border-radius:18px;
+      padding:16px;
+      box-shadow:var(--shadow);
+    }
+    .drop{
+      border:2px dashed rgba(0,245,255,.45);
+      border-radius:18px;
+      padding:24px;
+      text-align:center;
+      background:rgba(0,245,255,.04);
+      cursor:pointer;
+      transition:.18s ease;
+      margin-bottom:14px;
+    }
+    .drop:hover,.drop.drag{background:rgba(0,245,255,.1);border-color:var(--accent)}
+    .drop strong{display:block;font-size:20px;margin-bottom:6px}
+    .drop span{color:var(--muted);font-size:14px}
+    input[type=file]{display:none}
+    .frames{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;min-height:160px}
+    .frame{
+      border:1px solid var(--line);
+      background:var(--panel2);
+      border-radius:14px;
+      overflow:hidden;
+      position:relative;
+    }
+    .frame.dragging{opacity:.45;outline:2px solid var(--accent)}
+    .thumb{
+      width:100%;aspect-ratio:4/5;object-fit:cover;display:block;background:#05070a;
+    }
+    .framebar{display:flex;align-items:center;gap:6px;padding:8px;font-size:12px;color:var(--muted)}
+    .framebar b{color:var(--text);margin-right:auto}
+    button,.btn{
+      border:1px solid rgba(0,245,255,.4);
+      background:linear-gradient(135deg,rgba(0,245,255,.13),rgba(124,60,255,.12));
+      color:var(--text);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:.02em;
+      transition:.15s ease;
+      text-decoration:none;
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      gap:8px;
+    }
+    button:hover,.btn:hover{transform:translateY(-1px);border-color:var(--accent);box-shadow:0 0 18px rgba(0,245,255,.18)}
+    button:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+    .tiny{padding:6px 8px;border-radius:9px;font-size:12px}
+    .remove{border-color:rgba(255,59,107,.45);background:rgba(255,59,107,.1)}
+    .controls{display:grid;gap:13px}
+    label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
+    input[type=number],select{
+      width:100%;padding:10px 11px;border-radius:12px;border:1px solid var(--line);
+      background:#070c12;color:var(--text);outline:none;
+    }
+    input[type=range]{width:100%}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .check{display:flex;align-items:center;gap:10px;color:var(--text);font-weight:650}
+    .check input{width:18px;height:18px}
+    canvas{width:100%;background:#030507;border-radius:14px;border:1px solid var(--line);display:block}
+    .status{font-size:13px;color:var(--muted);line-height:1.45;min-height:38px}
+    .progress{height:10px;background:#05080c;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+    .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.12s linear}
+    .actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .download{grid-column:1/-1;border-color:rgba(156,255,122,.5);background:rgba(156,255,122,.1)}
+    .note{font-size:12px;color:var(--muted);line-height:1.45;border-top:1px solid var(--line);padding-top:12px}
+    .empty{color:var(--muted);text-align:center;padding:32px;border:1px dashed var(--line);border-radius:14px;grid-column:1/-1}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>KGB GIF Forge v2</h1>
+      <div class="subtitle">Drop still images, reorder frames, preview the motion, and export an animated GIF. Built as a lightweight browser-native utility for GitHub Pages / local use.</div>
+    </header>
+
+    <div class="grid">
+      <main class="card">
+        <div id="drop" class="drop">
+          <strong>Drop frames here</strong>
+          <span>PNG, JPG, WEBP, GIF stills. Or tap/click to select multiple images.</span>
+          <input id="fileInput" type="file" accept="image/*" multiple />
+        </div>
+        <div id="frames" class="frames">
+          <div class="empty">No frames loaded yet.</div>
+        </div>
+      </main>
+
+      <aside class="side card">
+        <div class="controls">
+          <canvas id="preview" width="540" height="675"></canvas>
+
+          <div class="row">
+            <div>
+              <label for="delay">Frame delay, ms</label>
+              <input id="delay" type="number" min="20" max="2000" step="10" value="150" />
+            </div>
+            <div>
+              <label for="width">Output width</label>
+              <input id="width" type="number" min="120" max="1600" step="10" value="540" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div>
+              <label for="fit">Frame fit</label>
+              <select id="fit">
+                <option value="contain">Contain, no crop</option>
+                <option value="cover">Cover, crop edges</option>
+              </select>
+            </div>
+            <div>
+              <label for="quality">GIF quality</label>
+              <select id="quality">
+                <option value="10">High</option>
+                <option value="15" selected>Balanced</option>
+                <option value="25">Smaller file</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="check"><input id="pingpong" type="checkbox" checked /> Ping-pong loop</label>
+          <label class="check"><input id="autoplay" type="checkbox" checked /> Preview animation</label>
+
+          <div class="actions">
+            <button id="reverseBtn">Reverse</button>
+            <button id="clearBtn">Clear</button>
+            <button id="exportBtn" class="download">Export GIF</button>
+          </div>
+
+          <div class="progress"><div id="bar" class="bar"></div></div>
+          <div id="status" class="status">Ready. Add frames to begin.</div>
+          <a id="download" class="btn download" style="display:none" download="kgb-forged.gif">Download GIF</a>
+
+          <div class="note">
+            GIF export uses the tiny client-side <strong>gif.js</strong> encoder. v2 uses a safer Blob worker wrapper so local <code>file://</code> launches on Mac are much less likely to freeze. For best results, run from a tiny local server or GitHub Pages.
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const drop = document.getElementById('drop');
+    const framesEl = document.getElementById('frames');
+    const canvas = document.getElementById('preview');
+    const ctx = canvas.getContext('2d');
+    const delayEl = document.getElementById('delay');
+    const widthEl = document.getElementById('width');
+    const fitEl = document.getElementById('fit');
+    const qualityEl = document.getElementById('quality');
+
+    const GIF_JS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js';
+    const GIF_WORKER_URL = 'https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.worker.js';
+    let gifWorkerBlobUrl = null;
+
+    function getGifWorkerScript(){
+      // Running an HTML file directly on macOS often makes Worker(url-to-CDN) fail/hang.
+      // This wraps the CDN worker in a same-origin Blob worker, then that worker imports gif.worker.js.
+      // For fully offline use, replace GIF_WORKER_URL with './vendor/gif.worker.js'.
+      if(gifWorkerBlobUrl) return gifWorkerBlobUrl;
+      const workerCode = `
+        try { importScripts('${GIF_WORKER_URL}'); }
+        catch (err) { postMessage({type:'error', data: String(err && err.message ? err.message : err)}); }
+      `;
+      gifWorkerBlobUrl = URL.createObjectURL(new Blob([workerCode], {type:'application/javascript'}));
+      return gifWorkerBlobUrl;
+    }
+    const pingpongEl = document.getElementById('pingpong');
+    const autoplayEl = document.getElementById('autoplay');
+    const statusEl = document.getElementById('status');
+    const barEl = document.getElementById('bar');
+    const downloadEl = document.getElementById('download');
+    const exportBtn = document.getElementById('exportBtn');
+    const reverseBtn = document.getElementById('reverseBtn');
+    const clearBtn = document.getElementById('clearBtn');
+
+    let frames = [];
+    let previewIndex = 0;
+    let lastTick = 0;
+    let dragIndex = null;
+
+    function setStatus(msg){ statusEl.textContent = msg; }
+
+    function loadFiles(fileList){
+      const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+      if(!files.length) return;
+      setStatus(`Loading ${files.length} frame(s)...`);
+      let loaded = 0;
+      files.forEach(file => {
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.onload = () => {
+          frames.push({ file, url, img, name:file.name });
+          loaded++;
+          if(loaded === files.length){
+            renderFrames();
+            drawPreview();
+            setStatus(`${frames.length} frame(s) loaded. Drag frames to reorder, then export.`);
+          }
+        };
+        img.onerror = () => {
+          loaded++;
+          URL.revokeObjectURL(url);
+          if(loaded === files.length) renderFrames();
+        };
+        img.src = url;
+      });
+    }
+
+    function renderFrames(){
+      framesEl.innerHTML = '';
+      if(!frames.length){
+        framesEl.innerHTML = '<div class="empty">No frames loaded yet.</div>';
+        return;
+      }
+      frames.forEach((fr, i) => {
+        const el = document.createElement('div');
+        el.className = 'frame';
+        el.draggable = true;
+        el.dataset.index = i;
+        el.innerHTML = `
+          <img class="thumb" src="${fr.url}" alt="Frame ${i+1}">
+          <div class="framebar">
+            <b>#${i+1}</b>
+            <button class="tiny" data-action="up">↑</button>
+            <button class="tiny" data-action="down">↓</button>
+            <button class="tiny remove" data-action="remove">×</button>
+          </div>
+        `;
+        el.addEventListener('dragstart', () => { dragIndex = i; el.classList.add('dragging'); });
+        el.addEventListener('dragend', () => { dragIndex = null; el.classList.remove('dragging'); });
+        el.addEventListener('dragover', e => e.preventDefault());
+        el.addEventListener('drop', e => {
+          e.preventDefault();
+          const to = i;
+          if(dragIndex === null || dragIndex === to) return;
+          const [moved] = frames.splice(dragIndex, 1);
+          frames.splice(to, 0, moved);
+          renderFrames();
+        });
+        el.querySelectorAll('button').forEach(btn => {
+          btn.addEventListener('click', () => frameAction(i, btn.dataset.action));
+        });
+        framesEl.appendChild(el);
+      });
+    }
+
+    function frameAction(i, action){
+      if(action === 'remove'){
+        URL.revokeObjectURL(frames[i].url);
+        frames.splice(i,1);
+      }
+      if(action === 'up' && i > 0){
+        [frames[i-1], frames[i]] = [frames[i], frames[i-1]];
+      }
+      if(action === 'down' && i < frames.length-1){
+        [frames[i+1], frames[i]] = [frames[i], frames[i+1]];
+      }
+      renderFrames();
+      drawPreview();
+    }
+
+    function getSequence(){
+      if(!pingpongEl.checked || frames.length < 3) return frames;
+      return frames.concat(frames.slice(1,-1).reverse());
+    }
+
+    function computeOutputSize(){
+      const first = frames[0]?.img;
+      const targetW = Math.max(120, Math.min(1600, parseInt(widthEl.value || '540', 10)));
+      if(!first) return {w:targetW,h:Math.round(targetW*1.25)};
+      return {w:targetW, h:Math.round(first.naturalHeight * targetW / first.naturalWidth)};
+    }
+
+    function drawImageFit(context, img, w, h, fit){
+      context.fillStyle = '#030507';
+      context.fillRect(0,0,w,h);
+      const iw = img.naturalWidth, ih = img.naturalHeight;
+      const scale = fit === 'cover' ? Math.max(w/iw, h/ih) : Math.min(w/iw, h/ih);
+      const nw = iw*scale, nh = ih*scale;
+      const x = (w-nw)/2, y = (h-nh)/2;
+      context.drawImage(img, x, y, nw, nh);
+    }
+
+    function drawPreview(){
+      if(!frames.length){
+        ctx.fillStyle = '#030507'; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = '#94a9ba'; ctx.font = '18px system-ui'; ctx.textAlign = 'center';
+        ctx.fillText('Drop images to preview GIF', canvas.width/2, canvas.height/2);
+        return;
+      }
+      const seq = getSequence();
+      const fr = seq[previewIndex % seq.length];
+      drawImageFit(ctx, fr.img, canvas.width, canvas.height, fitEl.value);
+    }
+
+    function tick(ts){
+      const delay = Math.max(20, parseInt(delayEl.value || '150', 10));
+      if(autoplayEl.checked && frames.length){
+        if(ts - lastTick > delay){
+          previewIndex = (previewIndex + 1) % getSequence().length;
+          drawPreview();
+          lastTick = ts;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    async function exportGif(){
+      if(!frames.length){ setStatus('Add at least one image frame first.'); return; }
+      if(typeof GIF === 'undefined'){
+        setStatus('GIF encoder did not load. You may be offline or the CDN is blocked. Run a local server or vendor gif.js locally.');
+        return;
+      }
+
+      exportBtn.disabled = true;
+      exportBtn.textContent = 'Encoding...';
+      downloadEl.style.display = 'none';
+      barEl.style.width = '0%';
+
+      let watchdog = null;
+      try{
+        const {w,h} = computeOutputSize();
+        const work = document.createElement('canvas');
+        work.width = w; work.height = h;
+        const wctx = work.getContext('2d', {willReadFrequently:false});
+        const sequence = getSequence();
+        const delay = Math.max(20, parseInt(delayEl.value || '150', 10));
+        const quality = parseInt(qualityEl.value || '15', 10);
+
+        // Keep this conservative. Multiple workers can hang harder from file:// and on mobile Safari.
+        const gif = new GIF({
+          workers: 1,
+          quality,
+          width: w,
+          height: h,
+          workerScript: getGifWorkerScript(),
+          debug: false
+        });
+
+        const localHint = location.protocol === 'file:'
+          ? ' Running from file:// — if this stalls, run this folder with: python3 -m http.server 8000'
+          : '';
+        setStatus(`Encoding ${sequence.length} frame(s) at ${w}×${h}...${localHint}`);
+
+        // Fail visibly instead of looking frozen forever.
+        watchdog = setTimeout(() => {
+          exportBtn.disabled = false;
+          exportBtn.textContent = 'Export GIF';
+          setStatus('Export appears stalled. Most likely the worker script did not load. Best fix: run from a local server instead of opening the HTML directly.');
+        }, 45000);
+
+        for(const fr of sequence){
+          wctx.clearRect(0,0,w,h);
+          drawImageFit(wctx, fr.img, w, h, fitEl.value);
+          gif.addFrame(work, {copy:true, delay});
+        }
+
+        gif.on('progress', p => {
+          const pct = Math.max(1, Math.min(99, Math.round(p*100)));
+          barEl.style.width = `${pct}%`;
+          setStatus(`Encoding GIF... ${pct}%`);
+        });
+
+        gif.on('finished', blob => {
+          if(watchdog) clearTimeout(watchdog);
+          const url = URL.createObjectURL(blob);
+          downloadEl.href = url;
+          downloadEl.style.display = 'flex';
+          downloadEl.textContent = `Download GIF (${(blob.size/1024/1024).toFixed(2)} MB)`;
+          setStatus('GIF forged. Download link is ready.');
+          barEl.style.width = '100%';
+          exportBtn.disabled = false;
+          exportBtn.textContent = 'Export GIF';
+        });
+
+        gif.render();
+      }catch(err){
+        if(watchdog) clearTimeout(watchdog);
+        exportBtn.disabled = false;
+        exportBtn.textContent = 'Export GIF';
+        setStatus(`Export failed: ${err && err.message ? err.message : err}`);
+        console.error(err);
+      }
+    }
+
+    drop.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', e => loadFiles(e.target.files));
+    ['dragenter','dragover'].forEach(ev => drop.addEventListener(ev, e => {e.preventDefault(); drop.classList.add('drag');}));
+    ['dragleave','drop'].forEach(ev => drop.addEventListener(ev, e => {e.preventDefault(); drop.classList.remove('drag');}));
+    drop.addEventListener('drop', e => loadFiles(e.dataTransfer.files));
+
+    exportBtn.addEventListener('click', exportGif);
+    reverseBtn.addEventListener('click', () => { frames.reverse(); renderFrames(); drawPreview(); });
+    clearBtn.addEventListener('click', () => {
+      frames.forEach(fr => URL.revokeObjectURL(fr.url));
+      frames = [];
+      previewIndex = 0;
+      renderFrames();
+      drawPreview();
+      downloadEl.style.display = 'none';
+      barEl.style.width = '0%';
+      setStatus('Cleared. Add new frames to begin.');
+    });
+    [delayEl,widthEl,fitEl,pingpongEl].forEach(el => el.addEventListener('input', drawPreview));
+    drawPreview();
+  </script>
+</body>
+</html>

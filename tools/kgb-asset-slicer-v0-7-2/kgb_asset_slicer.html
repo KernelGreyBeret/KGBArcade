@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KGB Asset Slicer v0.7.1</title>
+<style>
+:root{--bg:#070b0b;--panel:#0d1517;--ink:#f5f7fb;--muted:#aeb8ad;--line:#26352f;--ops:#00ff9a;--amber:#ffae42;--cyan:#28d7ff;--danger:#ff4d4d;--tots:#ffd94d}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#173028 0%,transparent 55%),var(--bg);color:var(--ink);font:14px/1.4 system-ui,Segoe UI,Roboto,Arial}header{position:sticky;top:0;z-index:30;background:rgba(7,11,11,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{margin:0;font-size:20px;color:var(--ops);letter-spacing:.3px}.sub{color:var(--muted);font-size:12px}button,select,input,textarea{font:inherit}button{border:1px solid var(--line);background:#111f21;color:var(--ink);border-radius:10px;padding:9px 12px;font-weight:800;cursor:pointer}button:hover{filter:brightness(1.12)}button.primary{border-color:var(--ops);color:var(--ops)}button.warn{border-color:var(--amber);color:var(--amber)}button.danger{border-color:var(--danger);color:var(--danger)}button.cyan{border-color:var(--cyan);color:var(--cyan)}button:disabled{opacity:.45;cursor:not-allowed}input[type=text],input[type=number],select{background:#071112;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px;min-width:0}.wrap{display:grid;grid-template-columns:320px 1fr 420px;gap:12px;padding:12px;min-height:calc(100vh - 74px)}.panel{background:rgba(13,21,23,.92);border:1px solid var(--line);border-radius:16px;padding:12px;overflow:hidden}.left,.right{height:calc(100vh - 98px);position:sticky;top:86px;overflow:auto}label{display:block;color:var(--muted);font-weight:800;margin:8px 0 4px}.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.row>*{flex:1}.tight>*{flex:0 0 auto}.muted{color:var(--muted)}.tiny{font-size:12px}.cropList,.sourceList,.fileList{display:flex;flex-direction:column;gap:7px;margin-top:10px}.cropItem,.sourceItem,.fileItem{border:1px solid #1d2b2c;background:#081112;border-radius:12px;padding:8px;cursor:pointer}.cropItem.active,.sourceItem.active,.fileItem.active{border-color:var(--ops);box-shadow:0 0 0 1px var(--ops) inset}.fileItem.used{border-color:#345c4a}.fileItem.assignedToSelected{border-color:var(--ops);box-shadow:0 0 0 1px var(--ops) inset}.fileItem .fileActions{display:flex;gap:6px;margin-top:7px}.fileItem .fileActions button{font-size:12px;padding:5px 7px;border-radius:8px;flex:1}.fileItem .fileHint{font-size:11px;color:var(--muted);margin-top:4px}.fileItem small,.cropItem small,.sourceItem small{display:block;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.stagePanel{min-width:0}.canvasWrap{position:relative;background:#050808;border:1px solid var(--line);border-radius:16px;overflow:auto;max-height:calc(100vh - 172px);padding:8px;text-align:center}#stage{max-width:100%;height:auto;cursor:crosshair}.hint{color:var(--muted);font-size:12px;margin-top:8px}.preview{background:#050808;border:1px solid var(--line);border-radius:14px;min-height:210px;display:grid;place-items:center;overflow:hidden}.preview canvas{max-width:100%;max-height:260px;background:repeating-conic-gradient(#172120 0% 25%,#0b1111 0% 50%) 50%/22px 22px}.path{color:var(--cyan);font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;word-break:break-all}hr{border:0;border-top:1px solid var(--line);margin:12px 0}.checkrow{display:flex;align-items:center;gap:8px;margin:8px 0;color:var(--ink);font-weight:800}.checkrow input{transform:scale(1.2)}.status{padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:#071112;color:var(--muted);font-size:12px;margin-top:8px;white-space:pre-wrap}.status.ok{border-color:var(--ops);color:var(--ops)}.status.err{border-color:var(--danger);color:#ffb0b0}.drop{border:2px dashed #29525c;border-radius:14px;padding:18px;text-align:center;background:#071112;color:var(--muted);min-height:120px;display:grid;place-items:center}.drop.drag{border-color:var(--ops);color:var(--ops);background:#061815}.kbd{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:#071112;border:1px solid var(--line);border-radius:6px;padding:1px 5px;color:var(--cyan)}.pill{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--muted);font-size:12px}.miniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.notice{border:1px solid #274a4f;background:#071112;border-radius:12px;padding:8px;color:var(--muted);font-size:12px}
+@media(max-width:1150px){.wrap{grid-template-columns:1fr}.left,.right{position:static;height:auto}.canvasWrap{max-height:none}}
+</style>
+</head>
+<body>
+<header>
+  <div><h1>KGB Asset Slicer <span style="color:var(--amber)">v0.7.2</span></h1><div class="sub">Source-sheet slicer with per-sheet target-folder assignment for overwriting existing game/deck assets.</div></div>
+  <div class="row tight" style="justify-content:flex-end">
+    <button class="cyan" id="chooseSheetsBtn">Load Source Sheet(s)</button>
+    <input id="sheetInput" type="file" accept="image/*" multiple style="display:none">
+    <button class="primary" id="exportSelected">Export Selected</button>
+    <button class="primary" id="exportActiveZip">Export Active Sheet ZIP</button>
+    <button class="cyan" id="writeActiveFolder">Write Active to Folder</button>
+    <button class="warn" id="downloadMap">Download Crop Map</button>
+    <button class="warn" id="loadMapBtn">Load Crop Map</button>
+    <input id="loadMapInput" type="file" accept="application/json,.json" style="display:none">
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="panel left">
+    <div class="drop" id="dropZone"><div><b>Drop source sheets here</b><br><span class="tiny">or use Load Source Sheet(s)</span></div></div>
+    <hr>
+    <label>Current Source Sheets</label>
+    <div class="sourceList" id="sourceList"></div>
+    <div class="status" id="status">Load one production sheet to begin. You can load several, but export is active-sheet only.</div>
+  </aside>
+
+  <section class="panel stagePanel">
+    <div class="row" style="margin-bottom:10px">
+      <div><strong id="sheetTitle">No source sheet loaded</strong><div class="sub" id="sheetMeta">Choose a source sheet from your files.</div></div>
+      <div class="row tight"><button id="fitBtn">Fit</button><button id="actualBtn">100%</button><button id="zoomInBtn">+</button><button id="zoomOutBtn">−</button></div>
+    </div>
+    <div class="canvasWrap" id="canvasWrap"><canvas id="stage"></canvas></div>
+    <div class="hint">Drag the green crop box to move. Drag corners to resize. Hold <span class="kbd">Shift</span> while dragging on empty space to create a new crop.</div>
+  </section>
+
+  <aside class="panel right">
+    <label>Target Folder for Active Sheet</label>
+    <div class="row"><button class="cyan" id="attachFolderBtn">Attach Image Folder</button><button class="warn" id="clearFolderBtn">Clear</button></div>
+    <input id="folderInput" type="file" webkitdirectory directory multiple style="display:none">
+    <div class="notice" id="folderNotice">No target folder attached. Attach the folder that already contains the images you are replacing, such as <span class="kbd">decks/actions/images</span>.</div>
+    <div class="row"><input id="fileFilter" type="text" placeholder="Filter target files..."><button id="autoAssignBtn">Auto Assign</button></div>
+    <div class="sub" style="margin-top:6px">File tiles: click any filename tile to assign/select/create. Double-click always creates a new crop assigned to that filename. Buttons are available on each tile too.</div>
+    <div class="fileList" id="targetFileList"></div>
+
+    <hr>
+    <label>Crops for Active Sheet</label>
+    <div class="row"><input id="filter" type="text" placeholder="Filter crops..."><button id="newCrop">New</button></div>
+    <div class="row"><button id="duplicateCrop">Duplicate</button><button class="danger" id="deleteCrop">Delete</button></div>
+    <div class="cropList" id="cropList"></div>
+
+    <hr>
+    <label>Selected Crop</label>
+    <div class="row"><input id="name" type="text" placeholder="existing_file.png"><select id="format"><option value="png">png</option><option value="webp">webp</option></select></div>
+    <div class="path" id="selectedPath">No crop selected</div>
+    <div class="miniGrid"><div><label>X</label><input id="x" type="number"></div><div><label>Y</label><input id="y" type="number"></div><div><label>W</label><input id="w" type="number"></div><div><label>H</label><input id="h" type="number"></div></div>
+    <div class="checkrow"><input id="removeBg" type="checkbox"><span>Remove dark background</span></div>
+    <div class="row"><div><label>Threshold</label><input id="threshold" type="number" value="38"></div><div><label>Pad</label><input id="pad" type="number" value="0"></div></div>
+    <label>Resize Output</label>
+    <div class="row"><input id="resizeW" type="number" placeholder="width"><input id="resizeH" type="number" placeholder="height"></div>
+    <div class="preview"><canvas id="preview"></canvas></div>
+
+    <hr>
+    <label>Batch Builder</label>
+    <div class="sub">Fast-create crop maps for frame rows, sprite sheets, or card grids. The folder comes from the attached target folder; file assignments can come next.</div>
+    <div class="row"><div><label>Rows</label><input id="gridRows" type="number" value="2"></div><div><label>Cols</label><input id="gridCols" type="number" value="8"></div></div>
+    <div class="row"><div><label>Start X</label><input id="gridX" type="number" value="0"></div><div><label>Start Y</label><input id="gridY" type="number" value="0"></div></div>
+    <div class="row"><div><label>Cell W</label><input id="gridW" type="number" value="200"></div><div><label>Cell H</label><input id="gridH" type="number" value="300"></div></div>
+    <div class="row"><div><label>Gap X</label><input id="gridGapX" type="number" value="0"></div><div><label>Gap Y</label><input id="gridGapY" type="number" value="0"></div></div>
+    <label>Row prefixes</label><input id="rowPrefixes" type="text" value="wave,clap" placeholder="wave,clap or run,walk">
+    <label>Naming pattern</label><input id="namePattern" type="text" value="{prefix}_{index:02d}.png">
+    <div class="row"><button class="primary" id="addGridBtn">Add Grid Crops</button><button class="warn" id="clearSheetCropsBtn">Clear Sheet Crops</button></div>
+  </aside>
+</main>
+
+<script>
+'use strict';
+let sources=[]; // {id,fileName,objectUrl,img,width,height,crops,targetFolderName,targetFiles,targetDirHandle}
+let sourceIndex=-1,cropIndex=-1,zoom=1,drag=null,createDrag=null,shiftDown=false;
+const els=id=>document.getElementById(id);
+const stage=els('stage'),ctx=stage.getContext('2d');
+const preview=els('preview'),pctx=preview.getContext('2d',{willReadFrequently:true});
+const inputs=['name','x','y','w','h','format','removeBg','threshold','pad','resizeW','resizeH'].reduce((a,id)=>(a[id]=els(id),a),{});
+function setStatus(msg,cls=''){const s=els('status');s.textContent=msg;s.className='status '+cls;}
+function currentSource(){return sources[sourceIndex]||null}function currentCrop(){const s=currentSource();return s&&s.crops[cropIndex]||null}
+function cleanFile(v,fmt){v=String(v||'asset.png').trim().replace(/[\\/:?*"<>|]+/g,'_').replace(/\s+/g,'_');if(!/\.(png|webp)$/i.test(v))v+='.'+(fmt||'png');return v.replace(/\.(png|webp)$/i,'.'+(fmt||'png'))}
+function joinPath(...parts){return parts.map(p=>String(p||'').replace(/^\/+|\/+$/g,'')).filter(Boolean).join('/')}
+function selectedExportPath(c=currentCrop()){if(!c)return'No crop selected';return cleanFile(c.name,c.format)}
+function padNum(n,w){return String(n).padStart(w,'0')}function applyPattern(pattern,prefix,index){return pattern.replace(/\{prefix\}/g,prefix).replace(/\{index(?::0(\d+)d)?\}/g,(_,w)=>padNum(index,+(w||2)))}
+function imageFiles(files){return [...files].filter(f=>/\.(png|jpe?g|webp|gif)$/i.test(f.name||f.fileName||''))}
+
+function init(){bindEvents();drawStage();updateFolderUI();}
+function bindEvents(){
+  els('chooseSheetsBtn').onclick=()=>els('sheetInput').click();els('sheetInput').onchange=e=>handleFiles([...e.target.files]);
+  const drop=els('dropZone');['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')}));['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')}));drop.addEventListener('drop',e=>handleFiles([...e.dataTransfer.files].filter(f=>f.type.startsWith('image/'))));
+  els('fitBtn').onclick=()=>{zoom=1;drawStage()};els('actualBtn').onclick=()=>{zoom='actual';drawStage()};els('zoomInBtn').onclick=()=>{zoom=(zoom==='actual'?1:zoom)*1.2;drawStage()};els('zoomOutBtn').onclick=()=>{zoom=(zoom==='actual'?1:zoom)/1.2;drawStage()};
+  els('newCrop').onclick=newCrop;els('duplicateCrop').onclick=duplicateCrop;els('deleteCrop').onclick=deleteCrop;els('clearSheetCropsBtn').onclick=clearSheetCrops;
+  els('exportSelected').onclick=exportSelected;els('exportActiveZip').onclick=exportActiveZip;els('writeActiveFolder').onclick=writeActiveToFolder;
+  els('downloadMap').onclick=downloadMap;els('loadMapBtn').onclick=()=>els('loadMapInput').click();els('loadMapInput').onchange=loadMap;
+  els('attachFolderBtn').onclick=attachFolder;els('folderInput').onchange=e=>attachFolderFallback([...e.target.files]);els('clearFolderBtn').onclick=clearTargetFolder;els('fileFilter').oninput=renderTargetFiles;els('autoAssignBtn').onclick=autoAssignByOrder;bindTargetFileListEvents();
+  els('filter').oninput=renderCrops;els('addGridBtn').onclick=addGridCrops;
+  Object.values(inputs).forEach(el=>{el.addEventListener('input',applyInputs);el.addEventListener('change',applyInputs)});
+  stage.addEventListener('pointerdown',pointerDown);window.addEventListener('pointermove',pointerMove);window.addEventListener('pointerup',pointerUp);
+  window.addEventListener('keydown',e=>{if(e.key==='Shift')shiftDown=true});window.addEventListener('keyup',e=>{if(e.key==='Shift')shiftDown=false});
+}
+function handleFiles(files){if(!files.length)return;files.forEach(file=>{if(!file.type.startsWith('image/'))return;const url=URL.createObjectURL(file);const img=new Image();img.onload=()=>{let existing=sources.find(s=>s.fileName===file.name);if(existing){URL.revokeObjectURL(existing.objectUrl);Object.assign(existing,{objectUrl:url,img,width:img.naturalWidth,height:img.naturalHeight})}else{sources.push({id:file.name.replace(/\.[^.]+$/,''),fileName:file.name,objectUrl:url,img,width:img.naturalWidth,height:img.naturalHeight,crops:[],targetFolderName:'',targetFiles:[],targetDirHandle:null})}if(sourceIndex<0)sourceIndex=sources.length-1;renderSources();selectSource(sourceIndex<0?0:sourceIndex);setStatus('Loaded '+sources.length+' source sheet(s).','ok')};img.onerror=()=>setStatus('Could not load image: '+file.name,'err');img.src=url})}
+function renderSources(){const list=els('sourceList');list.innerHTML='';sources.forEach((s,i)=>{const div=document.createElement('div');div.className='sourceItem '+(i===sourceIndex?'active':'');const folder=s.targetFolderName?` · folder: ${s.targetFolderName}`:'';div.innerHTML=`<strong>${s.id}</strong><small>${s.fileName} · ${s.width}×${s.height} · ${s.crops.length} crops${folder}</small>`;div.onclick=()=>selectSource(i);list.appendChild(div)})}
+function selectSource(i){sourceIndex=i;if(!currentSource())return;if(cropIndex<0||cropIndex>=currentSource().crops.length)cropIndex=currentSource().crops.length?0:-1;els('sheetTitle').textContent=currentSource().fileName;els('sheetMeta').textContent=`${currentSource().width} × ${currentSource().height} · ${currentSource().crops.length} crops`;renderSources();renderTargetFiles();updateFolderUI();renderCrops();loadInputs();drawStage()}
+
+async function attachFolder(){const s=currentSource();if(!s){setStatus('Load/select a source sheet first.','err');return}if(window.showDirectoryPicker){try{const dir=await window.showDirectoryPicker({mode:'readwrite'});s.targetDirHandle=dir;s.targetFolderName=dir.name;s.targetFiles=[];for await(const [name,handle] of dir.entries()){if(handle.kind==='file'&&/\.(png|jpe?g|webp|gif)$/i.test(name))s.targetFiles.push({name,handle})}s.targetFiles.sort((a,b)=>a.name.localeCompare(b.name));updateFolderUI();renderSources();renderTargetFiles();setStatus('Attached target folder: '+dir.name+' ('+s.targetFiles.length+' image files).','ok');return}catch(e){if(e.name!=='AbortError')setStatus('Folder attach failed: '+e.message,'err')}}els('folderInput').click()}
+function attachFolderFallback(files){const s=currentSource();if(!s||!files.length)return;const imgs=imageFiles(files);const first=imgs[0];let folder='attached-folder';if(first&&first.webkitRelativePath){const parts=first.webkitRelativePath.split('/');folder=parts.length>1?parts[parts.length-2]:parts[0]}s.targetDirHandle=null;s.targetFolderName=folder;s.targetFiles=imgs.map(f=>({name:f.name,file:f,relativePath:f.webkitRelativePath||f.name})).sort((a,b)=>a.name.localeCompare(b.name));updateFolderUI();renderSources();renderTargetFiles();setStatus('Attached folder file list: '+folder+' ('+s.targetFiles.length+' image files). Direct write is unavailable in fallback mode; use ZIP export.','ok')}
+function clearTargetFolder(){const s=currentSource();if(!s)return;s.targetFolderName='';s.targetFiles=[];s.targetDirHandle=null;updateFolderUI();renderTargetFiles();renderSources()}
+function updateFolderUI(){const s=currentSource();const n=els('folderNotice');if(!s){n.textContent='No source sheet selected.';els('writeActiveFolder').disabled=true;return}if(s.targetFolderName){n.innerHTML=`Attached: <b>${s.targetFolderName}</b> · ${s.targetFiles.length} image files. Click a filename below to assign it to the selected crop.`;els('writeActiveFolder').disabled=!s.targetDirHandle}else{n.innerHTML='No target folder attached. Attach the folder that already contains the images you are replacing, such as <span class="kbd">decks/actions/images</span>.';els('writeActiveFolder').disabled=true}}
+function bindTargetFileListEvents(){
+  const list=els('targetFileList');
+  if(!list||list.dataset.bound==='1')return;
+  list.dataset.bound='1';
+  list.addEventListener('click',ev=>{
+    const tile=ev.target.closest('.fileItem');
+    if(!tile||!list.contains(tile))return;
+    const name=tile.dataset.filename;
+    if(!name)return;
+    const act=ev.target.closest('[data-act]')?.dataset?.act||'tile';
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(act==='assign')assignFileToCrop(name);
+    else if(act==='new')createCropForFile(name,{force:true});
+    else handleFileTileClick(name);
+  });
+  list.addEventListener('dblclick',ev=>{
+    const tile=ev.target.closest('.fileItem');
+    if(!tile||!list.contains(tile))return;
+    const name=tile.dataset.filename;
+    if(!name)return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    createCropForFile(name,{force:true});
+  });
+}
+function renderTargetFiles(){
+  const list=els('targetFileList');
+  list.innerHTML='';
+  const s=currentSource();
+  if(!s)return;
+  const q=els('fileFilter').value.toLowerCase().trim();
+  const current=currentCrop();
+  const currentName=current?cleanFile(current.name,current.format):'';
+  (s.targetFiles||[]).forEach((f,idx)=>{
+    if(q&&!f.name.toLowerCase().includes(q))return;
+    const assignedIndex=findCropIndexByFile(f.name);
+    const assigned=assignedIndex>=0;
+    const selected=currentName===f.name;
+    const div=document.createElement('div');
+    div.className='fileItem '+(assigned?'used ':'')+(selected?'assignedToSelected ':'');
+    div.dataset.filename=f.name;
+    div.title=assigned?'Click to select assigned crop, or Assign Selected to reassign.':'Click to create/assign a crop for this file.';
+    div.innerHTML=`<strong>${escapeHtml(f.name)}</strong><small>${assigned?('assigned to crop #'+(assignedIndex+1)):'available'}</small><div class="fileHint">Click tile: assign/select/create · Double-click: new crop</div><div class="fileActions"><button type="button" data-act="assign">Assign Selected</button><button type="button" data-act="new">New Crop</button></div>`;
+    list.appendChild(div);
+  });
+}
+function escapeHtml(v){return String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+function findCropIndexByFile(name){const s=currentSource();if(!s)return-1;return(s.crops||[]).findIndex(c=>cleanFile(c.name,c.format)===name)}
+function handleFileTileClick(name){const c=currentCrop();const assignedIndex=findCropIndexByFile(name);if(c){if(cleanFile(c.name,c.format)===name){selectCrop(cropIndex);return}if(assignedIndex>=0){selectCrop(assignedIndex);setStatus(name+' is already assigned. Selected its crop.','ok');return}assignFileToCrop(name);return}if(assignedIndex>=0){selectCrop(assignedIndex);setStatus('Selected crop assigned to '+name+'.','ok');return}createCropForFile(name)}
+function assignFileToCrop(name){const c=currentCrop();if(!c){createCropForFile(name);return}const existing=findCropIndexByFile(name);if(existing>=0&&existing!==cropIndex){selectCrop(existing);setStatus(name+' is already assigned. Selected its crop instead of creating a duplicate.','err');return}c.name=name;c.format=/\.webp$/i.test(name)?'webp':'png';loadInputs();renderCrops();renderTargetFiles();drawStage();setStatus('Assigned selected crop to '+name,'ok')}
+function createCropForFile(name,opts={}){const s=currentSource();if(!s){setStatus('Load a source sheet first.','err');return}const existing=findCropIndexByFile(name);if(existing>=0&&!opts.force){selectCrop(existing);setStatus(name+' already has a crop. Selected it.','ok');return}if(existing>=0&&opts.force&&!confirm(name+' is already assigned to another crop. Create another crop with the same filename?')){selectCrop(existing);return}let w=Math.round(s.width*.18),h=Math.round(s.height*.18);const ref=currentCrop()||s.crops[s.crops.length-1];if(ref){w=ref.w;h=ref.h}const offset=s.crops.length*14;const c={name:name,x:Math.max(0,Math.round((s.width-w)/2)+offset),y:Math.max(0,Math.round((s.height-h)/2)+offset),w,h,format:/\.webp$/i.test(name)?'webp':'png',removeDarkBg:false,threshold:38,pad:0};s.crops.push(c);selectCrop(s.crops.length-1);renderSources();setStatus('Created new crop assigned to '+name+'. Move/resize it on the source sheet.','ok')}
+function autoAssignByOrder(){const s=currentSource();if(!s||!s.crops.length||!s.targetFiles.length){setStatus('Need crops and an attached folder with image files first.','err');return}const files=s.targetFiles.map(f=>f.name).filter(n=>/\.(png|webp)$/i.test(n));const count=Math.min(files.length,s.crops.length);for(let i=0;i<count;i++){s.crops[i].name=files[i];s.crops[i].format=/\.webp$/i.test(files[i])?'webp':'png'}cropIndex=0;loadInputs();renderCrops();renderTargetFiles();drawStage();setStatus('Auto-assigned '+count+' crops by file order.','ok')}
+
+function renderCrops(){const list=els('cropList');list.innerHTML='';const s=currentSource();if(!s)return;const q=els('filter').value.toLowerCase().trim();s.crops.forEach((c,i)=>{if(q&&!cleanFile(c.name,c.format).toLowerCase().includes(q))return;const div=document.createElement('div');div.className='cropItem '+(i===cropIndex?'active':'');div.innerHTML=`<strong>${cleanFile(c.name,c.format)}</strong><small>${c.x},${c.y},${c.w}×${c.h}</small>`;div.onclick=()=>selectCrop(i);list.appendChild(div)})}
+function selectCrop(i){cropIndex=i;loadInputs();renderCrops();renderTargetFiles();drawStage()}
+function loadInputs(){const c=currentCrop();if(!c){['name','x','y','w','h','resizeW','resizeH'].forEach(id=>inputs[id].value='');inputs.removeBg.checked=false;inputs.threshold.value=38;inputs.pad.value=0;els('selectedPath').textContent='No crop selected';updatePreview();return}inputs.name.value=c.name||'';inputs.x.value=c.x;inputs.y.value=c.y;inputs.w.value=c.w;inputs.h.value=c.h;inputs.format.value=c.format||'png';inputs.removeBg.checked=!!c.removeDarkBg;inputs.threshold.value=c.threshold??38;inputs.pad.value=c.pad??0;inputs.resizeW.value=(c.resize&&c.resize[0])||'';inputs.resizeH.value=(c.resize&&c.resize[1])||'';els('selectedPath').textContent=selectedExportPath(c);updatePreview()}
+function applyInputs(){const c=currentCrop();if(!c)return;c.name=inputs.name.value||'asset.png';c.x=Math.round(+inputs.x.value||0);c.y=Math.round(+inputs.y.value||0);c.w=Math.max(1,Math.round(+inputs.w.value||1));c.h=Math.max(1,Math.round(+inputs.h.value||1));c.format=inputs.format.value;c.removeDarkBg=inputs.removeBg.checked;c.threshold=+inputs.threshold.value||0;c.pad=+inputs.pad.value||0;const rw=+inputs.resizeW.value||0,rh=+inputs.resizeH.value||0;if(rw&&rh)c.resize=[rw,rh];else delete c.resize;els('selectedPath').textContent=selectedExportPath(c);renderCrops();renderTargetFiles();drawStage();updatePreview()}
+function uniqueName(base){const s=currentSource();let n=base,i=1,names=new Set((s?.crops||[]).map(c=>c.name));while(names.has(n))n=base.replace(/(\.[^.]+)$/,'_'+(i++)+'$1');return n}
+function newCrop(){const s=currentSource();if(!s){setStatus('Load a source sheet first.','err');return}const w=Math.round(s.width*.18),h=Math.round(s.height*.18);const c={name:uniqueName('new_asset.png'),x:Math.round((s.width-w)/2),y:Math.round((s.height-h)/2),w,h,format:'png',removeDarkBg:false,threshold:38,pad:0};s.crops.push(c);selectCrop(s.crops.length-1);renderSources()}
+function duplicateCrop(){const s=currentSource(),c=currentCrop();if(!s||!c)return;const d=JSON.parse(JSON.stringify(c));d.name=uniqueName(d.name.replace(/(\.[^.]+)$/,'_copy$1'));d.x+=20;d.y+=20;s.crops.splice(cropIndex+1,0,d);selectCrop(cropIndex+1);renderSources()}
+function deleteCrop(){const s=currentSource();if(!s||cropIndex<0)return;s.crops.splice(cropIndex,1);cropIndex=Math.min(cropIndex,s.crops.length-1);loadInputs();renderCrops();renderTargetFiles();renderSources();drawStage()}
+function clearSheetCrops(){const s=currentSource();if(!s)return;if(!confirm('Clear all crops for current source sheet?'))return;s.crops=[];cropIndex=-1;renderCrops();renderTargetFiles();renderSources();loadInputs();drawStage()}
+
+function drawStage(){const s=currentSource();if(!s||!s.img){stage.width=900;stage.height=520;ctx.clearRect(0,0,stage.width,stage.height);ctx.fillStyle='#050808';ctx.fillRect(0,0,stage.width,stage.height);ctx.fillStyle='#aeb8ad';ctx.font='20px system-ui';ctx.textAlign='center';ctx.fillText(s&&!s.img?'Crop map loaded. Reload matching source sheet file: '+s.fileName:'Load a source sheet to start slicing',stage.width/2,stage.height/2);return}const wrap=els('canvasWrap');let scale=zoom==='actual'?1:Math.min(1,Math.max(.1,(wrap.clientWidth-28)/s.width))*(typeof zoom==='number'?zoom:1);stage.width=Math.round(s.width*scale);stage.height=Math.round(s.height*scale);ctx.clearRect(0,0,stage.width,stage.height);ctx.imageSmoothingEnabled=true;ctx.drawImage(s.img,0,0,stage.width,stage.height);s.crops.forEach((c,i)=>drawCropRect(c,scale,i===cropIndex))}
+function drawCropRect(c,scale,active){const x=c.x*scale,y=c.y*scale,w=c.w*scale,h=c.h*scale;ctx.save();ctx.lineWidth=active?3:2;ctx.strokeStyle=active?'#00ff9a':'rgba(40,215,255,.9)';ctx.fillStyle=active?'rgba(0,255,154,.08)':'rgba(40,215,255,.05)';ctx.fillRect(x,y,w,h);ctx.strokeRect(x,y,w,h);ctx.fillStyle=active?'#00ff9a':'#28d7ff';ctx.font='12px system-ui';ctx.textBaseline='top';ctx.fillText(cleanFile(c.name,c.format),x+4,y+4);if(active){for(const [hx,hy] of handles(c,scale)){ctx.fillStyle='#00ff9a';ctx.fillRect(hx-5,hy-5,10,10);ctx.strokeStyle='#001';ctx.strokeRect(hx-5,hy-5,10,10)}}ctx.restore()}
+function stageScale(){const s=currentSource();return s?stage.width/s.width:1}function handles(c,scale){const x=c.x*scale,y=c.y*scale,w=c.w*scale,h=c.h*scale;return[[x,y],[x+w,y],[x,y+h],[x+w,y+h]]}function pointerPos(ev){const r=stage.getBoundingClientRect();return{x:ev.clientX-r.left,y:ev.clientY-r.top}}
+function pointerDown(ev){const s=currentSource();if(!s)return;const p=pointerPos(ev),sc=stageScale();if((ev.shiftKey||shiftDown)&&p.x>=0&&p.y>=0){createDrag={start:p};ev.preventDefault();return}let hit=-1,mode='move';for(let i=s.crops.length-1;i>=0;i--){const c=s.crops[i],x=c.x*sc,y=c.y*sc,w=c.w*sc,h=c.h*sc,hs=12;handles(c,sc).forEach((pt,hi)=>{if(Math.abs(p.x-pt[0])<hs&&Math.abs(p.y-pt[1])<hs){hit=i;mode='resize'+hi}});if(hit<0&&p.x>=x&&p.x<=x+w&&p.y>=y&&p.y<=y+h){hit=i;mode='move';break}}if(hit>=0){cropIndex=hit;loadInputs();renderCrops();renderTargetFiles();const c=currentCrop();drag={mode,start:p,orig:JSON.parse(JSON.stringify(c))};ev.preventDefault()}}
+function pointerMove(ev){const s=currentSource();if(!s)return;const p=pointerPos(ev),sc=stageScale();if(createDrag){drawStage();const x=Math.min(createDrag.start.x,p.x),y=Math.min(createDrag.start.y,p.y),w=Math.abs(p.x-createDrag.start.x),h=Math.abs(p.y-createDrag.start.y);ctx.strokeStyle='#ffae42';ctx.lineWidth=2;ctx.setLineDash([8,4]);ctx.strokeRect(x,y,w,h);ctx.setLineDash([]);return}if(!drag)return;const c=currentCrop();if(!c)return;const dx=(p.x-drag.start.x)/sc,dy=(p.y-drag.start.y)/sc,o=drag.orig;if(drag.mode==='move'){c.x=Math.round(o.x+dx);c.y=Math.round(o.y+dy)}else{let x=o.x,y=o.y,w=o.w,h=o.h;if(drag.mode==='resize0'){x=o.x+dx;y=o.y+dy;w=o.w-dx;h=o.h-dy}if(drag.mode==='resize1'){y=o.y+dy;w=o.w+dx;h=o.h-dy}if(drag.mode==='resize2'){x=o.x+dx;w=o.w-dx;h=o.h+dy}if(drag.mode==='resize3'){w=o.w+dx;h=o.h+dy}c.x=Math.round(x);c.y=Math.round(y);c.w=Math.max(5,Math.round(w));c.h=Math.max(5,Math.round(h))}inputs.x.value=c.x;inputs.y.value=c.y;inputs.w.value=c.w;inputs.h.value=c.h;els('selectedPath').textContent=selectedExportPath(c);drawStage();updatePreview()}
+function pointerUp(ev){if(createDrag){const s=currentSource(),sc=stageScale(),p=pointerPos(ev);const x=Math.round(Math.min(createDrag.start.x,p.x)/sc),y=Math.round(Math.min(createDrag.start.y,p.y)/sc),w=Math.round(Math.abs(p.x-createDrag.start.x)/sc),h=Math.round(Math.abs(p.y-createDrag.start.y)/sc);if(w>8&&h>8){const c={name:uniqueName('new_asset.png'),x,y,w,h,format:'png',removeDarkBg:false,threshold:38,pad:0};s.crops.push(c);selectCrop(s.crops.length-1);renderSources()}createDrag=null;drawStage()}drag=null;renderCrops();renderTargetFiles()}
+
+function cropToCanvas(c){const s=currentSource();if(!s||!s.img)throw new Error('No source sheet image loaded for this crop.');const pad=+c.pad||0;const sx=Math.max(0,c.x-pad),sy=Math.max(0,c.y-pad),sw=Math.min(s.width-sx,c.w+pad*2),sh=Math.min(s.height-sy,c.h+pad*2);let raw=document.createElement('canvas');raw.width=Math.max(1,sw);raw.height=Math.max(1,sh);let rctx=raw.getContext('2d',{willReadFrequently:true});rctx.drawImage(s.img,sx,sy,sw,sh,0,0,sw,sh);if(c.removeDarkBg)removeDark(raw,+c.threshold||38);let out=raw;if(c.resize&&c.resize[0]&&c.resize[1]){out=document.createElement('canvas');out.width=c.resize[0];out.height=c.resize[1];out.getContext('2d').drawImage(raw,0,0,out.width,out.height)}return out}
+function removeDark(canvas,threshold){const cx=canvas.getContext('2d',{willReadFrequently:true}),data=cx.getImageData(0,0,canvas.width,canvas.height),px=data.data;for(let i=0;i<px.length;i+=4){const r=px[i],g=px[i+1],b=px[i+2],mx=Math.max(r,g,b),avg=(r+g+b)/3;if(mx<threshold||avg<threshold*.85)px[i+3]=0;else if(mx<threshold+22)px[i+3]=Math.min(px[i+3],Math.max(0,Math.round((mx-threshold)/22*255)))}cx.putImageData(data,0,0)}
+function updatePreview(){const c=currentCrop();if(!c){preview.width=280;preview.height=180;pctx.clearRect(0,0,preview.width,preview.height);return}try{const cv=cropToCanvas(c);preview.width=cv.width;preview.height=cv.height;pctx.clearRect(0,0,preview.width,preview.height);pctx.drawImage(cv,0,0)}catch(e){setStatus('Preview failed: '+e.message,'err')}}
+function canvasBlob(cv,format){return new Promise(res=>cv.toBlob(b=>res(b),format==='webp'?'image/webp':'image/png',format==='webp'?0.92:undefined))}
+async function exportSelected(){const c=currentCrop();if(!c){setStatus('No crop selected.','err');return}try{const cv=cropToCanvas(c),blob=await canvasBlob(cv,c.format||'png');downloadBlob(blob,cleanFile(c.name,c.format));setStatus('Exported selected: '+cleanFile(c.name,c.format),'ok')}catch(e){setStatus('Export failed: '+e.message,'err')}}
+async function exportActiveZip(){const s=currentSource();if(!s){setStatus('No active source sheet.','err');return}try{setStatus('Exporting active sheet ZIP...');const files=[];const origCrop=cropIndex;for(let ci=0;ci<s.crops.length;ci++){cropIndex=ci;const c=s.crops[ci];const cv=cropToCanvas(c);const blob=await canvasBlob(cv,c.format||'png');files.push({path:cleanFile(c.name,c.format),data:new Uint8Array(await blob.arrayBuffer())})}files.push({path:'_cropmap_active_sheet.json',data:new TextEncoder().encode(JSON.stringify(makeActiveMap(),null,2))});downloadBlob(makeZip(files),(s.id||'active-sheet').replace(/[^a-z0-9_-]+/gi,'_')+'_sliced-assets.zip');cropIndex=origCrop;selectSource(sourceIndex);setStatus('Exported active sheet ZIP with '+s.crops.length+' crops.','ok')}catch(e){setStatus('Export ZIP failed: '+e.message,'err')}}
+async function writeActiveToFolder(){const s=currentSource();if(!s||!s.targetDirHandle){setStatus('Attach a target folder with browser folder access first.','err');return}try{let count=0;for(let ci=0;ci<s.crops.length;ci++){const c=s.crops[ci];cropIndex=ci;const cv=cropToCanvas(c),blob=await canvasBlob(cv,c.format||'png');const fh=await s.targetDirHandle.getFileHandle(cleanFile(c.name,c.format),{create:true});const writable=await fh.createWritable();await writable.write(blob);await writable.close();count++}selectSource(sourceIndex);setStatus('Wrote '+count+' files directly to '+s.targetFolderName+'.','ok')}catch(e){setStatus('Direct folder write failed: '+e.message,'err')}}
+function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+function makeActiveMap(){const s=currentSource();return{meta:{tool:'KGB Asset Slicer',version:'0.7.2',exportMode:'active-sheet-only',targetFolderName:s?.targetFolderName||'',notes:['Target folder handles are not stored in crop maps. Reattach folder after loading a map if direct writing is needed.']},sources:s?[{id:s.id,fileName:s.fileName,width:s.width,height:s.height,targetFolderName:s.targetFolderName||'',targetFiles:(s.targetFiles||[]).map(f=>f.name),crops:s.crops}]:[]}}
+function makeCropMap(){return{meta:{tool:'KGB Asset Slicer',version:'0.7.2',notes:['Source images and folder handles are selected from local files and are not embedded. Reload sheets and reattach folders before exporting.']},sources:sources.map(s=>({id:s.id,fileName:s.fileName,width:s.width,height:s.height,targetFolderName:s.targetFolderName||'',targetFiles:(s.targetFiles||[]).map(f=>f.name),crops:s.crops}))}}
+function downloadMap(){downloadBlob(new Blob([JSON.stringify(makeCropMap(),null,2)],{type:'application/json'}),'kgb_asset_cropmap_v0-7-2.json')}
+function loadMap(ev){const file=ev.target.files&&ev.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const map=JSON.parse(reader.result);applyCropMap(map);setStatus('Loaded crop map: '+file.name,'ok')}catch(e){setStatus('Could not load crop map: '+e.message,'err')}};reader.readAsText(file)}
+function applyCropMap(map){if(!Array.isArray(map.sources))throw new Error('Crop map must include sources array.');for(const ms of map.sources){let s=sources.find(x=>x.fileName===ms.fileName||x.id===ms.id);if(s){s.id=ms.id||s.id;s.crops=(ms.crops||[]).map(normalizeCrop);s.targetFolderName=ms.targetFolderName||s.targetFolderName||'';if(!s.targetFiles?.length&&Array.isArray(ms.targetFiles))s.targetFiles=ms.targetFiles.map(name=>({name}))}else{sources.push({id:ms.id||ms.fileName||'missing_source',fileName:ms.fileName||'',objectUrl:'',img:null,width:ms.width||0,height:ms.height||0,crops:(ms.crops||[]).map(normalizeCrop),targetFolderName:ms.targetFolderName||'',targetFiles:Array.isArray(ms.targetFiles)?ms.targetFiles.map(name=>({name})):[],targetDirHandle:null,missing:true})}}sourceIndex=sources.length?0:-1;cropIndex=currentSource()?.crops?.length?0:-1;renderSources();selectSource(sourceIndex)}
+function normalizeCrop(c){return{name:c.name||'asset.png',x:Math.round(+c.x||0),y:Math.round(+c.y||0),w:Math.max(1,Math.round(+c.w||1)),h:Math.max(1,Math.round(+c.h||1)),format:c.format==='webp'?'webp':'png',removeDarkBg:!!c.removeDarkBg,threshold:+c.threshold||38,pad:+c.pad||0,resize:Array.isArray(c.resize)?c.resize:undefined}}
+function addGridCrops(){const s=currentSource();if(!s){setStatus('Load a source sheet first.','err');return}const rows=+els('gridRows').value||1,cols=+els('gridCols').value||1,startX=+els('gridX').value||0,startY=+els('gridY').value||0,cellW=+els('gridW').value||100,cellH=+els('gridH').value||100,gapX=+els('gridGapX').value||0,gapY=+els('gridGapY').value||0;const prefixes=els('rowPrefixes').value.split(',').map(x=>x.trim()).filter(Boolean),pattern=els('namePattern').value||'{prefix}_{index:02d}.png';let added=0;for(let r=0;r<rows;r++){const prefix=prefixes[r]||`row${r+1}`;for(let c=0;c<cols;c++){s.crops.push({name:applyPattern(pattern,prefix,c+1),x:Math.round(startX+c*(cellW+gapX)),y:Math.round(startY+r*(cellH+gapY)),w:Math.round(cellW),h:Math.round(cellH),format:'png',removeDarkBg:false,threshold:38,pad:0});added++}}cropIndex=s.crops.length-added;renderCrops();renderTargetFiles();renderSources();loadInputs();drawStage();setStatus('Added '+added+' grid crops.','ok')}
+
+// Minimal no-compression ZIP writer
+const crcTable=(()=>{let c,t=[];for(let n=0;n<256;n++){c=n;for(let k=0;k<8;k++)c=(c&1)?(0xedb88320^(c>>>1)):(c>>>1);t[n]=c>>>0}return t})();function crc32(data){let c=0xffffffff;for(let i=0;i<data.length;i++)c=crcTable[(c^data[i])&255]^(c>>>8);return(c^0xffffffff)>>>0}function u16(n){return[n&255,n>>>8&255]}function u32(n){return[n&255,n>>>8&255,n>>>16&255,n>>>24&255]}function makeZip(files){let chunks=[],central=[],offset=0;for(const f of files){const nameBytes=new TextEncoder().encode(f.path),data=f.data,crc=crc32(data);const local=new Uint8Array([0x50,0x4b,0x03,0x04,20,0,0,0,0,0,0,0,0,0,...u32(crc),...u32(data.length),...u32(data.length),...u16(nameBytes.length),0,0]);chunks.push(local,nameBytes,data);central.push({nameBytes,data,crc,offset});offset+=local.length+nameBytes.length+data.length}const cdStart=offset;for(const e of central){const cent=new Uint8Array([0x50,0x4b,0x01,0x02,20,0,20,0,0,0,0,0,0,0,0,0,...u32(e.crc),...u32(e.data.length),...u32(e.data.length),...u16(e.nameBytes.length),0,0,0,0,0,0,0,0,0,0,0,0,...u32(e.offset)]);chunks.push(cent,e.nameBytes);offset+=cent.length+e.nameBytes.length}const cdSize=offset-cdStart;chunks.push(new Uint8Array([0x50,0x4b,0x05,0x06,0,0,0,0,...u16(central.length),...u16(central.length),...u32(cdSize),...u32(cdStart),0,0]));return new Blob(chunks,{type:'application/zip'})}
+init();
+</script>
+</body>
+</html>

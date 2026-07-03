@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PrettyForge — HTML Prettifier</title>
+  <style>
+    :root {
+      --bg: #090c12;
+      --panel: #111824;
+      --panel-2: #0d131d;
+      --text: #eaf1ff;
+      --muted: #96a6bf;
+      --line: #263347;
+      --accent: #a6d8ff;
+      --accent-2: #b6ffd4;
+      --warn: #ffd166;
+      --danger: #ff8da1;
+      --shadow: 0 20px 80px rgba(0,0,0,.34);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(166, 216, 255, .17), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(182, 255, 212, .10), transparent 24rem),
+        var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+    }
+
+    header {
+      padding: 34px clamp(18px, 4vw, 48px) 18px;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(166,216,255,.95), rgba(182,255,212,.7)),
+        linear-gradient(180deg, rgba(255,255,255,.3), transparent);
+      box-shadow: 0 0 32px rgba(166,216,255,.25);
+      position: relative;
+    }
+
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      left: 11px;
+      right: 11px;
+      height: 3px;
+      border-radius: 999px;
+      background: rgba(8,11,16,.78);
+    }
+
+    .mark::before { top: 13px; }
+    .mark::after { bottom: 13px; }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: .95;
+      letter-spacing: -.06em;
+    }
+
+    .subtitle {
+      max-width: 980px;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.6;
+      margin: 14px 0 0;
+    }
+
+    main {
+      padding: 24px clamp(18px, 4vw, 48px) 44px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .notice {
+      border: 1px solid rgba(166, 216, 255, .24);
+      background: rgba(166, 216, 255, .07);
+      color: #dff2ff;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      line-height: 1.55;
+      box-shadow: var(--shadow);
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(17, 24, 36, .74);
+      border: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button, .file-label, select {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,.12);
+      background: #172235;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      font-size: .92rem;
+      min-height: 40px;
+    }
+
+    select {
+      padding-right: 34px;
+      background-image:
+        linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+        linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+      background-position:
+        calc(100% - 18px) 17px,
+        calc(100% - 12px) 17px;
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+    }
+
+    button:hover, .file-label:hover, select:hover {
+      transform: translateY(-1px);
+      border-color: rgba(166,216,255,.6);
+      background-color: #1c2a40;
+    }
+
+    button.primary {
+      color: #051018;
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    button.secondary { background: transparent; }
+
+    button.danger-lite {
+      border-color: rgba(255, 141, 161, .35);
+      color: #ffc5cf;
+    }
+
+    input[type="file"] { display: none; }
+
+    .status {
+      color: var(--muted);
+      font-size: .93rem;
+      min-height: 1.35rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 310px 1fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: rgba(17, 24, 36, .78);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: .02em;
+    }
+
+    .panel-head {
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      background: rgba(13, 19, 29, .76);
+    }
+
+    .panel-body { padding: 14px; }
+
+    textarea {
+      width: 100%;
+      min-height: 640px;
+      resize: vertical;
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      background: #060910;
+      color: #eaf1ff;
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.45;
+      outline: none;
+      tab-size: 2;
+      white-space: pre;
+    }
+
+    textarea:focus {
+      border-color: rgba(166,216,255,.65);
+      box-shadow: 0 0 0 3px rgba(166,216,255,.12);
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    label.option {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border: 1px solid rgba(255,255,255,.08);
+      background: rgba(255,255,255,.025);
+      border-radius: 14px;
+      cursor: pointer;
+    }
+
+    label.option:hover { border-color: rgba(166,216,255,.28); }
+
+    input[type="checkbox"] {
+      margin-top: 3px;
+      accent-color: #a6d8ff;
+    }
+
+    .option strong {
+      display: block;
+      font-size: .93rem;
+      margin-bottom: 2px;
+    }
+
+    .option span {
+      display: block;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 800;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 12px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .metric .num {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      color: var(--accent-2);
+      margin-bottom: 4px;
+    }
+
+    .metric .label {
+      color: var(--muted);
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .log {
+      margin-top: 14px;
+      max-height: 220px;
+      overflow: auto;
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      background: rgba(0,0,0,.16);
+      padding: 11px;
+      font-size: .82rem;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .log div + div {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(166,216,255,.25);
+      background: rgba(166,216,255,.08);
+      color: #dff2ff;
+      padding: 6px 9px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 0 clamp(18px, 4vw, 48px) 34px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: .92rem;
+    }
+
+    code {
+      color: #dff2ff;
+      font-family: var(--mono);
+    }
+
+    @media (max-width: 1200px) {
+      .grid { grid-template-columns: 1fr; }
+      textarea { min-height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div><div class="pill">Local-only browser tool</div></div>
+    </div>
+    <h1>PrettyForge</h1>
+    <p class="subtitle">
+      Paste or load messy HTML and turn it back into readable, indented source.
+      It can also format embedded CSS and simple embedded JavaScript blocks.
+      Everything runs locally in your browser.
+    </p>
+  </header>
+
+  <main>
+    <div class="notice">
+      <strong>Use case:</strong> this is the reverse-side utility for your static-tool workflow.
+      Use Code Shield when you want a protected public build; use PrettyForge when you want readable code again for review, cleanup, learning, or editing.
+    </div>
+
+    <section class="toolbar">
+      <div class="button-row">
+        <label class="file-label" for="fileInput">Load File</label>
+        <input id="fileInput" type="file" accept=".html,.htm,.js,.css,.txt,text/html,text/javascript,text/css,text/plain" />
+        <button class="primary" id="prettifyBtn">Prettify HTML</button>
+        <button id="copyBtn">Copy Output</button>
+        <button id="downloadBtn">Download Output</button>
+      </div>
+      <div class="button-row">
+        <button class="secondary" id="sampleBtn">Load Sample</button>
+        <button class="danger-lite" id="clearBtn">Clear</button>
+      </div>
+      <div class="status" id="status">Ready. Load a file or paste source code.</div>
+    </section>
+
+    <section class="grid">
+      <aside class="panel">
+        <div class="panel-head">
+          <h2>Options</h2>
+          <span class="pill">v1</span>
+        </div>
+        <div class="panel-body">
+          <div class="field">
+            <label for="indentSelect">Indentation</label>
+            <select id="indentSelect">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tabs</option>
+            </select>
+          </div>
+
+          <div class="options">
+            <label class="option">
+              <input type="checkbox" id="formatCss" checked />
+              <span>
+                <strong>Format embedded CSS</strong>
+                <span>Prettifies inline style blocks and pasted CSS-looking input.</span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="checkbox" id="formatJs" checked />
+              <span>
+                <strong>Format embedded JavaScript</strong>
+                <span>Basic formatting for classic inline script blocks and pasted JS-looking input.</span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="checkbox" id="preserveSpecial" checked />
+              <span>
+                <strong>Preserve pre/code/textarea text</strong>
+                <span>Keeps special text blocks from being whitespace-collapsed.</span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="checkbox" id="collapseText" checked />
+              <span>
+                <strong>Collapse ordinary text nodes</strong>
+                <span>Converts runs of text whitespace into single spaces outside special blocks.</span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="checkbox" id="blankBetweenSections" />
+              <span>
+                <strong>Add section breathing room</strong>
+                <span>Adds blank lines after major structural tags such as head, body, main, section, and article.</span>
+              </span>
+            </label>
+
+            <label class="option">
+              <input type="checkbox" id="trimOutput" checked />
+              <span>
+                <strong>Trim output</strong>
+                <span>Removes leading and trailing blank space from final output.</span>
+              </span>
+            </label>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="num" id="inputBytes">0</div>
+              <div class="label">Input bytes</div>
+            </div>
+            <div class="metric">
+              <div class="num" id="outputBytes">0</div>
+              <div class="label">Output bytes</div>
+            </div>
+            <div class="metric">
+              <div class="num" id="lineCount">0</div>
+              <div class="label">Output lines</div>
+            </div>
+            <div class="metric">
+              <div class="num" id="blockCount">0</div>
+              <div class="label">Blocks formatted</div>
+            </div>
+          </div>
+
+          <div class="log" id="log">
+            <div>Load a file or paste code, choose options, then click Prettify HTML.</div>
+            <div>This is a readable-code formatter, not a browser validator.</div>
+          </div>
+        </div>
+      </aside>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Input</h2>
+          <span class="pill">Messy source</span>
+        </div>
+        <div class="panel-body">
+          <textarea id="input" spellcheck="false" placeholder="Paste messy HTML, CSS, or JavaScript here..."></textarea>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Output</h2>
+          <span class="pill">Readable source</span>
+        </div>
+        <div class="panel-body">
+          <textarea id="output" spellcheck="false" placeholder="Prettified output appears here..."></textarea>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>
+      Note: HTML parsing in the real world is messy. This tool intentionally favors practical readability for static pages and browser utilities.
+      It will not perfectly reconstruct all minified/generated frameworks, but it works well for normal hand-authored HTML/CSS/JS tools.
+    </p>
+  </footer>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const SCRIPT_OPEN = "<" + "script";
+      const SCRIPT_CLOSE = "<" + "/script>";
+      const STYLE_OPEN = "<" + "style";
+      const STYLE_CLOSE = "<" + "/style>";
+
+      const VOID_TAGS = new Set([
+        "area", "base", "br", "col", "embed", "hr", "img", "input",
+        "link", "meta", "param", "source", "track", "wbr"
+      ]);
+
+      const STRUCTURAL_TAGS = new Set([
+        "html", "head", "body", "main", "section", "article", "header",
+        "footer", "nav", "aside"
+      ]);
+
+      const $ = (id) => document.getElementById(id);
+
+      const els = {
+        input: $("input"),
+        output: $("output"),
+        status: $("status"),
+        log: $("log"),
+        fileInput: $("fileInput"),
+        inputBytes: $("inputBytes"),
+        outputBytes: $("outputBytes"),
+        lineCount: $("lineCount"),
+        blockCount: $("blockCount"),
+        loadedFileName: "",
+        opts: {
+          indentSelect: $("indentSelect"),
+          formatCss: $("formatCss"),
+          formatJs: $("formatJs"),
+          preserveSpecial: $("preserveSpecial"),
+          collapseText: $("collapseText"),
+          blankBetweenSections: $("blankBetweenSections"),
+          trimOutput: $("trimOutput")
+        }
+      };
+
+      const encoder = new TextEncoder();
+
+      function getOptions() {
+        const indentValue = els.opts.indentSelect.value;
+        return {
+          indent: indentValue === "tab" ? "\t" : " ".repeat(Number(indentValue)),
+          formatCss: els.opts.formatCss.checked,
+          formatJs: els.opts.formatJs.checked,
+          preserveSpecial: els.opts.preserveSpecial.checked,
+          collapseText: els.opts.collapseText.checked,
+          blankBetweenSections: els.opts.blankBetweenSections.checked,
+          trimOutput: els.opts.trimOutput.checked
+        };
+      }
+
+      function byteLength(text) {
+        return encoder.encode(text || "").length;
+      }
+
+      function getTagName(token) {
+        const match = token.match(/^<\/?\s*([a-zA-Z0-9:-]+)/);
+        return match ? match[1].toLowerCase() : "";
+      }
+
+      function isOpeningTag(token) {
+        return /^<[^!/][^>]*>$/.test(token) && !/^<\//.test(token);
+      }
+
+      function isClosingTag(token) {
+        return /^<\//.test(token);
+      }
+
+      function isSelfClosingTag(token) {
+        const tag = getTagName(token);
+        return /\/\s*>$/.test(token) || VOID_TAGS.has(tag);
+      }
+
+      function isCommentOrDeclaration(token) {
+        return /^<!--/.test(token) || /^<!/.test(token) || /^<\?/.test(token);
+      }
+
+      function normalizeNewlines(text) {
+        return String(text || "").replace(/\r\n?/g, "\n");
+      }
+
+      function addLine(lines, level, text, indent) {
+        if (text === "") {
+          lines.push("");
+          return;
+        }
+        lines.push(indent.repeat(Math.max(0, level)) + text);
+      }
+
+      function collapseTextNode(text) {
+        return text.replace(/\s+/g, " ").trim();
+      }
+
+      function formatCssBlock(css, indent) {
+        const src = normalizeNewlines(css).trim();
+        if (!src) return "";
+
+        const lines = [];
+        let current = "";
+        let level = 0;
+        let quote = "";
+        let escape = false;
+
+        function pushCurrent() {
+          const cleaned = current.trim();
+          if (cleaned) lines.push(indent.repeat(Math.max(0, level)) + cleaned);
+          current = "";
+        }
+
+        for (let i = 0; i < src.length; i++) {
+          const ch = src[i];
+          const next = src[i + 1];
+
+          if (quote) {
+            current += ch;
+            if (escape) {
+              escape = false;
+            } else if (ch === "\\") {
+              escape = true;
+            } else if (ch === quote) {
+              quote = "";
+            }
+            continue;
+          }
+
+          if (ch === '"' || ch === "'") {
+            quote = ch;
+            current += ch;
+            continue;
+          }
+
+          if (ch === "/" && next === "*") {
+            current += ch;
+            continue;
+          }
+
+          if (ch === "{") {
+            current = current.trimEnd() + " {";
+            pushCurrent();
+            level++;
+            continue;
+          }
+
+          if (ch === "}") {
+            pushCurrent();
+            level = Math.max(0, level - 1);
+            lines.push(indent.repeat(level) + "}");
+            continue;
+          }
+
+          if (ch === ";") {
+            current += ";";
+            pushCurrent();
+            continue;
+          }
+
+          if (/\s/.test(ch)) {
+            if (current && !/\s$/.test(current)) current += " ";
+            continue;
+          }
+
+          current += ch;
+        }
+
+        pushCurrent();
+        return lines.join("\n");
+      }
+
+      function formatJsBlock(js, indent) {
+        const src = normalizeNewlines(js).trim();
+        if (!src) return "";
+
+        const lines = [];
+        let current = "";
+        let level = 0;
+        let quote = "";
+        let escape = false;
+        let lineComment = false;
+        let blockComment = false;
+
+        function pushCurrent(forceBlank) {
+          const cleaned = current.trim();
+          if (cleaned) lines.push(indent.repeat(Math.max(0, level)) + cleaned);
+          else if (forceBlank) lines.push("");
+          current = "";
+        }
+
+        for (let i = 0; i < src.length; i++) {
+          const ch = src[i];
+          const next = src[i + 1];
+
+          if (lineComment) {
+            current += ch;
+            if (ch === "\n") {
+              lineComment = false;
+              pushCurrent();
+            }
+            continue;
+          }
+
+          if (blockComment) {
+            current += ch;
+            if (ch === "*" && next === "/") {
+              current += next;
+              i++;
+              blockComment = false;
+            }
+            continue;
+          }
+
+          if (quote) {
+            current += ch;
+            if (escape) {
+              escape = false;
+            } else if (ch === "\\") {
+              escape = true;
+            } else if (ch === quote) {
+              quote = "";
+            }
+            continue;
+          }
+
+          if (ch === "/" && next === "/") {
+            if (current.trim()) pushCurrent();
+            current += ch + next;
+            i++;
+            lineComment = true;
+            continue;
+          }
+
+          if (ch === "/" && next === "*") {
+            if (current.trim()) pushCurrent();
+            current += ch + next;
+            i++;
+            blockComment = true;
+            continue;
+          }
+
+          if (ch === '"' || ch === "'" || ch === "`") {
+            quote = ch;
+            current += ch;
+            continue;
+          }
+
+          if (ch === "{") {
+            current = current.trimEnd() + " {";
+            pushCurrent();
+            level++;
+            continue;
+          }
+
+          if (ch === "}") {
+            pushCurrent();
+            level = Math.max(0, level - 1);
+            current = "}";
+            if (next === ";" || next === "," || next === ")") {
+              continue;
+            }
+            pushCurrent();
+            continue;
+          }
+
+          if (ch === ";") {
+            current += ";";
+            pushCurrent();
+            continue;
+          }
+
+          if (ch === "\n") {
+            if (current.trim()) pushCurrent();
+            continue;
+          }
+
+          if (/\s/.test(ch)) {
+            if (current && !/\s$/.test(current)) current += " ";
+            continue;
+          }
+
+          current += ch;
+        }
+
+        pushCurrent();
+        return lines.join("\n");
+      }
+
+      function buildSpecialBlock(tag, attrs, content, options, stats) {
+        const lower = tag.toLowerCase();
+        const open = "<" + tag + attrs + ">";
+        const close = "<" + "/" + tag + ">";
+        const rawContent = normalizeNewlines(content || "");
+
+        if (lower === "style" && options.formatCss) {
+          stats.blocksFormatted++;
+          const formatted = formatCssBlock(rawContent, options.indent);
+          return formatted ? [open, ...formatted.split("\n").map(x => options.indent + x), close] : [open + close];
+        }
+
+        if (lower === "script" && options.formatJs && !/\ssrc\s*=/i.test(attrs)) {
+          const typeMatch = attrs.match(/\stype\s*=\s*["']?([^"'\s>]+)/i);
+          const type = typeMatch ? typeMatch[1].toLowerCase() : "";
+          const canFormat = !type || ["text/javascript", "application/javascript", "application/ecmascript"].includes(type);
+          if (canFormat) {
+            stats.blocksFormatted++;
+            const formatted = formatJsBlock(rawContent, options.indent);
+            return formatted ? [open, ...formatted.split("\n").map(x => options.indent + x), close] : [open + close];
+          }
+        }
+
+        if (["pre", "code", "textarea"].includes(lower) && options.preserveSpecial) {
+          if (!rawContent.includes("\n")) return [open + rawContent + close];
+          const body = rawContent.replace(/^\n/, "").replace(/\n$/, "").split("\n");
+          return [open, ...body.map(line => options.indent + line), close];
+        }
+
+        const collapsed = options.collapseText ? collapseTextNode(rawContent) : rawContent.trim();
+        return collapsed ? [open, options.indent + collapsed, close] : [open + close];
+      }
+
+      function protectSpecialBlocks(source, options, stats) {
+        const blocks = [];
+        const tokenPrefix = "§§PRETTYFORGE_BLOCK_";
+        const tokenSuffix = "§§";
+
+        const staged = source.replace(/<(script|style|pre|code|textarea)\b([^>]*)>([\s\S]*?)<\/\1>/gi, (match, tag, attrs, content) => {
+          const token = tokenPrefix + blocks.length + tokenSuffix;
+          blocks.push(buildSpecialBlock(tag, attrs || "", content || "", options, stats));
+          return token;
+        });
+
+        return { staged, blocks, tokenPrefix, tokenSuffix };
+      }
+
+      function prettifyHtml(source) {
+        const options = getOptions();
+        const stats = { blocksFormatted: 0 };
+        let src = normalizeNewlines(source);
+        const protectedData = protectSpecialBlocks(src, options, stats);
+        src = protectedData.staged;
+
+        const tokenRegex = /(§§PRETTYFORGE_BLOCK_\d+§§|<!--[\s\S]*?-->|<![^>]*>|<\?[\s\S]*?\?>|<\/?[^>]+>|[^<§]+)/g;
+        const tokens = src.match(tokenRegex) || [];
+        const lines = [];
+        let level = 0;
+
+        for (const token of tokens) {
+          if (!token) continue;
+
+          const blockMatch = token.match(/^§§PRETTYFORGE_BLOCK_(\d+)§§$/);
+          if (blockMatch) {
+            const blockLines = protectedData.blocks[Number(blockMatch[1])] || [];
+            for (const blockLine of blockLines) addLine(lines, level, blockLine, options.indent);
+            continue;
+          }
+
+          if (isCommentOrDeclaration(token)) {
+            addLine(lines, level, token.trim(), options.indent);
+            continue;
+          }
+
+          if (isClosingTag(token)) {
+            level = Math.max(0, level - 1);
+            addLine(lines, level, token.trim(), options.indent);
+            if (options.blankBetweenSections && STRUCTURAL_TAGS.has(getTagName(token))) addLine(lines, 0, "", options.indent);
+            continue;
+          }
+
+          if (isOpeningTag(token)) {
+            const clean = token.trim();
+            const tag = getTagName(clean);
+            addLine(lines, level, clean, options.indent);
+            if (!isSelfClosingTag(clean)) level++;
+            continue;
+          }
+
+          const text = options.collapseText ? collapseTextNode(token) : token.trim();
+          if (text) addLine(lines, level, text, options.indent);
+        }
+
+        let out = lines.join("\n").replace(/\n{3,}/g, "\n\n");
+        if (options.trimOutput) out = out.trim();
+        return { out, stats };
+      }
+
+      function looksLikeCss(source) {
+        const trimmed = source.trim();
+        return /[{][\s\S]*:[\s\S]*[}]/.test(trimmed) && !/<[a-z][\s\S]*>/i.test(trimmed);
+      }
+
+      function looksLikeJs(source) {
+        const trimmed = source.trim();
+        return /(function\s*\(|const\s+|let\s+|var\s+|=>|document\.|window\.|addEventListener)/.test(trimmed) && !/<[a-z][\s\S]*>/i.test(trimmed);
+      }
+
+      function prettifyAny(source) {
+        const options = getOptions();
+        const stats = { blocksFormatted: 0 };
+        if (looksLikeCss(source) && options.formatCss) {
+          stats.blocksFormatted = 1;
+          return { out: formatCssBlock(source, options.indent), stats, mode: "CSS formatting" };
+        }
+        if (looksLikeJs(source) && options.formatJs) {
+          stats.blocksFormatted = 1;
+          return { out: formatJsBlock(source, options.indent), stats, mode: "JavaScript formatting" };
+        }
+        const htmlResult = prettifyHtml(source);
+        return { out: htmlResult.out, stats: htmlResult.stats, mode: "HTML formatting" };
+      }
+
+      function renderResult(result) {
+        els.output.value = result.out;
+        updateMetrics(result.stats);
+
+        const inBytes = byteLength(els.input.value);
+        const outBytes = byteLength(result.out);
+        setStatus(result.mode + " complete. Output is " + outBytes.toLocaleString() + " bytes.");
+
+        const lines = [];
+        lines.push("Mode: " + result.mode);
+        if (els.loadedFileName) lines.push("Loaded file: " + els.loadedFileName);
+        lines.push("Input bytes: " + inBytes.toLocaleString());
+        lines.push("Output bytes: " + outBytes.toLocaleString());
+        lines.push("Output lines: " + countLines(result.out).toLocaleString());
+        lines.push("Embedded/special blocks formatted: " + Number(result.stats.blocksFormatted || 0).toLocaleString());
+        writeLog(lines);
+      }
+
+      function countLines(text) {
+        if (!text) return 0;
+        return text.split("\n").length;
+      }
+
+      function updateMetrics(stats = { blocksFormatted: 0 }) {
+        els.inputBytes.textContent = byteLength(els.input.value).toLocaleString();
+        els.outputBytes.textContent = byteLength(els.output.value).toLocaleString();
+        els.lineCount.textContent = countLines(els.output.value).toLocaleString();
+        els.blockCount.textContent = Number(stats.blocksFormatted || 0).toLocaleString();
+      }
+
+      function setStatus(message) {
+        els.status.textContent = message;
+      }
+
+      function writeLog(lines) {
+        els.log.innerHTML = "";
+        lines.forEach((line) => {
+          const div = document.createElement("div");
+          div.textContent = line;
+          els.log.appendChild(div);
+        });
+      }
+
+      function safeFileBaseName(name) {
+        return String(name || "pretty-output")
+          .replace(/\.[^.]+$/, "")
+          .replace(/[^a-z0-9._-]+/gi, "-")
+          .replace(/^-+|-+$/g, "") || "pretty-output";
+      }
+
+      function copyOutput() {
+        const text = els.output.value;
+        if (!text) {
+          setStatus("No output to copy.");
+          return;
+        }
+
+        navigator.clipboard.writeText(text)
+          .then(() => setStatus("Output copied."))
+          .catch(() => {
+            els.output.focus();
+            els.output.select();
+            document.execCommand("copy");
+            setStatus("Output selected and copied.");
+          });
+      }
+
+      function downloadOutput() {
+        const text = els.output.value;
+        if (!text) {
+          setStatus("No output to download.");
+          return;
+        }
+
+        const base = els.loadedFileName ? safeFileBaseName(els.loadedFileName) : "pretty-output";
+        const filename = base + ".pretty.html";
+        const blob = new Blob([text], { type: "text/html;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+        setStatus("Downloaded " + filename + ".");
+      }
+
+      function loadSample() {
+        const scriptTag = SCRIPT_OPEN + ">";
+        const styleTag = STYLE_OPEN + ">";
+        els.loadedFileName = "";
+        els.input.value = [
+          "<!doctype html><html><head><meta charset=\"utf-8\"><title>Messy Sample</title>",
+          styleTag + "body{font-family:system-ui,sans-serif;background:#111;color:white}.card{max-width:680px;margin:4rem auto;padding:2rem;border:1px solid rgba(255,255,255,.2);border-radius:18px}" + STYLE_CLOSE,
+          "</head><body><main class=\"card\"><h1>Hello from messy HTML</h1><p>This source is intentionally cramped.</p><button id=\"run\">Run demo</button></main>",
+          scriptTag + "const message=\"Now this is readable again.\";document.getElementById(\"run\").addEventListener(\"click\",()=>{alert(message);});" + SCRIPT_CLOSE,
+          "</body></html>"
+        ].join("");
+        els.output.value = "";
+        updateMetrics();
+        setStatus("Sample loaded.");
+        writeLog(["Sample loaded.", "Click Prettify HTML to format it."]);
+      }
+
+      els.fileInput.addEventListener("change", () => {
+        const file = els.fileInput.files && els.fileInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          els.loadedFileName = file.name;
+          els.input.value = String(reader.result || "");
+          els.output.value = "";
+          updateMetrics();
+          setStatus("Loaded " + file.name + ". Click Prettify HTML.");
+          writeLog([
+            "Loaded file: " + file.name,
+            "Input bytes: " + byteLength(els.input.value).toLocaleString(),
+            "Click Prettify HTML to process it."
+          ]);
+        };
+        reader.onerror = () => setStatus("Could not read selected file.");
+        reader.readAsText(file);
+      });
+
+      $("prettifyBtn").addEventListener("click", () => {
+        const source = els.input.value;
+        if (!source.trim()) {
+          setStatus("Load or paste code first.");
+          return;
+        }
+        renderResult(prettifyAny(source));
+      });
+
+      $("copyBtn").addEventListener("click", copyOutput);
+      $("downloadBtn").addEventListener("click", downloadOutput);
+      $("sampleBtn").addEventListener("click", loadSample);
+
+      $("clearBtn").addEventListener("click", () => {
+        els.loadedFileName = "";
+        els.fileInput.value = "";
+        els.input.value = "";
+        els.output.value = "";
+        updateMetrics();
+        setStatus("Cleared.");
+        writeLog(["Load a file or paste code, choose options, then click Prettify HTML."]);
+      });
+
+      els.input.addEventListener("input", () => {
+        els.loadedFileName = "";
+        updateMetrics();
+      });
+
+      els.output.addEventListener("input", () => updateMetrics());
+
+      document.addEventListener("keydown", (event) => {
+        if ((event.ctrlKey || event.metaKey) && event.key === "Enter") $("prettifyBtn").click();
+      });
+
+      updateMetrics();
+    })();
+  </script>
+</body>
+</html>
