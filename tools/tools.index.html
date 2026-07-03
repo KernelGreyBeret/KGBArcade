@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tools Index</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b0d12;
+      --panel: #121722;
+      --line: #243044;
+      --text: #f2f5fb;
+      --muted: #9aa7ba;
+      --link: #8fd3ff;
+      --link2: #a8ffcf;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100svh;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: start center;
+      padding: 28px 14px;
+    }
+    main {
+      width: min(780px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(0,0,0,.28);
+    }
+    h1 { margin: 0 0 4px; font-size: clamp(28px, 7vw, 44px); line-height: 1; }
+    p { margin: 0 0 18px; color: var(--muted); }
+    .grid { display: grid; gap: 10px; }
+    a.tool {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      color: var(--text);
+      text-decoration: none;
+      background: #0e131d;
+    }
+    a.tool:hover, a.tool:focus {
+      outline: none;
+      border-color: var(--link);
+      transform: translateY(-1px);
+    }
+    .name { font-weight: 800; }
+    .path { color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; text-align: right; overflow-wrap: anywhere; }
+    footer { margin-top: 18px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+    footer a { color: var(--link2); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Tools</h1>
+    <p>Quick temporary launcher for the tools directory.</p>
+
+    <section class="grid" aria-label="Tool links">
+      <a class="tool" href="./kgb-field-server/">
+        <span class="name">KGB Field Server</span>
+        <span class="path">/tools/kgb-field-server/</span>
+      </a>
+      <a class="tool" href="./kgb-asset-slicer.html">
+        <span class="name">KGB Asset Slicer</span>
+        <span class="path">/tools/kgb-asset-slicer.html</span>
+      </a>
+      <a class="tool" href="./kgb-file-cleaner.html">
+        <span class="name">KGB File Cleaner</span>
+        <span class="path">/tools/kgb-file-cleaner.html</span>
+      </a>
+      <a class="tool" href="./kgb-forge-suite_v1-1.html">
+        <span class="name">KGB Forge Suite v1.1</span>
+        <span class="path">/tools/kgb-forge-suite_v1-1.html</span>
+      </a>
+      <a class="tool" href="./kgb-pretty-forge.html">
+        <span class="name">KGB Pretty Forge</span>
+        <span class="path">/tools/kgb-pretty-forge.html</span>
+      </a>
+      <a class="tool" href="./kgb-taio-tool.html">
+        <span class="name">KGB Taio Tool</span>
+        <span class="path">/tools/kgb-taio-tool.html</span>
+      </a>
+      <a class="tool" href="./kgb_gif_forge_v2.html">
+        <span class="name">KGB GIF Forge v2</span>
+        <span class="path">/tools/kgb_gif_forge_v2.html</span>
+      </a>
+    </section>
+
+    <footer>
+      <span>Drop this in <code>/tools/index.html</code>.</span>
+      <a href="../">Back</a>
+    </footer>
+  </main>
+</body>
+</html>
