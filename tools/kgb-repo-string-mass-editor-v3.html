@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KGB Repo String Mass Editor</title>
+  <style>
+    :root {
+      --bg: #0a0f14;
+      --panel: #111a24;
+      --panel2: #172434;
+      --panel3: #0b1119;
+      --text: #eaf2ff;
+      --muted: #94a6bd;
+      --border: #294057;
+      --accent: #59f39b;
+      --accent2: #6cc2ff;
+      --warn: #ffd166;
+      --danger: #ff6a7b;
+      --ok: #8ff7b4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(89, 243, 155, .13), transparent 30%),
+        radial-gradient(circle at top right, rgba(108, 194, 255, .12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      padding: 22px;
+    }
+
+    .app {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel3));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 18px 55px rgba(0, 0, 0, .35);
+      overflow: hidden;
+    }
+
+    .controls {
+      padding: 20px;
+      position: sticky;
+      top: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(27px, 4vw, 38px);
+      letter-spacing: -.045em;
+      line-height: 1;
+    }
+
+    .sub {
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .group { margin-bottom: 18px; }
+
+    label.title {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="number"], textarea, select {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #091019;
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      line-height: 1.45;
+    }
+
+    .dropzone {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      min-height: 132px;
+      border: 2px dashed var(--border);
+      border-radius: 16px;
+      padding: 26px 18px;
+      text-align: center;
+      background: var(--panel2);
+      transition: .15s ease;
+      cursor: pointer;
+      overflow: visible;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--accent);
+      background: rgba(89, 243, 155, .08);
+    }
+
+    .dropzone strong {
+      display: block;
+      width: 100%;
+      font-size: 18px;
+      line-height: 1.25;
+      margin: 0;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    .dropzone span {
+      display: block;
+      width: 100%;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+      white-space: normal;
+    }
+
+    input[type="file"] { display: none; }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .row3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .checks {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .025);
+    }
+
+    .check {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .check input { transform: translateY(1px); }
+
+    .buttons {
+      display: grid;
+      gap: 10px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-weight: 950;
+      cursor: pointer;
+      transition: .15s ease;
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    button.primary { background: var(--accent); color: #031209; }
+    button.secondary { background: var(--accent2); color: #03101b; }
+    button.warn { background: var(--warn); color: #181100; }
+    button.ghost { background: #24384c; color: var(--text); }
+    button.danger { background: var(--danger); color: #180207; }
+
+    .note {
+      border: 1px solid rgba(255, 209, 102, .28);
+      background: rgba(255, 209, 102, .08);
+      color: #ffe4a1;
+      border-radius: 14px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-top: 12px;
+    }
+
+    .workspace {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .statusbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #10202c;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: #0a1018;
+      border-radius: 14px;
+      padding: 14px;
+    }
+
+    .stat .num {
+      display: block;
+      font-size: 26px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .stat .label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      text-transform: uppercase;
+      letter-spacing: .045em;
+      font-weight: 800;
+    }
+
+    .box {
+      background: #0a1018;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .box-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: #111a24;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .box-body { padding: 14px; }
+
+    .results {
+      max-height: 58vh;
+      overflow: auto;
+    }
+
+    .file-card {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .025);
+      border-radius: 14px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .file-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, .07);
+      background: rgba(255, 255, 255, .025);
+    }
+
+    .file-name {
+      font-weight: 850;
+      word-break: break-word;
+      line-height: 1.35;
+    }
+
+    .file-meta {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .match-list {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px;
+    }
+
+    .match {
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, .07);
+      background: #071018;
+      padding: 10px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    mark {
+      background: rgba(255, 209, 102, .85);
+      color: #150f00;
+      border-radius: 4px;
+      padding: 0 2px;
+    }
+
+    .download {
+      display: none;
+      text-decoration: none;
+      text-align: center;
+      background: #ffffff;
+      color: #061018;
+      border-radius: 12px;
+      padding: 13px 16px;
+      font-weight: 950;
+    }
+
+    .download.show { display: block; }
+
+    .rule-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .rule {
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, .025);
+      border-radius: 14px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .rule-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .rule-title {
+      font-weight: 850;
+      color: var(--text);
+      font-size: 13px;
+    }
+
+    .small-btn {
+      padding: 7px 10px;
+      border-radius: 9px;
+      font-size: 12px;
+    }
+
+    .tiny { color: var(--muted); font-size: 12px; }
+    .ok { color: var(--ok); }
+    .bad { color: var(--danger); }
+    .warnText { color: #ffe39d; }
+
+    @media (max-width: 980px) {
+      body { padding: 12px; }
+      .app { grid-template-columns: 1fr; }
+      .controls { position: static; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .row, .row3 { grid-template-columns: 1fr; }
+      .dropzone {
+        min-height: 118px;
+        padding: 22px 14px;
+      }
+      .dropzone strong {
+        font-size: 16px;
+      }
+      .dropzone span {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel controls">
+      <h1>KGB Repo String Mass Editor</h1>
+      <div class="sub">
+        Load a repo ZIP, search for strings, preview every matching file, replace the strings, and download a new ZIP containing only the edited files, while preserving their original folder paths and filenames.
+      </div>
+
+      <div class="group">
+        <label class="title">Repo ZIP</label>
+        <label class="dropzone" id="dropzone">
+          <strong>Drop ZIP here</strong>
+          <span>Tap to choose a .zip file</span>
+          <input id="zipInput" type="file" accept=".zip,application/zip,application/x-zip-compressed" />
+        </label>
+      </div>
+
+      <div class="group">
+        <label class="title">Replacement Rules</label>
+        <div class="rule-list" id="ruleList"></div>
+        <button id="addRuleBtn" class="ghost small-btn" type="button">+ Add Another Rule</button>
+      </div>
+
+      <div class="group">
+        <label class="title">File Filters</label>
+        <div class="row">
+          <div>
+            <label class="title" for="includeExt">Include Extensions</label>
+            <input id="includeExt" type="text" value=".html,.css,.js,.json,.md,.txt,.xml,.svg,.yml,.yaml,.toml,.ini,.csv" />
+          </div>
+          <div>
+            <label class="title" for="excludePaths">Exclude Path Contains</label>
+            <input id="excludePaths" type="text" value="node_modules,.git,dist,build,.DS_Store,__MACOSX" />
+          </div>
+        </div>
+        <div class="tiny" style="margin-top:8px;">
+          Leave include extensions blank to scan every text-looking file. Binary files are always copied unchanged.
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="title">Options</label>
+        <div class="checks">
+          <label class="check"><input id="caseSensitive" type="checkbox" /> Case-sensitive search</label>
+          <label class="check"><input id="wholeWord" type="checkbox" /> Match whole words only</label>
+          <label class="check"><input id="regexMode" type="checkbox" /> Treat search strings as RegEx patterns</label>
+          <label class="check"><input id="dryRunOnly" type="checkbox" checked /> Preview first / require explicit patch click</label>
+          <label class="check"><input id="includeReport" type="checkbox" checked /> Add replacement report to output ZIP</label>
+          <label class="check"><input id="normalizeZipDates" type="checkbox" checked /> Normalize ZIP entry dates</label>
+        </div>
+      </div>
+
+      <div class="group">
+        <label class="title" for="outputName">Output ZIP Name</label>
+        <input id="outputName" type="text" value="repo-edited-files-only.zip" />
+      </div>
+
+      <div class="buttons">
+        <button id="scanBtn" class="secondary" disabled>Scan ZIP</button>
+        <button id="patchBtn" class="primary" disabled>Apply Replacements + Build ZIP</button>
+        <a id="downloadLink" class="download">Download Patched ZIP</a>
+        <button id="clearBtn" class="ghost">Clear</button>
+      </div>
+
+      <div class="note">
+        <strong>Safety workflow:</strong> scan first, review matches, then patch. The output ZIP includes only edited files, preserving their original paths. Unchanged files are intentionally left out.
+      </div>
+    </section>
+
+    <section class="panel workspace">
+      <div class="statusbar">
+        <span class="pill" id="statePill">Idle</span>
+        <span id="statusText">Load a repo ZIP to begin.</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span class="num" id="statFiles">0</span><span class="label">Files</span></div>
+        <div class="stat"><span class="num" id="statScanned">0</span><span class="label">Scanned</span></div>
+        <div class="stat"><span class="num" id="statMatched">0</span><span class="label">Matched Files</span></div>
+        <div class="stat"><span class="num" id="statReplacements">0</span><span class="label">Matches</span></div>
+      </div>
+
+      <div class="box">
+        <div class="box-head">
+          <span>Matches Preview</span>
+          <span class="tiny" id="matchSummary">No scan yet</span>
+        </div>
+        <div class="box-body results" id="results">
+          <div class="tiny">Matching files and snippets will appear here after scanning.</div>
+        </div>
+      </div>
+
+      <div class="box">
+        <div class="box-head">
+          <span>Run Log</span>
+          <span class="tiny">Local browser processing only</span>
+        </div>
+        <div class="box-body">
+          <div id="log" class="tiny"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <script>
+    const els = {
+      dropzone: document.getElementById('dropzone'),
+      zipInput: document.getElementById('zipInput'),
+      ruleList: document.getElementById('ruleList'),
+      addRuleBtn: document.getElementById('addRuleBtn'),
+      includeExt: document.getElementById('includeExt'),
+      excludePaths: document.getElementById('excludePaths'),
+      caseSensitive: document.getElementById('caseSensitive'),
+      wholeWord: document.getElementById('wholeWord'),
+      regexMode: document.getElementById('regexMode'),
+      dryRunOnly: document.getElementById('dryRunOnly'),
+      includeReport: document.getElementById('includeReport'),
+      normalizeZipDates: document.getElementById('normalizeZipDates'),
+      outputName: document.getElementById('outputName'),
+      scanBtn: document.getElementById('scanBtn'),
+      patchBtn: document.getElementById('patchBtn'),
+      downloadLink: document.getElementById('downloadLink'),
+      clearBtn: document.getElementById('clearBtn'),
+      statePill: document.getElementById('statePill'),
+      statusText: document.getElementById('statusText'),
+      statFiles: document.getElementById('statFiles'),
+      statScanned: document.getElementById('statScanned'),
+      statMatched: document.getElementById('statMatched'),
+      statReplacements: document.getElementById('statReplacements'),
+      results: document.getElementById('results'),
+      matchSummary: document.getElementById('matchSummary'),
+      log: document.getElementById('log')
+    };
+
+    let zipFile = null;
+    let zip = null;
+    let scanResults = [];
+    let fileEntries = [];
+    let currentDownloadUrl = null;
+    let ruleCounter = 0;
+
+    const TEXT_DECODER = new TextDecoder('utf-8', { fatal: false });
+    const TEXT_ENCODER = new TextEncoder();
+    const NORMALIZED_DATE = new Date(2000, 0, 1, 0, 0, 0);
+
+    function setStatus(state, text) {
+      els.statePill.textContent = state;
+      els.statusText.textContent = text;
+    }
+
+    function log(message, type = '') {
+      const div = document.createElement('div');
+      div.className = type;
+      div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      els.log.prepend(div);
+    }
+
+    function revokeDownload() {
+      if (currentDownloadUrl) URL.revokeObjectURL(currentDownloadUrl);
+      currentDownloadUrl = null;
+      els.downloadLink.classList.remove('show');
+      els.downloadLink.removeAttribute('href');
+      els.downloadLink.removeAttribute('download');
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function escapeRegex(str) {
+      return String(str).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return '0 B';
+      const units = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.min(units.length - 1, Math.floor(Math.log(bytes) / Math.log(1024)));
+      const value = bytes / Math.pow(1024, i);
+      return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[i]}`;
+    }
+
+    function cleanZipName(name) {
+      let n = (name || '').trim() || 'repo-string-edited.zip';
+      if (!n.toLowerCase().endsWith('.zip')) n += '.zip';
+      return n.replace(/[<>:"/\\|?*]+/g, '-');
+    }
+
+    function addRule(search = '', replace = '') {
+      const id = ++ruleCounter;
+      const rule = document.createElement('div');
+      rule.className = 'rule';
+      rule.dataset.ruleId = id;
+      rule.innerHTML = `
+        <div class="rule-top">
+          <div class="rule-title">Rule ${id}</div>
+          <button type="button" class="danger small-btn remove-rule">Remove</button>
+        </div>
+        <div>
+          <label class="title">Find</label>
+          <textarea class="find" placeholder="String to find">${escapeHtml(search)}</textarea>
+        </div>
+        <div>
+          <label class="title">Replace With</label>
+          <textarea class="replace" placeholder="New string">${escapeHtml(replace)}</textarea>
+        </div>
+      `;
+      rule.querySelector('.remove-rule').addEventListener('click', () => {
+        rule.remove();
+        if (!els.ruleList.querySelector('.rule')) addRule();
+      });
+      els.ruleList.appendChild(rule);
+    }
+
+    function getRules() {
+      return [...els.ruleList.querySelectorAll('.rule')]
+        .map(rule => ({
+          find: rule.querySelector('.find').value,
+          replace: rule.querySelector('.replace').value
+        }))
+        .filter(rule => rule.find.length > 0);
+    }
+
+    function parseCsvish(value) {
+      return value
+        .split(',')
+        .map(x => x.trim())
+        .filter(Boolean);
+    }
+
+    function shouldExcludePath(path) {
+      const excludes = parseCsvish(els.excludePaths.value).map(x => x.toLowerCase());
+      const low = path.toLowerCase();
+      return excludes.some(ex => low.includes(ex.toLowerCase()));
+    }
+
+    function getExt(path) {
+      const clean = path.split('?')[0].split('#')[0];
+      const idx = clean.lastIndexOf('.');
+      return idx >= 0 ? clean.slice(idx).toLowerCase() : '';
+    }
+
+    function isProbablyBinaryPath(path) {
+      const ext = getExt(path);
+      const binary = new Set([
+        '.png','.jpg','.jpeg','.gif','.webp','.ico','.bmp','.avif',
+        '.mp3','.wav','.ogg','.m4a','.mp4','.mov','.avi','.webm',
+        '.woff','.woff2','.ttf','.otf','.eot',
+        '.zip','.rar','.7z','.tar','.gz',
+        '.pdf','.doc','.docx','.xls','.xlsx','.ppt','.pptx',
+        '.exe','.dll','.so','.dylib','.bin','.dat','.db','.sqlite'
+      ]);
+      return binary.has(ext);
+    }
+
+    function shouldScanFile(path) {
+      if (shouldExcludePath(path)) return false;
+      if (isProbablyBinaryPath(path)) return false;
+
+      const includeExts = parseCsvish(els.includeExt.value).map(x => x.toLowerCase());
+      if (!includeExts.length) return true;
+
+      const ext = getExt(path);
+      return includeExts.includes(ext);
+    }
+
+    function buildRegex(rule) {
+      const flags = els.caseSensitive.checked ? 'g' : 'gi';
+      let pattern = els.regexMode.checked ? rule.find : escapeRegex(rule.find);
+      if (els.wholeWord.checked) pattern = `\\b(?:${pattern})\\b`;
+      return new RegExp(pattern, flags);
+    }
+
+    function countMatches(text, regex) {
+      regex.lastIndex = 0;
+      let count = 0;
+      while (regex.exec(text) !== null) {
+        count++;
+        if (regex.lastIndex === 0) break;
+      }
+      regex.lastIndex = 0;
+      return count;
+    }
+
+    function getLineNumber(text, index) {
+      return text.slice(0, index).split('\n').length;
+    }
+
+    function makeSnippet(text, matchIndex, matchLength, context = 110) {
+      const start = Math.max(0, matchIndex - context);
+      const end = Math.min(text.length, matchIndex + matchLength + context);
+      const before = text.slice(start, matchIndex);
+      const match = text.slice(matchIndex, matchIndex + matchLength);
+      const after = text.slice(matchIndex + matchLength, end);
+      return `${start > 0 ? '…' : ''}${escapeHtml(before)}<mark>${escapeHtml(match)}</mark>${escapeHtml(after)}${end < text.length ? '…' : ''}`;
+    }
+
+    async function loadZip(file) {
+      revokeDownload();
+      zipFile = file;
+      setStatus('Loading', `Reading ${file.name}...`);
+      log(`Loading ZIP: ${file.name} (${formatBytes(file.size)})`);
+
+      zip = await JSZip.loadAsync(file);
+      fileEntries = Object.values(zip.files).filter(entry => !entry.dir);
+      scanResults = [];
+
+      els.statFiles.textContent = fileEntries.length;
+      els.statScanned.textContent = '0';
+      els.statMatched.textContent = '0';
+      els.statReplacements.textContent = '0';
+      els.matchSummary.textContent = 'ZIP loaded. Ready to scan.';
+      els.results.innerHTML = '<div class="tiny">ZIP loaded. Add rules and click Scan ZIP.</div>';
+      els.scanBtn.disabled = false;
+      els.patchBtn.disabled = true;
+
+      setStatus('Ready', `${file.name} loaded with ${fileEntries.length} file(s).`);
+      log(`ZIP loaded with ${fileEntries.length} file(s).`, 'ok');
+    }
+
+    async function scanZip() {
+      if (!zip) return;
+      revokeDownload();
+
+      const rules = getRules();
+      if (!rules.length) {
+        setStatus('Need Rule', 'Add at least one find/replace rule.');
+        log('No rules configured.', 'bad');
+        return;
+      }
+
+      let regexes;
+      try {
+        regexes = rules.map(rule => ({ ...rule, regex: buildRegex(rule) }));
+      } catch (err) {
+        setStatus('Regex Error', err.message);
+        log(`Regex error: ${err.message}`, 'bad');
+        return;
+      }
+
+      scanResults = [];
+      let scanned = 0;
+      let matchedFiles = 0;
+      let totalMatches = 0;
+
+      setStatus('Scanning', 'Searching files...');
+      els.scanBtn.disabled = true;
+      els.patchBtn.disabled = true;
+      els.results.innerHTML = '<div class="tiny">Scanning...</div>';
+
+      for (const entry of fileEntries) {
+        if (!shouldScanFile(entry.name)) continue;
+        scanned++;
+        if (scanned % 25 === 0) {
+          els.statScanned.textContent = scanned;
+          await new Promise(requestAnimationFrame);
+        }
+
+        try {
+          const arrayBuffer = await entry.async('arraybuffer');
+          const text = TEXT_DECODER.decode(arrayBuffer);
+          if (text.includes('\u0000')) continue;
+
+          const fileMatches = [];
+          for (const rule of regexes) {
+            rule.regex.lastIndex = 0;
+            let match;
+            let ruleCount = 0;
+            const snippets = [];
+
+            while ((match = rule.regex.exec(text)) !== null) {
+              ruleCount++;
+              if (snippets.length < 6) {
+                snippets.push({
+                  line: getLineNumber(text, match.index),
+                  snippet: makeSnippet(text, match.index, match[0].length)
+                });
+              }
+              if (match[0].length === 0) rule.regex.lastIndex++;
+            }
+
+            if (ruleCount > 0) {
+              fileMatches.push({
+                find: rule.find,
+                replace: rule.replace,
+                count: ruleCount,
+                snippets
+              });
+              totalMatches += ruleCount;
+            }
+          }
+
+          if (fileMatches.length) {
+            matchedFiles++;
+            scanResults.push({
+              path: entry.name,
+              matches: fileMatches,
+              originalText: text
+            });
+          }
+        } catch (err) {
+          log(`Skipped ${entry.name}: ${err.message}`, 'warnText');
+        }
+      }
+
+      els.statScanned.textContent = scanned;
+      els.statMatched.textContent = matchedFiles;
+      els.statReplacements.textContent = totalMatches;
+      els.matchSummary.textContent = `${matchedFiles} matching file(s), ${totalMatches} total match(es).`;
+      renderResults();
+
+      els.scanBtn.disabled = false;
+      els.patchBtn.disabled = matchedFiles === 0;
+      setStatus('Scan Complete', `${matchedFiles} file(s) matched. ${totalMatches} replacement(s) available.`);
+      log(`Scan complete: ${matchedFiles} matching file(s), ${totalMatches} total match(es).`, matchedFiles ? 'ok' : 'warnText');
+    }
+
+    function renderResults() {
+      if (!scanResults.length) {
+        els.results.innerHTML = '<div class="tiny">No matches found.</div>';
+        return;
+      }
+
+      els.results.innerHTML = '';
+      for (const file of scanResults) {
+        const total = file.matches.reduce((sum, m) => sum + m.count, 0);
+        const card = document.createElement('div');
+        card.className = 'file-card';
+
+        const head = document.createElement('div');
+        head.className = 'file-head';
+        head.innerHTML = `
+          <div class="file-name">${escapeHtml(file.path)}</div>
+          <div class="file-meta">${total} match(es)</div>
+        `;
+
+        const list = document.createElement('div');
+        list.className = 'match-list';
+
+        for (const ruleMatch of file.matches) {
+          const title = document.createElement('div');
+          title.className = 'tiny';
+          title.innerHTML = `<strong>${ruleMatch.count}</strong> match(es) for <code>${escapeHtml(ruleMatch.find)}</code>`;
+          list.appendChild(title);
+
+          for (const snip of ruleMatch.snippets) {
+            const div = document.createElement('div');
+            div.className = 'match';
+            div.innerHTML = `Line ${snip.line}: ${snip.snippet}`;
+            list.appendChild(div);
+          }
+
+          if (ruleMatch.count > ruleMatch.snippets.length) {
+            const more = document.createElement('div');
+            more.className = 'tiny';
+            more.textContent = `...plus ${ruleMatch.count - ruleMatch.snippets.length} more match(es) in this file.`;
+            list.appendChild(more);
+          }
+        }
+
+        card.appendChild(head);
+        card.appendChild(list);
+        els.results.appendChild(card);
+      }
+    }
+
+    function applyRulesToText(text, rules) {
+      let updated = text;
+      let replacements = 0;
+      const details = [];
+
+      for (const rule of rules) {
+        const regex = buildRegex(rule);
+        const count = countMatches(updated, regex);
+        if (count > 0) {
+          updated = updated.replace(regex, rule.replace);
+        }
+        replacements += count;
+        details.push({
+          find: rule.find,
+          replace: rule.replace,
+          replacements: count
+        });
+      }
+
+      return { updated, replacements, details };
+    }
+
+    async function patchZip() {
+      if (!zip || !scanResults.length) return;
+
+      const rules = getRules();
+      if (!rules.length) return;
+
+      setStatus('Patching', 'Applying replacements and building output ZIP...');
+      els.scanBtn.disabled = true;
+      els.patchBtn.disabled = true;
+      revokeDownload();
+
+      const outputZip = new JSZip();
+      const changedMap = new Map();
+      const report = {
+        createdAt: new Date().toISOString(),
+        inputZip: zipFile ? zipFile.name : null,
+        outputZip: cleanZipName(els.outputName.value),
+        options: {
+          outputMode: 'edited-files-only',
+          caseSensitive: els.caseSensitive.checked,
+          wholeWord: els.wholeWord.checked,
+          regexMode: els.regexMode.checked,
+          includeExtensions: parseCsvish(els.includeExt.value),
+          excludePathContains: parseCsvish(els.excludePaths.value),
+          normalizeZipDates: els.normalizeZipDates.checked
+        },
+        rules: rules.map(rule => ({ find: rule.find, replace: rule.replace })),
+        files: []
+      };
+
+      for (const result of scanResults) {
+        const patched = applyRulesToText(result.originalText, rules);
+        if (patched.replacements > 0 && patched.updated !== result.originalText) {
+          changedMap.set(result.path, patched.updated);
+          report.files.push({
+            path: result.path,
+            replacements: patched.replacements,
+            ruleDetails: patched.details.filter(d => d.replacements > 0)
+          });
+        }
+      }
+
+      let changed = 0;
+
+      // Important: output edited files only. Unchanged files are intentionally not included,
+      // so uploading/extracting the ZIP over a repo will only touch files that actually changed.
+      for (const [path, updatedText] of changedMap.entries()) {
+        const opts = {};
+        if (els.normalizeZipDates.checked) opts.date = NORMALIZED_DATE;
+
+        outputZip.file(path, updatedText, opts);
+        changed++;
+
+        if (changed % 50 === 0) {
+          setStatus('Zipping', `Added ${changed}/${changedMap.size} edited file(s)...`);
+          await new Promise(requestAnimationFrame);
+        }
+      }
+
+      if (els.includeReport.checked) {
+        outputZip.file('kgb-string-edit-report.json', JSON.stringify(report, null, 2), {
+          date: els.normalizeZipDates.checked ? NORMALIZED_DATE : new Date()
+        });
+        outputZip.file('kgb-string-edit-report.txt', makeTextReport(report), {
+          date: els.normalizeZipDates.checked ? NORMALIZED_DATE : new Date()
+        });
+      }
+
+      const blob = await outputZip.generateAsync({
+        type: 'blob',
+        compression: 'DEFLATE',
+        compressionOptions: { level: 6 }
+      }, metadata => {
+        setStatus('Zipping', `Building output ZIP... ${metadata.percent.toFixed(0)}%`);
+      });
+
+      const outputName = cleanZipName(els.outputName.value);
+      currentDownloadUrl = URL.createObjectURL(blob);
+      els.downloadLink.href = currentDownloadUrl;
+      els.downloadLink.download = outputName;
+      els.downloadLink.textContent = `Download ${outputName} (${formatBytes(blob.size)})`;
+      els.downloadLink.classList.add('show');
+
+      setStatus('Done', `Patched ${changed} file(s). Output ZIP contains edited files only.`);
+      log(`Output ready: ${outputName}. Patched ${changed} file(s). Output ZIP contains edited files only.`, 'ok');
+
+      els.scanBtn.disabled = false;
+      els.patchBtn.disabled = false;
+    }
+
+    function makeTextReport(report) {
+      const lines = [];
+      lines.push('KGB Repo String Mass Editor Report');
+      lines.push('===================================');
+      lines.push(`Created: ${report.createdAt}`);
+      lines.push(`Input ZIP: ${report.inputZip}`);
+      lines.push(`Output ZIP: ${report.outputZip}`);
+      lines.push('');
+      lines.push('Options');
+      lines.push('-------');
+      for (const [key, value] of Object.entries(report.options)) {
+        lines.push(`${key}: ${Array.isArray(value) ? value.join(', ') : value}`);
+      }
+      lines.push('');
+      lines.push('Rules');
+      lines.push('-----');
+      report.rules.forEach((rule, idx) => {
+        lines.push(`${idx + 1}. Find: ${rule.find}`);
+        lines.push(`   Replace: ${rule.replace}`);
+      });
+      lines.push('');
+      lines.push('Changed Files');
+      lines.push('-------------');
+      if (!report.files.length) {
+        lines.push('No files changed.');
+      } else {
+        for (const file of report.files) {
+          lines.push(`${file.path} — ${file.replacements} replacement(s)`);
+          for (const d of file.ruleDetails) {
+            lines.push(`  - ${d.replacements} x ${d.find}`);
+          }
+        }
+      }
+      return lines.join('\n');
+    }
+
+    function clearAll() {
+      revokeDownload();
+      zipFile = null;
+      zip = null;
+      scanResults = [];
+      fileEntries = [];
+      els.zipInput.value = '';
+      els.statFiles.textContent = '0';
+      els.statScanned.textContent = '0';
+      els.statMatched.textContent = '0';
+      els.statReplacements.textContent = '0';
+      els.matchSummary.textContent = 'No scan yet';
+      els.results.innerHTML = '<div class="tiny">Matching files and snippets will appear here after scanning.</div>';
+      els.log.innerHTML = '';
+      els.scanBtn.disabled = true;
+      els.patchBtn.disabled = true;
+      setStatus('Idle', 'Load a repo ZIP to begin.');
+      log('Cleared.');
+    }
+
+    els.zipInput.addEventListener('change', async () => {
+      const file = els.zipInput.files && els.zipInput.files[0];
+      if (file) {
+        try { await loadZip(file); }
+        catch (err) {
+          setStatus('Error', err.message);
+          log(`Could not load ZIP: ${err.message}`, 'bad');
+        }
+      }
+    });
+
+    els.dropzone.addEventListener('dragover', event => {
+      event.preventDefault();
+      els.dropzone.classList.add('dragover');
+    });
+
+    els.dropzone.addEventListener('dragleave', () => {
+      els.dropzone.classList.remove('dragover');
+    });
+
+    els.dropzone.addEventListener('drop', async event => {
+      event.preventDefault();
+      els.dropzone.classList.remove('dragover');
+      const file = event.dataTransfer.files && event.dataTransfer.files[0];
+      if (!file) return;
+      try { await loadZip(file); }
+      catch (err) {
+        setStatus('Error', err.message);
+        log(`Could not load ZIP: ${err.message}`, 'bad');
+      }
+    });
+
+    els.addRuleBtn.addEventListener('click', () => addRule());
+    els.scanBtn.addEventListener('click', scanZip);
+    els.patchBtn.addEventListener('click', patchZip);
+    els.clearBtn.addEventListener('click', clearAll);
+
+    addRule();
+    setStatus('Idle', 'Load a repo ZIP to begin.');
+    log('Tool loaded. Load a ZIP, add find/replace rules, then scan.');
+  </script>
+</body>
+</html>
