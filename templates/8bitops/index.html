@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#060913" />
+  <title>8BitOps Production Template — KGB Arcade Engine v0.2</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="../../shared/styles/kgb-game-shell.css" />
+</head>
+<body>
+  <main class="kgb-game-shell">
+    <canvas id="game" class="kgb-canvas" aria-label="KGB Arcade canvas"></canvas>
+
+    <header class="kgb-topbar">
+      <section class="kgb-brand">
+        <div class="kgb-title-small">KGB Arcade Engine v0.2</div>
+        <div class="kgb-title-main" data-kgb-game-title>8BitOps Production Template</div>
+        <span class="kgb-world-badge" data-kgb-world="8bitops">8BitOps</span>
+      </section>
+
+      <section class="kgb-hud-row" aria-label="HUD">
+        <div class="kgb-hud-panel">
+          <span class="kgb-hud-label">Score</span>
+          <span class="kgb-hud-value" data-kgb-hud="score">0</span>
+        </div>
+        <div class="kgb-hud-panel">
+          <span class="kgb-hud-label">Best</span>
+          <span class="kgb-hud-value" data-kgb-hud="best">0</span>
+        </div>
+        <div class="kgb-hud-panel">
+          <span class="kgb-hud-label">Lives</span>
+          <span class="kgb-hud-value hearts" data-kgb-hud="lives">♥♥♥</span>
+        </div>
+        <div class="kgb-hud-panel status">
+          <span class="kgb-hud-label">Status</span>
+          <span class="kgb-hud-value" data-kgb-hud="status">READY</span>
+        </div>
+        <button class="kgb-small-btn" data-kgb-sound-toggle type="button">Sound</button>
+        <button class="kgb-small-btn" data-kgb-settings-toggle type="button">Settings</button>
+        <button class="kgb-small-btn" data-kgb-fullscreen-toggle type="button">Full</button>
+        <a class="kgb-small-btn" data-kgb-back href="../../index.html">Back to Arcade</a>
+      </section>
+    </header>
+
+    <div class="kgb-status-strip" data-kgb-control-help>Move: WASD/Arrows • Fire: Space/J • Boost: Shift/K • Pause: Esc/P</div>
+
+    <nav class="kgb-controls" aria-label="Game controls">
+      <section class="kgb-dpad">
+        <button class="kgb-vbtn" data-kgb-btn="left" type="button">◀</button>
+        <button class="kgb-vbtn" data-kgb-btn="right" type="button">▶</button>
+        <button class="kgb-vbtn" data-kgb-btn="up" type="button">▲</button>
+        <button class="kgb-vbtn" data-kgb-btn="down" type="button">▼</button>
+      </section>
+      <section class="kgb-actions">
+        <button class="kgb-vbtn pause" data-kgb-btn="pause" type="button">PAUSE</button>
+        <button class="kgb-vbtn alt" data-kgb-btn="boost" type="button">BOOST</button>
+        <button class="kgb-vbtn fire" data-kgb-btn="action" type="button">FIRE</button>
+      </section>
+    </nav>
+  </main>
+
+  <script src="../../engine/kgb-utils.js"></script>
+  <script src="../../engine/kgb-assets.js"></script>
+  <script src="../../engine/kgb-input.js"></script>
+  <script src="../../engine/kgb-audio.js"></script>
+  <script src="../../engine/kgb-renderer2d.js"></script>
+  <script src="../../engine/kgb-scenes.js"></script>
+  <script src="../../engine/kgb-save.js"></script>
+  <script src="../../engine/kgb-ui.js"></script>
+  <script src="../../engine/kgb-pwa.js"></script>
+  <script src="../../engine/kgb-core.js"></script>
+  <script src="../../engine/kgb-arcade-kit.js"></script>
+  <script src="config.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

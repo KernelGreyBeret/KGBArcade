@@ -1,0 +1,15 @@
+{
+  "name": "8BitOps Production Template",
+  "short_name": "8BitOps",
+  "description": "KGB Arcade Engine v0.2 production template for 8BitOps arcade games.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#060913",
+  "theme_color": "#060913",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

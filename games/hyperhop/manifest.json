@@ -1,0 +1,15 @@
+{
+  "name": "HyperHop — KGB Arcade",
+  "short_name": "HyperHop",
+  "description": "HyperHop, an 8BitOps lane-dodger arcade game powered by KGB Arcade Engine v0.2.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020408",
+  "theme_color": "#020408",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "hyperhop",
+    "title": "HyperHop",
+    "section": "8BitOps",
+    "vaultSection": "8BitOps — Arcade Bangers",
+    "status": "live",
+    "path": "/games/hyperhop/",
+    "banner": "/games/hyperhop/assets/banner.png",
+    "icon": "/games/hyperhop/assets/icons/icon-192.png",
+    "description": "Hop lanes, chain clean pickups, shield up, and survive an escalating learnable pattern.",
+    "engine": "/engine/v0.2/",
+    "version": "0.2.4"
+  }
+]
