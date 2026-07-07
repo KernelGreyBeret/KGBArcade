@@ -1,0 +1,19 @@
+Arc Defender — Rhythm Rings — Attribution
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Copyright: © 2026 Tommy Burke. All rights reserved.
+Website: https://kgbarcade.com
+
+Original packaged files:
+
+1. archive/arc_defender.html (162.4 KB)
+2. icons/arc-192.png (84.4 KB)
+3. icons/arc-512.png (448.3 KB)
+4. icons/arc-maskable-512.png (286.1 KB)
+5. icons/arc-screenshot-narrow.png (43 KB)
+6. icons/arc-screenshot-wide.png (38.2 KB)
+7. index.html (163.4 KB)
+8. manifest.webmanifest (1.1 KB)
+9. README_ARC_DEFENDER_PWA.md (1.3 KB)
+10. service-worker.js (1.8 KB)

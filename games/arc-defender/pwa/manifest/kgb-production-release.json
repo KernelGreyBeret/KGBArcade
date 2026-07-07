@@ -1,0 +1,108 @@
+{
+  "manifestType": "kgb-existing-game-release",
+  "manifestVersion": "0.1.0",
+  "generatedAt": "2026-07-07T02:08:06.112Z",
+  "wrapper": {
+    "studio": "KGB Studio",
+    "studioVersion": "1.0.11",
+    "mode": "existing-game-release-wrapper",
+    "note": "This wraps an already-existing playable game. It does not claim the game was authored through the KGB Studio actor/scene pipeline."
+  },
+  "game": {
+    "title": "Arc Defender — Rhythm Rings",
+    "version": "2.0",
+    "originalUpload": "folder import",
+    "hasIndex": true,
+    "hasExistingKgbConfig": false
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "publisher": "KGB Arcade",
+    "copyright": "© 2026 Tommy Burke. All rights reserved.",
+    "license": "All rights reserved unless otherwise stated in this package.",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com"
+  },
+  "package": {
+    "fileCount": 10,
+    "totalBytes": 1259445,
+    "byExtension": {
+      "html": 2,
+      "png": 5,
+      "webmanifest": 1,
+      "md": 1,
+      "js": 1
+    },
+    "byTopFolder": {
+      "archive": 1,
+      "icons": 5,
+      "root": 4
+    },
+    "rootIndex": "index.html",
+    "detectedEntryPath": "index.html",
+    "generatedRootLauncher": false,
+    "smokeTest": "smoke-test.html",
+    "pwa": {
+      "enabled": false,
+      "iconSource": "none",
+      "themeColor": "#7dff00",
+      "backgroundColor": "#02080a",
+      "generatedFiles": []
+    }
+  },
+  "files": [
+    {
+      "path": "archive/arc_defender.html",
+      "size": 166256,
+      "mime": "text/html"
+    },
+    {
+      "path": "icons/arc-192.png",
+      "size": 86377,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/arc-512.png",
+      "size": 459078,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/arc-maskable-512.png",
+      "size": 292942,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/arc-screenshot-narrow.png",
+      "size": 44023,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/arc-screenshot-wide.png",
+      "size": 39133,
+      "mime": "image/png"
+    },
+    {
+      "path": "index.html",
+      "size": 167318,
+      "mime": "text/html"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "size": 1136,
+      "mime": "application/manifest+json"
+    },
+    {
+      "path": "README_ARC_DEFENDER_PWA.md",
+      "size": 1313,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "service-worker.js",
+      "size": 1869,
+      "mime": "text/javascript"
+    }
+  ],
+  "notes": [
+    "Wrapped by KGB Studio Existing Game Release Wrapper."
+  ]
+}
