@@ -1,0 +1,16 @@
+Tommy the Tank — Attribution
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Copyright: © 2026 Tommy Burke. All rights reserved.
+Website: https://kgbarcade.com
+
+Original packaged files:
+
+1. archive/tommy_the_tank_final_live_campaign_build.html (273.3 KB)
+2. icons/tommy-192.png (57.6 KB)
+3. icons/tommy-512.png (301.6 KB)
+4. icons/tommy-maskable-512.png (214.2 KB)
+5. index.html (269.6 KB)
+6. manifest.webmanifest (0.8 KB)
+7. service-worker.js (1.7 KB)

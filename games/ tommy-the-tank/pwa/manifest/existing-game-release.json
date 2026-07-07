@@ -1,0 +1,92 @@
+{
+  "manifestType": "kgb-existing-game-release",
+  "manifestVersion": "0.1.0",
+  "generatedAt": "2026-07-07T02:10:31.826Z",
+  "wrapper": {
+    "studio": "KGB Studio",
+    "studioVersion": "1.0.11",
+    "mode": "existing-game-release-wrapper",
+    "note": "This wraps an already-existing playable game. It does not claim the game was authored through the KGB Studio actor/scene pipeline."
+  },
+  "game": {
+    "title": "Tommy the Tank",
+    "version": "1.1.8",
+    "originalUpload": "folder import",
+    "hasIndex": true,
+    "hasExistingKgbConfig": false
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "publisher": "KGB Arcade",
+    "copyright": "© 2026 Tommy Burke. All rights reserved.",
+    "license": "All rights reserved unless otherwise stated in this package.",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com"
+  },
+  "package": {
+    "fileCount": 7,
+    "totalBytes": 1145708,
+    "byExtension": {
+      "html": 2,
+      "png": 3,
+      "webmanifest": 1,
+      "js": 1
+    },
+    "byTopFolder": {
+      "archive": 1,
+      "icons": 3,
+      "root": 3
+    },
+    "rootIndex": "index.html",
+    "detectedEntryPath": "index.html",
+    "generatedRootLauncher": false,
+    "smokeTest": "smoke-test.html",
+    "pwa": {
+      "enabled": false,
+      "iconSource": "none",
+      "themeColor": "#7dff00",
+      "backgroundColor": "#02080a",
+      "generatedFiles": []
+    }
+  },
+  "files": [
+    {
+      "path": "archive/tommy_the_tank_final_live_campaign_build.html",
+      "size": 279888,
+      "mime": "text/html"
+    },
+    {
+      "path": "icons/tommy-192.png",
+      "size": 58993,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/tommy-512.png",
+      "size": 308792,
+      "mime": "image/png"
+    },
+    {
+      "path": "icons/tommy-maskable-512.png",
+      "size": 219364,
+      "mime": "image/png"
+    },
+    {
+      "path": "index.html",
+      "size": 276065,
+      "mime": "text/html"
+    },
+    {
+      "path": "manifest.webmanifest",
+      "size": 831,
+      "mime": "application/manifest+json"
+    },
+    {
+      "path": "service-worker.js",
+      "size": 1775,
+      "mime": "text/javascript"
+    }
+  ],
+  "notes": [
+    "Wrapped by KGB Studio Existing Game Release Wrapper."
+  ]
+}
