@@ -1,0 +1,15 @@
+Kid Jam Button Masher — Attribution
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Copyright: © 2026 Tommy Burke. All rights reserved.
+Website: https://kgbarcade.com
+
+Original packaged files:
+
+1. icons/icon-192.png (1783.1 KB)
+2. icons/icon-512.png (1947.9 KB)
+3. icons/maskable-512.png (1800.5 KB)
+4. index.html (35 KB)
+5. manifest.webmanifest (0.8 KB)
+6. service-worker.js (1.1 KB)
