@@ -1,0 +1,22 @@
+StarWarp — Attribution
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Copyright: © 2026 Tommy Burke. All rights reserved.
+Website: https://kgbarcade.com
+
+Original packaged files:
+
+1. index.html (4.1 KB)
+2. pwa/archive/starwarp_arena_v3-1.html (228.9 KB)
+3. pwa/icons/sw-192.png (59.1 KB)
+4. pwa/icons/sw-512.png (312.4 KB)
+5. pwa/icons/sw-maskable-512.png (239.5 KB)
+6. pwa/icons/sw-screenshot-narrow.png (43.7 KB)
+7. pwa/icons/sw-screenshot-wide.png (39.3 KB)
+8. pwa/index.html (221.8 KB)
+9. pwa/manifest.webmanifest (1.1 KB)
+10. pwa/service-worker.js (1.8 KB)
+11. starwarp_arena_v3-1.html (284.7 KB)
+12. Starwarp_banner_small.png (100.2 KB)
+13. Starwarp_banner.png (3116.1 KB)
