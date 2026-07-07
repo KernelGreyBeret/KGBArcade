@@ -585,6 +585,158 @@
 .launch-inner a:hover{
   filter:brightness(1.12);
 }
+
+/* --- KGBA Armory / Store Section --- */
+.store-card {
+  position: relative;
+  overflow: hidden;
+  margin-top: 24px;
+  border-radius: 18px;
+  border: 1px solid rgba(75,213,255,0.22);
+  background:
+    radial-gradient(circle at 82% 20%, rgba(255,61,90,0.18), transparent 34%),
+    radial-gradient(circle at 18% 85%, rgba(75,213,255,0.18), transparent 36%),
+    linear-gradient(135deg, rgba(255,255,255,0.055), rgba(0,0,0,0.38));
+  box-shadow:
+    0 0 26px rgba(75,213,255,0.20),
+    inset 0 0 34px rgba(0,0,0,0.55);
+  padding: clamp(20px, 4vw, 34px);
+}
+
+.store-scanline {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.16;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.08) 0px,
+      rgba(255,255,255,0.08) 1px,
+      transparent 1px,
+      transparent 6px
+    );
+}
+
+.store-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,61,90,0.5);
+  background: rgba(255,61,90,0.18);
+  color: #ffd6df;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  box-shadow: 0 0 14px rgba(255,61,90,0.22);
+}
+
+.store-content {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+}
+
+.store-kicker {
+  color: #4bd5ff;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  text-shadow: 0 0 12px rgba(75,213,255,0.55);
+}
+
+.store-content h3 {
+  margin: 6px 0 10px;
+  font-size: clamp(30px, 5vw, 52px);
+  line-height: 1;
+  color: #fff;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 14px rgba(75,213,255,0.5),
+    0 0 26px rgba(255,61,90,0.22);
+}
+
+.store-content p {
+  color: #d8ecff;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.store-note {
+  opacity: 0.8;
+}
+
+.store-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+  padding: 13px 18px;
+  border-radius: 14px;
+  border: 1px solid rgba(75,213,255,0.55);
+  background: linear-gradient(180deg, rgba(75,213,255,0.22), rgba(0,0,0,0.35));
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 0 18px rgba(75,213,255,0.22);
+}
+
+.store-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 26px rgba(75,213,255,0.34);
+}
+
+.store-btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.store-flair {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.store-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(1px);
+  opacity: 0.75;
+}
+
+.orb-a {
+  width: 120px;
+  height: 120px;
+  right: 9%;
+  top: 20%;
+  background: radial-gradient(circle, rgba(75,213,255,0.34), transparent 68%);
+}
+
+.orb-b {
+  width: 170px;
+  height: 170px;
+  right: -30px;
+  bottom: -38px;
+  background: radial-gradient(circle, rgba(255,61,90,0.32), transparent 70%);
+}
+
+.store-grid-mark {
+  position: absolute;
+  right: clamp(18px, 5vw, 48px);
+  bottom: clamp(14px, 4vw, 34px);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: clamp(44px, 9vw, 92px);
+  font-weight: 900;
+  color: rgba(255,255,255,0.045);
+  letter-spacing: 0.08em;
+}
 </style>
 </head>
 
@@ -980,6 +1132,46 @@ The Game Vault is sorted into three sections — <strong>8BitOps</strong>, <stro
           <img src="/games/firetruck-rescue/Firetruck-rescue_banner_small.png" alt="Banner Image">
         </a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- KGBA STORE / QUARTERMASTER SECTION -->
+<section class="section" id="store">
+  <h2 class="section-title">
+    <img src="icons-support_small.png" class="section-icon" alt="">
+    <span class="title-main">Quartermaster</span>
+    <span class="title-sub">KGB Arcade Gear</span>
+  </h2>
+
+  <div class="store-card">
+    <div class="store-scanline"></div>
+
+    <div class="store-badge">COMING SOON</div>
+
+    <div class="store-content">
+      <h3>KGB Arcade Quartermaster</h3>
+
+      <p>
+        Hats, shirts, stickers, patches, and operator-grade nonsense from the Tactical Underground.
+        Built mostly so the dev can surround himself with the stuff he thinks is cool.
+      </p>
+
+      <p class="store-note">
+        The store is staging now. Once it goes live, this button will open the official KGBA storefront.
+      </p>
+
+      <!-- Change href to your Fourthwall store link when ready -->
+      <!-- Change button text from "Armory Not Live Yet" to "Enter the Armory →" when ready -->
+      <a class="store-btn disabled" href="#" aria-disabled="true">
+        Quartermaster Not Live Yet
+      </a>
+    </div>
+
+    <div class="store-flair" aria-hidden="true">
+      <div class="store-orb orb-a"></div>
+      <div class="store-orb orb-b"></div>
+      <div class="store-grid-mark">KGBA</div>
     </div>
   </div>
 </section>
