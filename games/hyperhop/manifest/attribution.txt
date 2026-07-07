@@ -1,0 +1,21 @@
+HyperHop — Attribution
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Copyright: © 2026 Tommy Burke. All rights reserved.
+Website: https://kgbarcade.com
+
+Original packaged files:
+
+1. .DS_Store (6 KB)
+2. assets/.DS_Store (6 KB)
+3. assets/icons/icon-192.png (102.4 KB)
+4. assets/icons/icon-512.png (620.6 KB)
+5. config.js (3.5 KB)
+6. game.js (42.3 KB)
+7. hyperhop_banner_small.png (234 KB)
+8. HYPERHOP_UPGRADE_NOTES.md (1 KB)
+9. index.html (3.5 KB)
+10. manifest.json (0.5 KB)
+11. reset-cache.html (1.7 KB)
+12. service-worker.js (1.9 KB)

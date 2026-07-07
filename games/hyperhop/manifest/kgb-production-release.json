@@ -1,0 +1,118 @@
+{
+  "manifestType": "kgb-existing-game-release",
+  "manifestVersion": "0.1.0",
+  "generatedAt": "2026-07-07T02:02:12.404Z",
+  "wrapper": {
+    "studio": "KGB Studio",
+    "studioVersion": "1.0.11",
+    "mode": "existing-game-release-wrapper",
+    "note": "This wraps an already-existing playable game. It does not claim the game was authored through the KGB Studio actor/scene pipeline."
+  },
+  "game": {
+    "title": "HyperHop",
+    "version": "1.2.4",
+    "originalUpload": "hyperhop.zip",
+    "hasIndex": true,
+    "hasExistingKgbConfig": false
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "publisher": "KGB Arcade",
+    "copyright": "© 2026 Tommy Burke. All rights reserved.",
+    "license": "All rights reserved unless otherwise stated in this package.",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com"
+  },
+  "package": {
+    "fileCount": 12,
+    "totalBytes": 1047871,
+    "byExtension": {
+      "ds_store": 2,
+      "png": 3,
+      "js": 3,
+      "md": 1,
+      "html": 2,
+      "json": 1
+    },
+    "byTopFolder": {
+      "root": 9,
+      "assets": 3
+    },
+    "rootIndex": "index.html",
+    "detectedEntryPath": "index.html",
+    "generatedRootLauncher": false,
+    "smokeTest": "smoke-test.html",
+    "pwa": {
+      "enabled": false,
+      "iconSource": "none",
+      "themeColor": "#7dff00",
+      "backgroundColor": "#02080a",
+      "generatedFiles": []
+    }
+  },
+  "files": [
+    {
+      "path": ".DS_Store",
+      "size": 6148,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "assets/.DS_Store",
+      "size": 6148,
+      "mime": "application/octet-stream"
+    },
+    {
+      "path": "assets/icons/icon-192.png",
+      "size": 104891,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/icons/icon-512.png",
+      "size": 635480,
+      "mime": "image/png"
+    },
+    {
+      "path": "config.js",
+      "size": 3602,
+      "mime": "text/javascript"
+    },
+    {
+      "path": "game.js",
+      "size": 43326,
+      "mime": "text/javascript"
+    },
+    {
+      "path": "hyperhop_banner_small.png",
+      "size": 239611,
+      "mime": "image/png"
+    },
+    {
+      "path": "HYPERHOP_UPGRADE_NOTES.md",
+      "size": 986,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "index.html",
+      "size": 3555,
+      "mime": "text/html"
+    },
+    {
+      "path": "manifest.json",
+      "size": 505,
+      "mime": "application/json"
+    },
+    {
+      "path": "reset-cache.html",
+      "size": 1704,
+      "mime": "text/html"
+    },
+    {
+      "path": "service-worker.js",
+      "size": 1915,
+      "mime": "text/javascript"
+    }
+  ],
+  "notes": [
+    "Wrapped by KGB Studio Existing Game Release Wrapper."
+  ]
+}
