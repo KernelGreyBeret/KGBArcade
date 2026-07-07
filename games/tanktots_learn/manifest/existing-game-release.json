@@ -1,0 +1,825 @@
+{
+  "manifestType": "kgb-existing-game-release",
+  "manifestVersion": "0.1.0",
+  "generatedAt": "2026-07-07T02:03:39.422Z",
+  "wrapper": {
+    "studio": "KGB Studio",
+    "studioVersion": "1.0.11",
+    "mode": "existing-game-release-wrapper",
+    "note": "This wraps an already-existing playable game. It does not claim the game was authored through the KGB Studio actor/scene pipeline."
+  },
+  "game": {
+    "title": "TankTots Learn",
+    "version": "1.2",
+    "originalUpload": "tanktots_learn.zip",
+    "hasIndex": true,
+    "hasExistingKgbConfig": false
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "publisher": "KGB Arcade",
+    "copyright": "© 2026 Tommy Burke. All rights reserved.",
+    "license": "All rights reserved unless otherwise stated in this package.",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com"
+  },
+  "package": {
+    "fileCount": 153,
+    "totalBytes": 10066410,
+    "byExtension": {
+      "png": 139,
+      "json": 6,
+      "md": 4,
+      "js": 2,
+      "html": 1,
+      "css": 1
+    },
+    "byTopFolder": {
+      "assets": 21,
+      "decks": 123,
+      "docs": 3,
+      "root": 6
+    },
+    "rootIndex": "index.html",
+    "detectedEntryPath": "index.html",
+    "generatedRootLauncher": false,
+    "smokeTest": "smoke-test.html",
+    "pwa": {
+      "enabled": false,
+      "iconSource": "none",
+      "themeColor": "#7dff00",
+      "backgroundColor": "#02080a",
+      "generatedFiles": []
+    }
+  },
+  "files": [
+    {
+      "path": "assets/logos/tanktots_learn_logo_small.png",
+      "size": 19145,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/logos/tanktots_learn_logo.png",
+      "size": 111273,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/pwa/icon_192.png",
+      "size": 85475,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/pwa/icon_512_maskable.png",
+      "size": 424152,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/pwa/icon_512.png",
+      "size": 424152,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_back.png",
+      "size": 10722,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_deck_select.png",
+      "size": 11152,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_home.png",
+      "size": 10929,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_mute.png",
+      "size": 10008,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_next.png",
+      "size": 11133,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_play.png",
+      "size": 24863,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_random.png",
+      "size": 10356,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_replay.png",
+      "size": 10844,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_settings.png",
+      "size": 9475,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_sound.png",
+      "size": 9823,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/btn_voice.png",
+      "size": 9695,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/cadet_helper_01.png",
+      "size": 13768,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/mascot_tank_01.png",
+      "size": 20242,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/reward_check.png",
+      "size": 10801,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/reward_great_job.png",
+      "size": 17281,
+      "mime": "image/png"
+    },
+    {
+      "path": "assets/ui/reward_star.png",
+      "size": 7421,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/deck.json",
+      "size": 15331,
+      "mime": "application/json"
+    },
+    {
+      "path": "decks/alphabet/images/01_apple.png",
+      "size": 41661,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/02_bear.png",
+      "size": 43482,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/03_cat.png",
+      "size": 43643,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/04_dog.png",
+      "size": 45121,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/05_elephant.png",
+      "size": 57946,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/06_frog.png",
+      "size": 42558,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/07_giraffe.png",
+      "size": 40164,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/08_helicopter.png",
+      "size": 38270,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/09_ice_cream.png",
+      "size": 35030,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/10_jellyfish.png",
+      "size": 39511,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/11_kite.png",
+      "size": 40693,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/12_lion.png",
+      "size": 41676,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/13_monkey.png",
+      "size": 40490,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/14_narwhal.png",
+      "size": 37475,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/15_octopus.png",
+      "size": 40651,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/16_penguin.png",
+      "size": 36448,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/17_quail.png",
+      "size": 39646,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/18_rainbow.png",
+      "size": 39521,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/19_sun.png",
+      "size": 35789,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/20_truck.png",
+      "size": 40073,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/21_umbrella.png",
+      "size": 34475,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/22_volcano.png",
+      "size": 38180,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/23_whale.png",
+      "size": 39244,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/24_xylophone.png",
+      "size": 38060,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/25_yak.png",
+      "size": 39236,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/26_zebra.png",
+      "size": 36625,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/bonus_sticker_heart.png",
+      "size": 23098,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/bonus_sticker_rainbow.png",
+      "size": 25045,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/bonus_sticker_smile.png",
+      "size": 24422,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/bonus_sticker_star.png",
+      "size": 22604,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/bonus_sticker_thumbs_up.png",
+      "size": 23607,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/alphabet/images/cover.png",
+      "size": 82718,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/deck.json",
+      "size": 7724,
+      "mime": "application/json"
+    },
+    {
+      "path": "decks/colors/images/beige.png",
+      "size": 150018,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/black.png",
+      "size": 121387,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/blue.png",
+      "size": 117901,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/bonus_sticker_heart.png",
+      "size": 29192,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/bonus_sticker_smile.png",
+      "size": 30234,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/bonus_sticker_star.png",
+      "size": 33119,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/brown.png",
+      "size": 134091,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/cover.png",
+      "size": 358531,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/dark_blue.png",
+      "size": 150506,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/gold.png",
+      "size": 150998,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/gray.png",
+      "size": 127336,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/green.png",
+      "size": 124172,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/lavender.png",
+      "size": 168088,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/light_blue.png",
+      "size": 145359,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/lime.png",
+      "size": 148547,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/maroon.png",
+      "size": 168609,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/mint.png",
+      "size": 141579,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/multicolor.png",
+      "size": 154600,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/navy.png",
+      "size": 147811,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/orange.png",
+      "size": 117044,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/peach.png",
+      "size": 144515,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/pink.png",
+      "size": 123319,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/purple.png",
+      "size": 125109,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/rainbow.png",
+      "size": 119794,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/red.png",
+      "size": 112081,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/silver.png",
+      "size": 139360,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/tan.png",
+      "size": 151283,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/teal.png",
+      "size": 145618,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/turquoise.png",
+      "size": 148834,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/white.png",
+      "size": 100338,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/colors/images/yellow.png",
+      "size": 113311,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/index.json",
+      "size": 868,
+      "mime": "application/json"
+    },
+    {
+      "path": "decks/shapes/deck.json",
+      "size": 6661,
+      "mime": "application/json"
+    },
+    {
+      "path": "decks/shapes/images/arrow.png",
+      "size": 67189,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/bonus_sticker_heart.png",
+      "size": 53942,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/bonus_sticker_rainbow.png",
+      "size": 75826,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/bonus_sticker_smile.png",
+      "size": 4003,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/bonus_sticker_star.png",
+      "size": 53678,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/bonus_sticker_thumbs_up.png",
+      "size": 50210,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/circle.png",
+      "size": 69006,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/cone.png",
+      "size": 59600,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/cover.png",
+      "size": 423208,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/crescent.png",
+      "size": 63873,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/cross.png",
+      "size": 61557,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/cube.png",
+      "size": 60325,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/cylinder.png",
+      "size": 64712,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/diamond.png",
+      "size": 65107,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/heart.png",
+      "size": 64338,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/hexagon.png",
+      "size": 66119,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/octagon.png",
+      "size": 64820,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/oval.png",
+      "size": 65968,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/pentagon.png",
+      "size": 65134,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/rainbow_bonus.png",
+      "size": 89757,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/rectangle.png",
+      "size": 64721,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/semicircle.png",
+      "size": 67766,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/sphere.png",
+      "size": 69039,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/spiral.png",
+      "size": 69970,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/square.png",
+      "size": 61570,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/star.png",
+      "size": 65938,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/sticker_smiley.png",
+      "size": 46371,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/trapezoid.png",
+      "size": 66952,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/shapes/images/triangle.png",
+      "size": 64770,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/deck.json",
+      "size": 11721,
+      "mime": "application/json"
+    },
+    {
+      "path": "decks/tools/images/01_hammer.png",
+      "size": 40107,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/02_screwdriver.png",
+      "size": 40558,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/03_wrench.png",
+      "size": 41827,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/04_pliers.png",
+      "size": 41462,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/05_saw.png",
+      "size": 42587,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/06_tape_measure.png",
+      "size": 58463,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/07_level.png",
+      "size": 49940,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/08_drill.png",
+      "size": 56310,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/09_paintbrush.png",
+      "size": 46686,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/10_paint_roller.png",
+      "size": 44814,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/11_toolbox.png",
+      "size": 55986,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/12_nails.png",
+      "size": 41305,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/13_screws.png",
+      "size": 49663,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/14_nuts_bolts.png",
+      "size": 48145,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/15_utility_knife.png",
+      "size": 48514,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/16_clamp.png",
+      "size": 37711,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/17_measuring_square.png",
+      "size": 49492,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/18_safety_goggles.png",
+      "size": 53015,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/19_work_gloves.png",
+      "size": 47177,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/20_hard_hat.png",
+      "size": 44238,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/bonus_heart.png",
+      "size": 24621,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/bonus_rainbow.png",
+      "size": 29775,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/bonus_smile.png",
+      "size": 27015,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/bonus_star.png",
+      "size": 23192,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/bonus_thumbs_up.png",
+      "size": 26219,
+      "mime": "image/png"
+    },
+    {
+      "path": "decks/tools/images/cover.png",
+      "size": 82845,
+      "mime": "image/png"
+    },
+    {
+      "path": "docs/animated_deck_schema.md",
+      "size": 1067,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "docs/fun_layer_v0-2-1.md",
+      "size": 1021,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "docs/production_notes.md",
+      "size": 810,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "game.js",
+      "size": 29932,
+      "mime": "text/javascript"
+    },
+    {
+      "path": "index.html",
+      "size": 3844,
+      "mime": "text/html"
+    },
+    {
+      "path": "manifest.json",
+      "size": 881,
+      "mime": "application/json"
+    },
+    {
+      "path": "README.md",
+      "size": 1557,
+      "mime": "text/markdown"
+    },
+    {
+      "path": "service-worker.js",
+      "size": 2408,
+      "mime": "text/javascript"
+    },
+    {
+      "path": "styles.css",
+      "size": 12893,
+      "mime": "text/css"
+    }
+  ],
+  "notes": [
+    "Wrapped by KGB Studio Existing Game Release Wrapper."
+  ]
+}
