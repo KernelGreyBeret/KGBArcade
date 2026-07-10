@@ -1,4 +1,4 @@
-# KGB Arcade Repository Protection Package
+# KGB Arcade Repository Notice
 
 Prepared for:
 
