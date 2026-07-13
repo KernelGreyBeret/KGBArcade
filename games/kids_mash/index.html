@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
-  <title>Kid Jam Button Masher</title>
+  <title>Kid Jam Beat Party</title>
   <meta name="theme-color" content="#081a2a" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -56,7 +56,7 @@
       max-height: 100dvh;
       padding: calc(8px + var(--safe-t)) 10px calc(10px + var(--safe-b));
       display: grid;
-      grid-template-rows: auto minmax(74px, .85fr) minmax(74px, .85fr) minmax(230px, 2.25fr);
+      grid-template-rows: auto minmax(102px, 1.05fr) minmax(70px, .72fr) minmax(70px, .72fr) minmax(190px, 1.85fr);
       gap: 8px;
       overflow: hidden;
       position: relative;
@@ -75,6 +75,7 @@
     }
 
     header,
+    .beat-panel,
     .deck,
     .sfx-panel {
       position: relative;
@@ -174,6 +175,62 @@
       background: var(--yellow);
       box-shadow: 0 0 10px rgba(255,228,92,.9);
     }
+
+
+    .beat-panel {
+      position: relative;
+      z-index: 1;
+      padding: 8px;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 7px;
+    }
+
+    .beat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: rgba(245,251,255,.82);
+      font-weight: 1000;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: clamp(.72rem, 2vw, .9rem);
+    }
+
+    .beat-head strong { color: var(--green); text-shadow: 0 0 10px rgba(81,255,155,.60); }
+
+    .beat-grid {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .beat-pad {
+      min-width: 0;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      align-items: center;
+      justify-items: center;
+      gap: 2px;
+      padding: 5px 3px;
+      line-height: 1;
+      border-color: rgba(81,255,155,.58);
+      background: linear-gradient(180deg, rgba(81,255,155,.18), rgba(39,232,255,.055));
+      overflow: hidden;
+    }
+    .beat-pad:nth-child(3n+1){border-color:rgba(39,232,255,.62);background:linear-gradient(180deg,rgba(39,232,255,.18),rgba(39,232,255,.05));}
+    .beat-pad:nth-child(3n+2){border-color:rgba(255,79,216,.62);background:linear-gradient(180deg,rgba(255,79,216,.18),rgba(255,79,216,.05));}
+    .beat-pad:nth-child(4n){border-color:rgba(255,228,92,.70);background:linear-gradient(180deg,rgba(255,228,92,.20),rgba(255,228,92,.055));}
+    .beat-pad.active {
+      transform: translateY(3px) scale(.98);
+      border-color: var(--yellow);
+      box-shadow: 0 0 22px rgba(255,228,92,.66), inset 0 0 14px rgba(255,228,92,.18);
+    }
+    .beat-emoji { font-size: clamp(1rem, 3vw, 1.55rem); }
+    .beat-name { max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-size: clamp(.50rem, 1.45vw, .68rem); font-weight: 1000; }
 
     .deck {
       padding: 8px;
@@ -305,7 +362,7 @@
     @media (max-width: 740px) {
       .app {
         padding: calc(6px + var(--safe-t)) 6px calc(6px + var(--safe-b));
-        grid-template-rows: auto minmax(72px, .76fr) minmax(72px, .76fr) minmax(300px, 2.55fr);
+        grid-template-rows: auto minmax(116px, 1.12fr) minmax(62px, .62fr) minmax(62px, .62fr) minmax(240px, 2.2fr);
         gap: 6px;
       }
       header { grid-template-columns: 1fr; gap: 6px; padding: 6px; }
@@ -313,20 +370,21 @@
       .top-btn, a.save-link { min-height: 42px; border-radius: 12px; }
       .beat-lights { gap: 3px; }
       .light { height: 6px; }
-      .deck, .sfx-panel { padding: 6px; gap: 5px; border-radius: 14px; }
+      .beat-panel, .deck, .sfx-panel { padding: 6px; gap: 5px; border-radius: 14px; }
       .keys { grid-template-columns: repeat(8, 1fr); gap: 4px; }
       .key-pad, .sfx-pad { border-radius: 12px; border-width: 2px; }
+      .beat-grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
       .sfx-grid { grid-template-columns: repeat(4, 1fr); gap: 5px; }
       .sub { display: none; }
     }
 
     @media (max-height: 650px) {
-      .app { grid-template-rows: auto minmax(58px,.68fr) minmax(58px,.68fr) minmax(160px,2.2fr); gap: 5px; }
+      .app { grid-template-rows: auto minmax(86px,.92fr) minmax(52px,.56fr) minmax(52px,.56fr) minmax(140px,1.8fr); gap: 5px; }
       .top-btn, a.save-link { min-height: 36px; }
-      .deck-head, .sfx-head { display: none; }
-      .deck, .sfx-panel { grid-template-rows: 1fr; }
+      .beat-head, .deck-head, .sfx-head { display: none; }
+      .beat-panel, .deck, .sfx-panel { grid-template-rows: 1fr; }
       .light { height: 5px; }
-      .emoji { font-size: clamp(.82rem, 2.6vw, 1.2rem); }
+      .beat-emoji, .emoji { font-size: clamp(.82rem, 2.6vw, 1.2rem); }
       .sfx-name { font-size: clamp(.44rem, 1.3vw, .6rem); }
     }
   </style>
@@ -336,16 +394,22 @@
     <header>
       <div class="titlebox">
         <h1>Kid Jam</h1>
-        <div class="sub">Start a beat. Smash buttons. Save the chaos. Offline-ready.</div>
+        <div class="sub">One-tap techno beats. Smash buttons. Save the chaos. Offline-ready.</div>
       </div>
       <div class="controls">
-        <button class="top-btn play" id="playBtn">▶ Beat</button>
-        <button class="top-btn random" id="randomBtn">🎲 New Beat</button>
+        <button class="top-btn play" id="playBtn">▶ Party</button>
+        <button class="top-btn random" id="randomBtn">🎲 Surprise</button>
         <button class="top-btn record" id="recordBtn">● Record</button>
         <a class="save-link" id="downloadLink" hidden>⬇ Save</a>
         <div class="beat-lights" id="beatLights" aria-hidden="true"></div>
       </div>
     </header>
+
+    <section class="beat-panel">
+      <div class="beat-head"><strong>EDM Beat Buttons</strong><span>one tap = dance party</span></div>
+      <div class="beat-grid" id="beatGrid"></div>
+    </section>
+
 
     <section class="deck horn">
       <div class="deck-head"><strong>Horn Keyboard</strong><span>big bright brass</span></div>
@@ -375,6 +439,7 @@
       const recordBtn = document.getElementById('recordBtn');
       const downloadLink = document.getElementById('downloadLink');
       const beatLights = document.getElementById('beatLights');
+      const beatGrid = document.getElementById('beatGrid');
       const statusEl = document.getElementById('status');
 
       const NOTES = [
@@ -391,8 +456,10 @@
       let beatStep = 0;
       let bpm = 112;
       const steps = 16;
-      const drums = ['kick','snare','hat','clap','tom'];
+      const drums = ['kick','snare','hat','clap','tom','perc','shaker'];
       let drumPattern = {};
+      let activeArrangement = null;
+      let arrangementStep = 0;
       let isRecording = false;
       let recLeft = [];
       let recRight = [];
@@ -660,47 +727,125 @@
         tone(180, .18, 'sine', .22, { delay, toFreq: 88 });
       }
 
-      const drumFns = { kick, snare, hat, clap, tom };
+      function perc(time = tNow()) {
+        const delay = Math.max(0, time - tNow());
+        tone(520, .07, 'triangle', .10, { delay, toFreq: 220 });
+        filteredNoise(.045, .07, 'bandpass', 2600, 2, delay);
+      }
+
+      function shaker(time = tNow()) {
+        filteredNoise(.04, .10, 'highpass', 8200, .45, Math.max(0, time - tNow()));
+      }
+
+      const drumFns = { kick, snare, hat, clap, tom, perc, shaker };
+      const BASS = [65.41,73.42,82.41,98,110,123.47,130.81,146.83];
+      const LEAD = [523.25,587.33,659.25,783.99,880,987.77,1046.5,1174.66,1318.51];
+
+      function makePreset(emoji, name, bpmValue, drumsDef, bassHits, melodyDef, flavor) {
+        return { emoji, name, bpm: bpmValue, drums: drumsDef, bassHits, melody: melodyDef || {}, flavor: flavor || 'sparkle' };
+      }
+      const BEAT_PRESETS = [
+        makePreset('🌈','Rainbow Rave',128,{kick:[0,4,8,12],snare:[4,12],clap:[4,12],hat:[2,6,10,14],shaker:[1,3,5,7,9,11,13,15]},[0,2,4,6,8,10,12,14],{0:4,2:6,4:7,6:6,8:4,10:2,12:0,14:2},'sparkle'),
+        makePreset('🤖','Robot Dance',124,{kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14],perc:[3,7,11,15]},[0,3,6,8,11,14],{0:0,4:3,8:5,12:3},'robot'),
+        makePreset('🫧','Bubble Bounce',118,{kick:[0,3,6,10,12],snare:[4,12],clap:[4,12],hat:[1,3,5,7,9,11,13,15],tom:[15]},[0,4,7,10,12,14],{0:2,3:4,6:7,9:4,12:2,15:0},'bubble'),
+        makePreset('🚀','Space Zoom',132,{kick:[0,4,8,12],snare:[4,12],hat:[2,6,10,14],shaker:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]},[0,1,4,6,8,9,12,14],{0:7,4:8,8:6,12:4},'space'),
+        makePreset('🍭','Candy Techno',126,{kick:[0,4,8,12],snare:[4,12],clap:[6,14],hat:[0,2,4,6,8,10,12,14],perc:[5,11]},[0,2,5,8,10,13],{0:4,2:5,4:7,8:8,10:7,12:5,14:4},'candy'),
+        makePreset('⚡','Zap House',128,{kick:[0,4,8,12],snare:[4,12],clap:[4,12],hat:[2,6,10,14],perc:[7,15]},[0,4,6,8,12,14],{0:7,3:9,6:7,9:5,12:4},'zap'),
+        makePreset('⭐','Star Parade',120,{kick:[0,4,8,12],snare:[4,12],clap:[4,12],hat:[0,2,4,6,8,10,12,14],tom:[6,14]},[0,4,8,12],{0:0,2:2,4:4,6:7,8:4,10:2,12:0,14:7},'stars'),
+        makePreset('🐸','Frog Hop',116,{kick:[0,3,8,11,12],snare:[4,12],hat:[1,3,5,7,9,11,13,15],tom:[6,14],perc:[2,10]},[0,3,6,9,12,15],{0:0,4:5,8:0,12:7},'hop'),
+        makePreset('👾','Bit Pop',136,{kick:[0,4,8,12],snare:[4,12],hat:[0,1,2,4,6,8,9,10,12,14],perc:[3,7,11,15]},[0,2,4,8,10,12,14],{0:7,1:8,4:5,5:7,8:4,9:5,12:2,13:4},'bit'),
+        makePreset('🏁','Turbo Zoom',140,{kick:[0,4,8,12],snare:[4,12],clap:[4,12],hat:[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]},[0,2,4,6,8,10,12,14],{0:4,2:7,4:8,6:7,8:4,10:7,12:8,14:11},'turbo'),
+        makePreset('🌙','Moon Bounce',110,{kick:[0,4,8,12],snare:[4,12],hat:[2,6,10,14],shaker:[1,5,9,13]},[0,4,8,12],{0:4,4:2,8:0,12:2},'moon'),
+        makePreset('🦖','Dino Drop',124,{kick:[0,4,7,8,12],snare:[4,12],clap:[12],hat:[2,6,10,14],tom:[14,15]},[0,3,4,7,8,11,12,15],{0:7,4:5,8:3,12:0},'drop'),
+        makePreset('🎮','Arcade Pop',132,{kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14],perc:[1,5,9,13]},[0,2,4,6,8,10,12,14],{0:0,2:4,4:7,6:8,8:7,10:4,12:2,14:0},'arcade'),
+        makePreset('🐶','Puppy Party',122,{kick:[0,3,6,8,10,12],snare:[4,12],clap:[4,12],hat:[1,3,5,7,9,11,13,15],perc:[15]},[0,4,6,8,12,14],{0:4,2:7,4:4,8:9,10:7,12:4},'party'),
+        makePreset('🚨','Siren Sprint',138,{kick:[0,4,8,12],snare:[4,12],hat:[0,2,4,6,8,10,12,14],perc:[6,14],shaker:[1,3,5,7,9,11,13,15]},[0,1,4,5,8,9,12,13],{0:7,4:5,8:7,12:9},'siren'),
+        makePreset('🦄','Unicorn Drop',128,{kick:[0,4,8,12],snare:[4,12],clap:[4,12],hat:[2,6,10,14],tom:[15]},[0,4,8,12,14],{0:7,2:9,4:11,8:9,10:7,12:4,14:2},'unicorn')
+      ];
+
+      function hitsToPattern(list) {
+        const pattern = Array(steps).fill(false);
+        (list || []).forEach(i => { if (i >= 0 && i < steps) pattern[i] = true; });
+        return pattern;
+      }
+
+      function buildBeatButtons() {
+        beatGrid.innerHTML = '';
+        BEAT_PRESETS.forEach((preset, i) => {
+          const btn = document.createElement('button');
+          btn.className = 'beat-pad';
+          btn.innerHTML = `<span class="beat-emoji">${preset.emoji}</span><span class="beat-name">${preset.name}</span>`;
+          btn.addEventListener('pointerdown', async (e) => {
+            e.preventDefault();
+            await unlockAudio();
+            loadBeatPreset(preset, true);
+            pressFlash(btn, 280);
+          }, { passive: false });
+          beatGrid.appendChild(btn);
+        });
+      }
+
+      function loadBeatPreset(preset, startAfter = true) {
+        clearPattern();
+        activeArrangement = preset;
+        bpm = preset.bpm;
+        arrangementStep = 0;
+        beatStep = 0;
+        drums.forEach(d => drumPattern[d] = hitsToPattern(preset.drums[d] || []));
+        if (seqTimer) { clearInterval(seqTimer); seqTimer = setInterval(tick, stepMs()); }
+        showStatus(`${preset.emoji} ${preset.name}!`);
+        if (startAfter && !isPlaying) startBeat();
+      }
+
+      function toneAt(time, freq, dur, type = 'sine', vol = .12, opts = {}) {
+        tone(freq, dur, type, vol, { ...opts, delay: Math.max(0, time - tNow()) + (opts.extraDelay || 0) });
+      }
+      function noiseAt(time, dur, vol, filterType, freq, q = 1, extraDelay = 0) {
+        filteredNoise(dur, vol, filterType, freq, q, Math.max(0, time - tNow()) + extraDelay);
+      }
+
+      function playArrangementStep(preset, s, time) {
+        if (!preset) return;
+        const cycle = Math.floor(arrangementStep / 16) % 4;
+        const bassHits = preset.bassHits || [];
+        if (bassHits.includes(s)) {
+          const idx = (bassHits.indexOf(s) + cycle) % BASS.length;
+          const f = BASS[(idx + (preset.flavor === 'drop' ? 2 : 0)) % BASS.length];
+          toneAt(time, f, .13, preset.flavor === 'moon' ? 'sine' : 'square', .115, { toFreq: f * (preset.flavor === 'turbo' ? 1.5 : .98), curve:'linear' });
+        }
+        if (preset.melody && preset.melody[s] !== undefined) {
+          const noteIdx = (preset.melody[s] + cycle) % LEAD.length;
+          const wave = ['bit','arcade','robot'].includes(preset.flavor) ? 'square' : 'triangle';
+          toneAt(time, LEAD[noteIdx], .105, wave, .08);
+        }
+        if (s === 0 && ['moon','space','unicorn','stars'].includes(preset.flavor)) {
+          [0,2,4].forEach((n,k)=>toneAt(time, LEAD[(n+cycle)%LEAD.length]/2, .9, 'triangle', .035, { extraDelay:k*.015 }));
+        }
+        if (s === 15 && cycle % 2 === 1) {
+          if (['drop','turbo','space','rave'].includes(preset.flavor) || preset.name.includes('Drop')) {
+            for (let i=0;i<5;i++) toneAt(time, 300+i*130, .045, 'sawtooth', .045, { extraDelay:i*.035, toFreq:500+i*180, curve:'linear' });
+          }
+        }
+        if (s === 14 && ['sparkle','stars','candy','unicorn'].includes(preset.flavor)) {
+          [0,.055,.11].forEach((d,i)=>toneAt(time, LEAD[5+i], .09, 'triangle', .06, { extraDelay:d }));
+        }
+        if (s === 8 && ['zap','bit','siren'].includes(preset.flavor)) {
+          toneAt(time, preset.flavor === 'siren' ? 660 : 980, .10, 'square', .07, { toFreq: preset.flavor === 'siren' ? 440 : 130 });
+        }
+        if (s === 12 && preset.flavor === 'bubble') {
+          for(let i=0;i<4;i++) toneAt(time, 240+i*80, .06, 'sine', .055, { extraDelay:i*.045, toFreq:400+i*90, curve:'linear' });
+        }
+        if (s === 4 && preset.flavor === 'hop') toneAt(time, 220, .18, 'sine', .08, { toFreq: 760, curve:'linear' });
+        if (s === 0 && preset.flavor === 'party') { filteredNoise(.08,.08,'bandpass',900,3,Math.max(0,time-tNow())); toneAt(time, 180, .08, 'square', .07, { toFreq:90 }); }
+      }
 
       function clearPattern() {
         drums.forEach(d => drumPattern[d] = Array(steps).fill(false));
       }
 
       function randomizeBeat(startAfter = true) {
-        clearPattern();
-        const styles = ['dance', 'rock', 'march', 'bounce', 'chaos'];
-        const style = styles[Math.floor(Math.random() * styles.length)];
-        bpm = style === 'dance' ? 124 : style === 'march' ? 104 : style === 'chaos' ? 132 : 112;
-
-        for (let i = 0; i < steps; i++) {
-          if (i % 4 === 0) drumPattern.kick[i] = true;
-          if (i === 4 || i === 12) drumPattern.snare[i] = true;
-          if (style === 'dance') {
-            if (i % 2 === 0) drumPattern.hat[i] = true;
-            if (i === 0 || i === 8) drumPattern.kick[i] = true;
-            if (i === 6 || i === 14) drumPattern.clap[i] = Math.random() < .65;
-          } else if (style === 'rock') {
-            if (i % 2 === 0 || Math.random() < .25) drumPattern.hat[i] = true;
-            if (i === 10) drumPattern.kick[i] = Math.random() < .7;
-            if (i === 15) drumPattern.tom[i] = Math.random() < .65;
-          } else if (style === 'march') {
-            if (i % 2 === 0) drumPattern.hat[i] = true;
-            if (i === 2 || i === 6 || i === 10 || i === 14) drumPattern.tom[i] = Math.random() < .5;
-          } else if (style === 'bounce') {
-            if ([0,3,6,10,12].includes(i)) drumPattern.kick[i] = true;
-            if (i % 2 === 1) drumPattern.hat[i] = true;
-            if (i === 4 || i === 12) drumPattern.clap[i] = true;
-          } else {
-            drums.forEach(d => {
-              for (let i = 0; i < steps; i++) drumPattern[d][i] = Math.random() < (d === 'hat' ? .42 : .22);
-            });
-            drumPattern.kick[0] = true;
-            drumPattern.snare[4] = true;
-            drumPattern.snare[12] = true;
-          }
-        }
-        showStatus(`New ${style} beat!`);
-        if (startAfter && !isPlaying) startBeat();
+        const preset = BEAT_PRESETS[Math.floor(Math.random() * BEAT_PRESETS.length)];
+        loadBeatPreset(preset, startAfter);
       }
 
       function updateLights() {
@@ -712,8 +857,10 @@
         drums.forEach(d => {
           if (drumPattern[d][beatStep]) drumFns[d](when);
         });
+        playArrangementStep(activeArrangement, beatStep, when);
         updateLights();
         beatStep = (beatStep + 1) % steps;
+        arrangementStep = (arrangementStep + 1) % 64;
       }
 
       function stepMs() { return (60 / bpm / 4) * 1000; }
@@ -732,10 +879,11 @@
       function stopBeat() {
         isPlaying = false;
         playBtn.classList.remove('on');
-        playBtn.textContent = '▶ Beat';
+        playBtn.textContent = '▶ Party';
         clearInterval(seqTimer);
         seqTimer = null;
         beatStep = 0;
+        arrangementStep = 0;
         [...beatLights.children].forEach(el => el.classList.remove('on'));
         showStatus('Beat stopped');
       }
@@ -885,40 +1033,17 @@
       }
 
       SFX.forEach(([emoji, name, fn], i) => {
-  const btn = document.createElement('button');
-  btn.className = 'sfx-pad';
-  btn.innerHTML = `<span class="emoji">${emoji}</span><span class="sfx-name">${name}</span>`;
-
-  let holdTimer = null;
-
-  const startSfxHold = async (e) => {
-    e.preventDefault();
-    await unlockAudio();
-
-    pressFlash(btn);
-    fn();
-
-    clearInterval(holdTimer);
-    holdTimer = setInterval(() => {
-      pressFlash(btn);
-      fn();
-    }, 350); // lower = faster repeat, higher = slower repeat
-  };
-
-  const stopSfxHold = (e) => {
-    if (e) e.preventDefault();
-    clearInterval(holdTimer);
-    holdTimer = null;
-    btn.classList.remove('active');
-  };
-
-  btn.addEventListener('pointerdown', startSfxHold, { passive: false });
-  btn.addEventListener('pointerup', stopSfxHold, { passive: false });
-  btn.addEventListener('pointercancel', stopSfxHold, { passive: false });
-  btn.addEventListener('pointerleave', stopSfxHold, { passive: false });
-
-  sfxGrid.appendChild(btn);
-});
+        const btn = document.createElement('button');
+        btn.className = 'sfx-pad';
+        btn.innerHTML = `<span class="emoji">${emoji}</span><span class="sfx-name">${name}</span>`;
+        btn.addEventListener('pointerdown', async (e) => {
+          e.preventDefault();
+          await unlockAudio();
+          pressFlash(btn);
+          fn();
+        }, { passive: false });
+        sfxGrid.appendChild(btn);
+      });
 
       window.addEventListener('keydown', async (e) => {
         const key = e.key.toUpperCase();
@@ -957,6 +1082,7 @@
 
       document.body.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
 
+      buildBeatButtons();
       clearPattern();
       randomizeBeat(false);
       showStatus('Tap Beat or New Beat');

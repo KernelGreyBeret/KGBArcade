@@ -1,7 +1,7 @@
 {
-  "name": "Kid Jam Button Masher",
+  "name": "Kid Jam Beat Party",
   "short_name": "Kid Jam",
-  "description": "A kid-friendly offline music button masher with beats, horn keys, game keys, and funny sound effects.",
+  "description": "A kid-friendly offline music button masher with one-tap EDM beats, horn keys, game keys, and funny sound effects.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",

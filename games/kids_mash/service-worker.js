@@ -1,4 +1,4 @@
-const CACHE_NAME = 'kid-jam-button-masher-v2';
+const CACHE_NAME = 'kid-jam-beat-party-v3';
 const APP_SHELL = [
   './',
   './index.html',
