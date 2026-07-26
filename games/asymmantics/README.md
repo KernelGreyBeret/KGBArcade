@@ -1,18 +1,26 @@
-# Asymmantics Beta
+# Asymmantics Beta 0.2.2
 
 A signal-language puzzle game in which the player constructs shared meaning
 with an unknown intelligence through observation, inference, response, and
 validated reuse.
 
-> Beta software. Puzzle structure, behavior, presentation, and content may
-> change substantially.
+## This build
+
+Beta 0.2.2 establishes the permanent Prologue interface and puzzle-engine
+foundation:
+
+- fixed signal scope, active context, and transmitter;
+- scrolling conversation history;
+- selectable and replayable transmissions;
+- distinct received and transmitted signals;
+- grouped demonstration bundles;
+- stable response grammar;
+- progressive remediation after repeated failure;
+- persistent active examples for unresolved challenges;
+- player-authored signal notebook architecture;
+- installable offline PWA behavior.
 
 ## Run locally
-
-Because service workers require a secure context, test the PWA through
-`localhost` rather than opening `index.html` directly.
-
-From this directory:
 
 ```bash
 python -m http.server 8080
@@ -26,43 +34,18 @@ http://localhost:8080/
 
 ## Deploy to KGB Arcade
 
-Upload the complete contents of this folder without changing its internal
-structure. A suitable deployment path is:
+Upload the contents of this folder intact under a path such as:
 
 ```text
 /games/asymmantics/
 ```
 
-The directory must be served over HTTPS for installation and offline caching
-in production.
+Serve it over HTTPS. The service worker is scoped to the Asymmantics directory.
 
-## Install on Android
+## Upgrade note
 
-Open the deployed game in Chrome. Use the in-game **INSTALL** control when
-available, or open the browser menu and select **Install app** or
-**Add to Home screen**.
-
-## Updating a deployed build
-
-1. Replace the deployed application files.
-2. Change `CACHE_NAME` in `sw.js`.
-3. Record the release in `CHANGELOG.md`.
-4. Test a clean installation and an upgrade from the prior installed build.
-
-Changing the cache name ensures that the service worker retires the previous
-application shell.
-
-## Repository files
-
-- `LICENSE.md` — proprietary use terms.
-- `NOTICE.md` — ownership, beta status, and attribution notice.
-- `THIRD_PARTY_NOTICES.md` — bundled dependency and asset record.
-- `PRIVACY.md` — current data-handling description.
-- `SECURITY.md` — responsible vulnerability reporting.
-- `CONTRIBUTING.md` — contribution expectations.
-- `CHANGELOG.md` — release history.
-- `manifest.webmanifest` — install metadata.
-- `sw.js` — offline application-shell service worker.
+The service-worker cache is named `asymmantics-beta-v0-2`. Future releases
+must change `CACHE_NAME` in `sw.js` so installed builds update cleanly.
 
 ## License
 
