@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#05040b" />
+<title>404 — Signal Lost | KGB Arcade</title>
+<meta name="description" content="That route went off-grid. Return to KGB Arcade — The Arcade of the Tactical Underground." />
+<style>
+  :root{
+    --bg:#05040b;
+    --panel:#0b0912;
+    --panel2:#100b17;
+    --ink:#f6f7fb;
+    --muted:#aaa6b6;
+    --line:rgba(255,255,255,.10);
+    --pink:#ff4f9a;
+    --pink2:#ff7bb3;
+    --blue:#53b8ff;
+    --blue2:#7ed5ff;
+    --red:#ff514e;
+    --violet:#8e72ff;
+    --radius:22px;
+    --max:1100px;
+  }
+
+  *{box-sizing:border-box}
+  html{min-height:100%;background:var(--bg)}
+  body{
+    margin:0;
+    min-height:100vh;
+    min-height:100svh;
+    color:var(--ink);
+    background:
+      radial-gradient(900px 600px at 10% 5%,rgba(83,184,255,.10),transparent 56%),
+      radial-gradient(900px 600px at 90% 15%,rgba(255,79,154,.12),transparent 58%),
+      var(--bg);
+    font:500 16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    overflow-x:hidden;
+  }
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    opacity:.11;
+    background:
+      repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.12) 4px),
+      linear-gradient(90deg,transparent 49.7%,rgba(83,184,255,.08) 50%,transparent 50.3%);
+    mix-blend-mode:screen;
+    z-index:20;
+  }
+
+  a{color:inherit;text-decoration:none}
+  button{font:inherit}
+  .wrap{width:min(var(--max),calc(100% - 30px));margin-inline:auto}
+
+  /* ===== Site-style top bar ===== */
+  header{
+    position:relative;
+    z-index:10;
+    border-bottom:1px solid var(--line);
+    background:rgba(5,4,11,.82);
+    backdrop-filter:blur(12px);
+  }
+  .nav{
+    min-height:74px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+  }
+  .brand img{
+    width:54px;
+    height:54px;
+    object-fit:contain;
+    filter:drop-shadow(0 0 12px rgba(255,81,78,.20));
+  }
+  .brandText{line-height:1.05}
+  .brandText strong{
+    display:block;
+    font-size:18px;
+    letter-spacing:.14em;
+  }
+  .brandText span{
+    display:block;
+    margin-top:6px;
+    color:#8f8a99;
+    font-size:11px;
+    letter-spacing:.10em;
+    text-transform:uppercase;
+  }
+  .navlinks{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .navlinks a{
+    padding:9px 12px;
+    border:1px solid transparent;
+    border-radius:10px;
+    color:#bbb6c4;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    transition:.18s ease;
+  }
+  .navlinks a:hover{
+    color:#fff;
+    border-color:rgba(83,184,255,.24);
+    background:rgba(83,184,255,.06);
+  }
+
+  /* ===== 404 hero ===== */
+  .hero{
+    position:relative;
+    min-height:calc(100svh - 75px);
+    display:grid;
+    align-items:center;
+    isolation:isolate;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-3;
+    background-image:url('/kgbarcade-hero_smaller.png');
+    background-size:cover;
+    background-position:center;
+    opacity:.48;
+    filter:saturate(.88) contrast(1.06) brightness(.66);
+    transform:scale(1.025);
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    z-index:-2;
+    background:
+      linear-gradient(180deg,rgba(5,4,11,.56),rgba(5,4,11,.78) 46%,#05040b 100%),
+      radial-gradient(circle at 50% 42%,rgba(6,5,12,.15),rgba(5,4,11,.82) 70%);
+  }
+  .glow{
+    position:absolute;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:
+      radial-gradient(440px 260px at 38% 43%,rgba(255,79,154,.12),transparent 70%),
+      radial-gradient(440px 260px at 62% 52%,rgba(83,184,255,.11),transparent 70%);
+  }
+
+  .heroInner{
+    padding:52px 0 44px;
+    display:grid;
+    grid-template-columns:minmax(0,1.14fr) minmax(300px,.86fr);
+    gap:28px;
+    align-items:center;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    margin-bottom:13px;
+    color:var(--pink2);
+    font:900 12px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+  }
+  .pulse{
+    width:8px;height:8px;border-radius:50%;
+    background:var(--red);
+    box-shadow:0 0 14px var(--red);
+  }
+
+  .code{
+    position:relative;
+    width:max-content;
+    max-width:100%;
+    margin:0 0 10px;
+    font:1000 clamp(92px,18vw,190px)/.78 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:-.09em;
+    color:#f6f7fb;
+    text-shadow:
+      4px 0 0 rgba(255,79,154,.72),
+      -4px 0 0 rgba(83,184,255,.55),
+      0 0 34px rgba(255,79,154,.17),
+      0 0 50px rgba(83,184,255,.10);
+  }
+  .code::before,
+  .code::after{
+    content:"404";
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    overflow:hidden;
+    opacity:.28;
+  }
+  .code::before{
+    color:var(--pink);
+    transform:translate(4px,-2px);
+    clip-path:inset(18% 0 57% 0);
+  }
+  .code::after{
+    color:var(--blue);
+    transform:translate(-4px,3px);
+    clip-path:inset(64% 0 17% 0);
+  }
+
+  h1{
+    margin:16px 0 10px;
+    font-size:clamp(30px,5.6vw,58px);
+    line-height:.98;
+    letter-spacing:-.04em;
+  }
+  .lead{
+    max-width:660px;
+    margin:0;
+    color:#c2bdca;
+    font-size:clamp(16px,2.2vw,19px);
+  }
+  .lead strong{color:#fff}
+
+  .route{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    width:min(650px,100%);
+    margin:22px 0 0;
+    padding:11px 13px;
+    border:1px solid rgba(255,79,154,.20);
+    border-radius:11px;
+    background:rgba(7,5,12,.72);
+    color:#807b89;
+    box-shadow:inset 0 0 24px rgba(255,79,154,.02);
+    font:700 12px/1.3 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .route::before{content:">";color:var(--pink);font-weight:1000}
+  .routeText{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:24px;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:48px;
+    padding:11px 17px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    cursor:pointer;
+    font-weight:900;
+    letter-spacing:.02em;
+    transition:transform .15s ease,filter .15s ease,border-color .15s ease,box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
+  .primary{
+    color:#08050b;
+    border-color:#ff80b6;
+    background:linear-gradient(135deg,var(--pink2),var(--pink));
+    box-shadow:0 0 24px rgba(255,79,154,.18);
+  }
+  .secondary{
+    color:#07121b;
+    border-color:#7dd7ff;
+    background:linear-gradient(135deg,var(--blue2),var(--blue));
+    box-shadow:0 0 24px rgba(83,184,255,.14);
+  }
+  .ghost{
+    color:#d5d0dc;
+    background:rgba(14,10,21,.76);
+  }
+
+  /* ===== Current-site quick routes ===== */
+  .panel{
+    position:relative;
+    padding:22px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:var(--radius);
+    background:linear-gradient(180deg,rgba(14,9,21,.87),rgba(7,5,12,.92));
+    box-shadow:0 22px 70px rgba(0,0,0,.38),inset 0 1px rgba(255,255,255,.035);
+    backdrop-filter:blur(8px);
+  }
+  .panel::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:inherit;
+    pointer-events:none;
+    background:linear-gradient(135deg,rgba(255,79,154,.06),transparent 34%,rgba(83,184,255,.055));
+  }
+  .panelHead{
+    position:relative;
+    z-index:1;
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    align-items:center;
+    padding-bottom:14px;
+    margin-bottom:6px;
+    border-bottom:1px solid var(--line);
+  }
+  .panelHead strong{
+    font-size:12px;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+  }
+  .online{
+    color:#7effb7;
+    font:800 10px/1.2 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+  }
+
+  .routeCard{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:46px 1fr auto;
+    gap:12px;
+    align-items:center;
+    padding:13px 2px;
+    border-bottom:1px solid rgba(255,255,255,.065);
+    transition:.15s ease;
+  }
+  .routeCard:last-of-type{border-bottom:0}
+  .routeCard:hover{transform:translateX(2px)}
+  .routeCard img{
+    width:42px;height:42px;object-fit:contain;
+    filter:drop-shadow(0 0 10px rgba(83,184,255,.12));
+  }
+  .routeCard strong{display:block;font-size:14px}
+  .routeCard span{display:block;color:#8d8797;font-size:12px;margin-top:2px}
+  .arrow{color:#777080;font-size:20px;font-weight:300}
+
+  .siteLine{
+    position:relative;
+    z-index:1;
+    margin-top:14px;
+    padding-top:13px;
+    border-top:1px solid var(--line);
+    color:#797381;
+    font:700 10px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+  .siteLine b{color:#afa8b8}
+
+  footer{
+    padding:16px 0 22px;
+    color:#625d6c;
+    text-align:center;
+    font-size:11px;
+    letter-spacing:.07em;
+    text-transform:uppercase;
+  }
+
+  @media (max-width:860px){
+    .heroInner{grid-template-columns:1fr;gap:22px;padding-top:38px}
+    .panel{max-width:650px}
+    .code{font-size:clamp(96px,29vw,170px)}
+  }
+  @media (max-width:650px){
+    .nav{min-height:65px}
+    .brand img{width:46px;height:46px}
+    .brandText strong{font-size:15px}
+    .brandText span{display:none}
+    .navlinks a{display:none}
+    .navlinks a:first-child{display:inline-flex}
+    .hero{min-height:calc(100svh - 66px)}
+    .hero::before{background-position:center top}
+    .heroInner{padding:30px 0 26px}
+    h1{font-size:clamp(31px,10.5vw,46px)}
+    .actions{display:grid;grid-template-columns:1fr 1fr}
+    .btn{width:100%;padding-inline:12px}
+    .ghost{grid-column:1/-1}
+    .panel{padding:18px}
+    .routeCard{grid-template-columns:42px 1fr auto}
+    .routeCard img{width:38px;height:38px}
+  }
+  @media (prefers-reduced-motion:no-preference){
+    .code{animation:signalJitter 8s steps(1,end) infinite}
+    .pulse{animation:pulse 1.7s ease-in-out infinite}
+    @keyframes signalJitter{
+      0%,92%,94%,100%{transform:translate(0,0)}
+      93%{transform:translate(2px,-1px)}
+      93.5%{transform:translate(-1px,1px)}
+    }
+    @keyframes pulse{50%{opacity:.45;box-shadow:0 0 6px var(--red)}}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="nav wrap">
+    <a class="brand" href="/index.html" aria-label="KGB Arcade home">
+      <img src="/icons-KGBA-Logo_small.png" alt="KGB Arcade logo" />
+      <div class="brandText">
+        <strong>KGB ARCADE</strong>
+        <span>The Arcade of the Tactical Underground</span>
+      </div>
+    </a>
+    <nav class="navlinks" aria-label="Quick navigation">
+      <a href="/index.html#arsenal">Arsenal</a>
+      <a href="/mission.html">Mission</a>
+      <a href="/index.html#comms">Comms</a>
+    </nav>
+  </div>
+</header>
+
+<main class="hero">
+  <div class="glow" aria-hidden="true"></div>
+
+  <div class="heroInner wrap">
+    <section>
+      <div class="eyebrow"><span class="pulse" aria-hidden="true"></span> Signal Lost // Route Not Found</div>
+      <div class="code" aria-hidden="true">404</div>
+      <h1>This sector went off-grid.</h1>
+      <p class="lead">
+        Whatever you were hunting isn't at this coordinate. <strong>The arcade is still online.</strong>
+        Re-route to the Game Vault, return to base, or backtrack to wherever you came from.
+      </p>
+
+      <div class="route" title="Requested route">
+        <span class="routeText" id="badRoute">NO ROUTE: requested path unavailable</span>
+      </div>
+
+      <div class="actions">
+        <a class="btn primary" href="/index.html">⌂ Return to Base</a>
+        <a class="btn secondary" href="/index.html#arsenal">▣ Enter the Arsenal</a>
+        <button class="btn ghost" id="backBtn" type="button">← Backtrack</button>
+      </div>
+    </section>
+
+    <aside class="panel" aria-label="KGB Arcade routes">
+      <div class="panelHead">
+        <strong>Available Routes</strong>
+        <span class="online">● KGBA Online</span>
+      </div>
+
+      <a class="routeCard" href="/index.html#arsenal">
+        <img src="/icons-arcade_small.png" alt="" aria-hidden="true" />
+        <div>
+          <strong>Arsenal // The Game Vault</strong>
+          <span>8BitOps · MiniMissions · TankTots</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="routeCard" href="/index.html#intel">
+        <img src="/icons-eye_small.png" alt="" aria-hidden="true" />
+        <div>
+          <strong>Intel // Behind the Arcade</strong>
+          <span>What KGBA is, why it exists, how it works.</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <a class="routeCard" href="/index.html#comms">
+        <img src="/icons-tower_small.png" alt="" aria-hidden="true" />
+        <div>
+          <strong>Comms // Hail the Dev</strong>
+          <span>Feedback, bug reports, and direct contact.</span>
+        </div>
+        <div class="arrow">›</div>
+      </a>
+
+      <div class="siteLine">
+        <b>FAST-LOAD MICRO-GAMES</b> // OPERATOR-BUILT PRECISION<br>
+        ZERO ADS // ZERO FRICTION // ALL FUN
+      </div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">© KGB Arcade · The Arcade of the Tactical Underground · OP: TT-KGB</div>
+</footer>
+
+<script>
+(function(){
+  const path = location.pathname + location.search + location.hash;
+  const route = document.getElementById('badRoute');
+  route.textContent = 'NO ROUTE: ' + path;
+  route.parentElement.title = path;
+
+  document.getElementById('backBtn').addEventListener('click', function(){
+    if(history.length > 1) history.back();
+    else location.href = '/index.html';
+  });
+})();
+</script>
+</body>
+</html>
