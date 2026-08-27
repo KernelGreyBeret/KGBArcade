@@ -371,22 +371,153 @@
     .code{font-size:clamp(96px,29vw,170px)}
   }
   @media (max-width:650px){
-    .nav{min-height:65px}
-    .brand img{width:46px;height:46px}
-    .brandText strong{font-size:15px}
+    body::before{opacity:.07}
+    .wrap{width:min(100% - 22px,var(--max))}
+
+    header{position:relative;background:rgba(5,4,11,.94)}
+    .nav{min-height:58px;gap:10px}
+    .brand{gap:9px}
+    .brand img{width:38px;height:38px}
+    .brandText strong{font-size:13px;letter-spacing:.12em}
     .brandText span{display:none}
-    .navlinks a{display:none}
-    .navlinks a:first-child{display:inline-flex}
-    .hero{min-height:calc(100svh - 66px)}
-    .hero::before{background-position:center top}
-    .heroInner{padding:30px 0 26px}
-    h1{font-size:clamp(31px,10.5vw,46px)}
-    .actions{display:grid;grid-template-columns:1fr 1fr}
-    .btn{width:100%;padding-inline:12px}
-    .ghost{grid-column:1/-1}
-    .panel{padding:18px}
-    .routeCard{grid-template-columns:42px 1fr auto}
-    .routeCard img{width:38px;height:38px}
+    .navlinks{display:none}
+
+    .hero{
+      min-height:auto;
+      display:block;
+      overflow:visible;
+    }
+    .hero::before{
+      position:absolute;
+      height:390px;
+      bottom:auto;
+      background-size:auto 390px;
+      background-repeat:no-repeat;
+      background-position:50% 0;
+      opacity:.34;
+      filter:saturate(.9) contrast(1.05) brightness(.58);
+      transform:none;
+      mask-image:linear-gradient(to bottom,#000 0%,#000 68%,transparent 100%);
+      -webkit-mask-image:linear-gradient(to bottom,#000 0%,#000 68%,transparent 100%);
+    }
+    .hero::after{
+      background:
+        linear-gradient(180deg,rgba(5,4,11,.36) 0%,rgba(5,4,11,.74) 240px,#05040b 390px,#05040b 100%);
+    }
+    .glow{opacity:.7}
+
+    .heroInner{
+      display:block;
+      padding:24px 0 20px;
+    }
+    .heroInner > section{text-align:center}
+    .eyebrow{
+      justify-content:center;
+      margin-bottom:10px;
+      font-size:10px;
+      letter-spacing:.13em;
+    }
+    .code{
+      margin:4px auto 8px;
+      font-size:clamp(76px,28vw,118px);
+      line-height:.78;
+      letter-spacing:-.10em;
+      padding-right:.09em;
+      text-shadow:
+        2px 0 0 rgba(255,79,154,.68),
+        -2px 0 0 rgba(83,184,255,.52),
+        0 0 24px rgba(255,79,154,.14);
+    }
+    .code::before{transform:translate(2px,-1px)}
+    .code::after{transform:translate(-2px,2px)}
+    h1{
+      margin:12px auto 9px;
+      max-width:330px;
+      font-size:clamp(29px,9.2vw,39px);
+      line-height:1.02;
+    }
+    .lead{
+      margin-inline:auto;
+      max-width:390px;
+      font-size:14px;
+      line-height:1.48;
+    }
+    .route{
+      width:100%;
+      margin:16px 0 0;
+      padding:9px 10px;
+      border-radius:10px;
+      text-align:left;
+      font-size:10px;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:9px;
+      margin-top:16px;
+    }
+    .btn{
+      width:100%;
+      min-height:46px;
+      padding:10px 14px;
+      border-radius:11px;
+      font-size:14px;
+    }
+    .ghost{grid-column:auto}
+
+    .panel{
+      margin-top:18px;
+      padding:14px;
+      border-radius:16px;
+      text-align:left;
+      backdrop-filter:blur(5px);
+      box-shadow:0 14px 40px rgba(0,0,0,.30);
+    }
+    .panelHead{padding-bottom:10px;margin-bottom:2px}
+    .panelHead strong{font-size:10px;letter-spacing:.13em}
+    .online{font-size:9px;letter-spacing:.08em}
+    .routeCard{
+      grid-template-columns:34px minmax(0,1fr) 14px;
+      gap:9px;
+      padding:10px 0;
+    }
+    .routeCard img{width:30px;height:30px}
+    .routeCard strong{font-size:12px;line-height:1.2}
+    .routeCard span{
+      margin-top:3px;
+      font-size:10.5px;
+      line-height:1.3;
+    }
+    .arrow{font-size:17px}
+    .siteLine{
+      margin-top:8px;
+      padding-top:10px;
+      font-size:8.5px;
+      line-height:1.55;
+      letter-spacing:.055em;
+    }
+    footer{
+      padding:12px 0 calc(16px + env(safe-area-inset-bottom,0px));
+      font-size:8.5px;
+      line-height:1.5;
+    }
+  }
+
+  @media (max-width:390px){
+    .wrap{width:min(100% - 18px,var(--max))}
+    .brand img{width:34px;height:34px}
+    .brandText strong{font-size:12px}
+    .heroInner{padding-top:20px}
+    .eyebrow{font-size:9px;letter-spacing:.10em}
+    .code{font-size:78px}
+    h1{font-size:29px}
+    .lead{font-size:13px}
+    .panel{padding:12px}
+    .routeCard span{display:none}
+    .routeCard{grid-template-columns:30px 1fr 12px;padding:9px 0}
+    .routeCard img{width:27px;height:27px}
+    .siteLine{font-size:8px}
   }
   @media (prefers-reduced-motion:no-preference){
     .code{animation:signalJitter 8s steps(1,end) infinite}
