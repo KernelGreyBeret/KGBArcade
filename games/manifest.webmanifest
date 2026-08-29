@@ -1,0 +1,42 @@
+{
+  "name": "Asymmantics Beta 0.3",
+  "short_name": "Asymmantics",
+  "description": "Prologue and Epoch I: Quantity. Construct shared meaning with an unknown intelligence.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "window-controls-overlay",
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#010302",
+  "theme_color": "#010302",
+  "orientation": "portrait",
+  "categories": [
+    "games",
+    "education",
+    "entertainment"
+  ],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
