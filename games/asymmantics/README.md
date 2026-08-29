@@ -1,4 +1,4 @@
-# Asymmantics Beta 0.2.2
+# Asymmantics Beta 0.3
 
 A signal-language puzzle game in which the player constructs shared meaning
 with an unknown intelligence through observation, inference, response, and
@@ -6,19 +6,23 @@ validated reuse.
 
 ## This build
 
-Beta 0.2.2 establishes the permanent Prologue interface and puzzle-engine
-foundation:
+Beta 0.3 is the first full chapter build:
 
-- fixed signal scope, active context, and transmitter;
-- scrolling conversation history;
-- selectable and replayable transmissions;
-- distinct received and transmitted signals;
-- grouped demonstration bundles;
-- stable response grammar;
-- progressive remediation after repeated failure;
-- persistent active examples for unresolved challenges;
-- player-authored signal notebook architecture;
-- installable offline PWA behavior.
+- complete Prologue: Presence;
+- Epoch I: Quantity;
+- 39 authored protocol stages;
+- number construction from zero through eight;
+- exact identity versus equal quantity;
+- more, less, and equal quantity;
+- successor and predecessor;
+- conserved quantity across changed signal forms;
+- delayed recall and compound semantic checkpoints;
+- persistent save/resume through browser storage;
+- chapter transitions and completion state;
+- adaptive remediation and concept-specific active context.
+
+The game remains instructionless. All vocabulary is established through signal
+behavior, repetition, contrast, validation, and reuse.
 
 ## Run locally
 

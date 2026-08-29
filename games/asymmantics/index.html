@@ -1,5 +1,5 @@
 <!--
-  Asymmantics Beta 0.2.2
+  Asymmantics Beta 0.3
   Copyright © 2026 Tommy Burke / KGB Arcade. All rights reserved.
   Proprietary software. See LICENSE.md and NOTICE.md.
 -->
@@ -300,7 +300,7 @@
 
   .strip{
     display:grid;
-    grid-template-columns:repeat(12,minmax(0,1fr));
+    grid-template-columns:repeat(16,minmax(0,1fr));
     gap:5px
   }
 
@@ -503,6 +503,72 @@
     font-size:12px
   }
 
+
+  .chapter-overlay{
+    position:fixed;
+    inset:0;
+    z-index:28;
+    display:none;
+    place-items:center;
+    padding:20px;
+    background:#010301;
+  }
+
+  .chapter-overlay.show{display:grid}
+
+  .chapter-card{
+    width:min(680px,100%);
+    text-align:center;
+  }
+
+  .chapter-sigil{
+    width:min(460px,86vw);
+    margin:0 auto 28px;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:9px;
+  }
+
+  .chapter-sigil span{
+    aspect-ratio:1;
+    border:1px solid var(--source-dim);
+    background:#031008;
+  }
+
+  .chapter-sigil span.on{
+    background:var(--source);
+    box-shadow:0 0 12px rgba(103,255,143,.28);
+  }
+
+  .chapter-kicker{
+    color:var(--muted);
+    letter-spacing:.20em;
+    font-size:12px;
+  }
+
+  .chapter-title{
+    margin-top:14px;
+    color:var(--source);
+    font-size:clamp(30px,8vw,64px);
+    letter-spacing:.18em;
+  }
+
+  .chapter-actions{
+    margin-top:28px;
+    display:flex;
+    justify-content:center;
+  }
+
+  .resume-mark{
+    position:absolute;
+    left:9px;
+    bottom:7px;
+    color:var(--muted);
+    font-size:9px;
+    letter-spacing:.12em;
+    pointer-events:none;
+  }
+
   @media(max-width:650px){
     .app{padding:4px;gap:4px}
     .scope{height:76px}
@@ -527,7 +593,7 @@
 <body>
 <div class="app">
   <header class="topbar">
-    <div class="brand">ASYMMANTICS // BETA 0.2.2 <span class="status-mark" id="stateMark">•</span></div>
+    <div class="brand">ASYMMANTICS // BETA 0.3 <span class="status-mark" id="stateMark">•</span></div>
     <div class="top-actions">
       <button type="button" class="icon-btn" id="notebookBtn" aria-label="Open signal notebook">▤</button>
       <button type="button" class="install-btn" id="installBtn">INSTALL</button>
@@ -566,6 +632,18 @@
   <div class="notes" id="notes"></div>
 </aside>
 
+
+<div class="chapter-overlay" id="chapterOverlay">
+  <div class="chapter-card">
+    <div class="chapter-sigil" id="chapterSigil"></div>
+    <div class="chapter-kicker" id="chapterKicker">SEMANTIC BASELINE ESTABLISHED</div>
+    <div class="chapter-title" id="chapterTitle">EPOCH I</div>
+    <div class="chapter-actions">
+      <button type="button" class="btn primary" id="continueChapterBtn">CONTINUE</button>
+    </div>
+  </div>
+</div>
+
 <div class="overlay" id="overlay">
   <div class="reveal">
     <div class="entities">
@@ -586,6 +664,27 @@
   const SAME=[H,L,H];
   const DIFFERENT=[L,H,L];
 
+  const N0=[L,L,L];
+  const N1=[H,L,L];
+  const N2=[H,H,L];
+  const N3=[H,H,H];
+  const N4=[L,H,H];
+  const N5=[L,L,H];
+  const N6=[H,L,H,H];
+  const N7=[L,H,L,L];
+  const N8=[H,H,L,H];
+  const NUM=[N0,N1,N2,N3,N4,N5,N6,N7,N8];
+
+  const MORE=[H,L,L,H];
+  const LESS=[L,H,H,L];
+  const EQUALQ=[H,H,L,L];
+  const NEXT=[H,L,H,L];
+  const PREV=[L,H,L,H];
+  const OPEN=[H,L,L,L,H];
+  const CLOSE=[L,H,H,H,L];
+
+  const STORAGE_KEY='asymmantics-beta-v0-3-save';
+
   const ledger=document.getElementById('ledger');
   const contextRack=document.getElementById('contextRack');
   const strip=document.getElementById('strip');
@@ -602,9 +701,14 @@
   const notebook=document.getElementById('notebook');
   const notesEl=document.getElementById('notes');
   const noteInput=document.getElementById('noteInput');
+  const chapterOverlay=document.getElementById('chapterOverlay');
+  const chapterSigil=document.getElementById('chapterSigil');
+  const chapterKicker=document.getElementById('chapterKicker');
+  const chapterTitle=document.getElementById('chapterTitle');
+  const continueChapterBtn=document.getElementById('continueChapterBtn');
 
-  const state={
-    compose:Array(12).fill(O),
+  const freshState=()=>({
+    compose:Array(16).fill(O),
     step:0,
     failures:0,
     signature:[],
@@ -614,8 +718,14 @@
     conceptContexts:{},
     notes:[],
     autoScroll:true,
-    playing:false
-  };
+    playing:false,
+    currentContextId:null,
+    awaitingPresentation:true,
+    chapterGate:null,
+    complete:false
+  });
+
+  let state=freshState();
 
   function groups(...gs){
     const out=[];
@@ -626,112 +736,329 @@
     return out;
   }
 
-  const lesson={
-    relationExamples:[
-      groups([H,L,H],[H,L,H],SAME),
-      groups([L,L,H],[L,L,H],SAME),
-      groups([H,L,H],[L,H,H],DIFFERENT),
-      groups([L,H,H],[H,L,H],DIFFERENT)
-    ],
-    relationContrast:groups([H,O,L],[H,L,O],DIFFERENT)
-  };
+  function framed(items){
+    return groups(OPEN,items,CLOSE);
+  }
+
+  function objects(count,variant=0){
+    const palettes=[
+      [H],[L],[H,L],[L,H],[H,L,L],[L,H,H]
+    ];
+    const unit=palettes[variant%palettes.length];
+    const out=[];
+    for(let i=0;i<count;i++){
+      out.push(...unit);
+      if(i<count-1)out.push(O);
+    }
+    return out;
+  }
+
+  const relationExamples=[
+    groups([H,L,H],[H,L,H],SAME),
+    groups([L,L,H],[L,L,H],SAME),
+    groups([H,L,H],[L,H,H],DIFFERENT),
+    groups([L,H,H],[H,L,H],DIFFERENT)
+  ];
+
+  const numberDemos=[
+    groups(framed(objects(1,0)),N1),
+    groups(framed(objects(1,1)),N1),
+    groups(framed(objects(2,0)),N2),
+    groups(framed(objects(2,1)),N2),
+    groups(framed(objects(3,2)),N3),
+    groups(framed(objects(3,3)),N3),
+    groups(framed(objects(4,0)),N4),
+    groups(framed(objects(4,1)),N4),
+    groups(framed(objects(5,0)),N5),
+    groups(framed(objects(5,1)),N5)
+  ];
+
+  const zeroDemos=[
+    groups(framed([]),N0),
+    groups(framed(objects(1,0)),N1),
+    groups(framed([]),N0)
+  ];
+
+  const compareDemos=[
+    groups(framed(objects(2,0)),framed(objects(4,1)),LESS),
+    groups(framed(objects(5,1)),framed(objects(3,0)),MORE),
+    groups(framed(objects(4,2)),framed(objects(4,3)),EQUALQ),
+    groups(framed(objects(1,0)),framed(objects(2,0)),LESS)
+  ];
+
+  const orderDemos=[
+    groups(N1,NEXT,N2),
+    groups(N2,NEXT,N3),
+    groups(N3,NEXT,N4),
+    groups(N5,PREV,N4),
+    groups(N4,PREV,N3),
+    groups(N3,PREV,N2)
+  ];
+
+  const conservationDemos=[
+    groups(framed(objects(4,0)),framed(objects(4,4)),EQUALQ),
+    groups(framed(objects(3,1)),framed(objects(3,5)),EQUALQ),
+    groups(framed(objects(5,0)),framed(objects(5,2)),EQUALQ)
+  ];
 
   const tasks=[
+    // PROLOGUE — PRESENCE
     {
-      kind:'progress',
-      prompt:groups([H],[H,H],[H,H,H]),
-      answer:[H,H,H,H],
-      context:'prompt',
+      id:'P01',kind:'challenge',concept:'progression',
+      prompt:groups([H],[H,H],[H,H,H]),answer:[H,H,H,H],
       remediation:[
         groups([H],[H,H],[H,H,H]),
         groups([H],[H,H],[H,H,H],[H,H,H,H])
       ]
     },
     {
-      kind:'progress',
-      prompt:groups([L,L],[L,L,L],[L,L,L,L]),
-      answer:[L,L,L,L,L],
-      context:'prompt',
+      id:'P02',kind:'challenge',concept:'progression',
+      prompt:groups([L,L],[L,L,L],[L,L,L,L]),answer:[L,L,L,L,L],
       remediation:[
-        groups([L,L],[L,L,L],[L,L,L,L]),
         groups([L],[L,L],[L,L,L],[L,L,L,L])
       ]
     },
     {
-      kind:'progress',
+      id:'P03',kind:'challenge',concept:'progression',
       prompt:groups([H,L],[H,L,H,L],[H,L,H,L,H,L]),
-      answer:[H,L,H,L,H,L,H,L],
-      context:'prompt',
-      remediation:[
-        groups([H,L],[H,L,H,L],[H,L,H,L,H,L]),
-        groups([H,L],[H,L,H,L],[H,L,H,L,H,L],[H,L,H,L,H,L,H,L])
+      answer:[H,L,H,L,H,L,H,L]
+    },
+    {
+      id:'P04',kind:'challenge',concept:'echo',
+      prompt:[H,L,H,H,L,H],answer:[H,L,H,H,L,H]
+    },
+    {
+      id:'P05',kind:'challenge',concept:'echo',
+      prompt:[L,H,O,H,L,H,O,L],answer:[L,H,O,H,L,H,O,L]
+    },
+    {
+      id:'P06',kind:'lesson',concept:'relation',
+      demonstrations:relationExamples
+    },
+    {
+      id:'P07',kind:'challenge',concept:'relation',
+      prompt:groups([H,H,L,H],[H,H,L,H]),answer:SAME,
+      retain:'relation'
+    },
+    {
+      id:'P08',kind:'challenge',concept:'relation',
+      prompt:groups([H,H,L],[H,L,H]),answer:DIFFERENT,
+      retain:'relation'
+    },
+    {
+      id:'P09',kind:'challenge',concept:'relation',
+      prompt:groups([H,O,L,H],[H,O,L,H]),answer:SAME,
+      retain:'relation'
+    },
+    {
+      id:'P10',kind:'challenge',concept:'progression',
+      prompt:groups([L],[L,L],[L,L,L],[L,L,L,L]),
+      answer:[L,L,L,L,L]
+    },
+    {
+      id:'P11',kind:'challenge',concept:'echo',
+      prompt:[H,O,L,L,H,O,H,L],answer:[H,O,L,L,H,O,H,L]
+    },
+    {
+      id:'P12',kind:'challenge',concept:'relation',
+      prompt:groups([L,H,O,L],[L,H,L,O]),answer:DIFFERENT,
+      retain:'relation'
+    },
+    {
+      id:'P13',kind:'open',
+      prompt:[H,H,H,L,L,L,H,H,H]
+    },
+    {
+      id:'P14',kind:'chapter',
+      kicker:'SEMANTIC BASELINE ESTABLISHED',
+      title:'EPOCH I'
+    },
+
+    // EPOCH I — QUANTITY
+    {
+      id:'Q01',kind:'lesson',concept:'number',
+      demonstrations:numberDemos.slice(0,4)
+    },
+    {
+      id:'Q02',kind:'challenge',concept:'number',
+      prompt:framed(objects(1,2)),answer:N1,retain:'number'
+    },
+    {
+      id:'Q03',kind:'challenge',concept:'number',
+      prompt:framed(objects(2,3)),answer:N2,retain:'number'
+    },
+    {
+      id:'Q04',kind:'lesson',concept:'number',
+      demonstrations:numberDemos.slice(4,8),appendContext:true
+    },
+    {
+      id:'Q05',kind:'challenge',concept:'number',
+      prompt:framed(objects(3,4)),answer:N3,retain:'number'
+    },
+    {
+      id:'Q06',kind:'challenge',concept:'number',
+      prompt:framed(objects(4,5)),answer:N4,retain:'number'
+    },
+    {
+      id:'Q07',kind:'lesson',concept:'number',
+      demonstrations:numberDemos.slice(8,10),appendContext:true
+    },
+    {
+      id:'Q08',kind:'challenge',concept:'number',
+      prompt:framed(objects(5,2)),answer:N5,retain:'number'
+    },
+    {
+      id:'Q09',kind:'challenge',concept:'number',
+      prompt:framed(objects(2,5)),answer:N2,retain:'number'
+    },
+    {
+      id:'Q10',kind:'lesson',concept:'zero',
+      demonstrations:zeroDemos
+    },
+    {
+      id:'Q11',kind:'challenge',concept:'zero',
+      prompt:framed([]),answer:N0,retain:'zero'
+    },
+    {
+      id:'Q12',kind:'challenge',concept:'number',
+      prompt:framed(objects(4,2)),answer:N4,retain:'number'
+    },
+    {
+      id:'Q13',kind:'lesson',concept:'quantityRelation',
+      demonstrations:compareDemos
+    },
+    {
+      id:'Q14',kind:'challenge',concept:'quantityRelation',
+      prompt:groups(framed(objects(2,4)),framed(objects(5,1))),
+      answer:LESS,retain:'quantityRelation'
+    },
+    {
+      id:'Q15',kind:'challenge',concept:'quantityRelation',
+      prompt:groups(framed(objects(5,2)),framed(objects(3,5))),
+      answer:MORE,retain:'quantityRelation'
+    },
+    {
+      id:'Q16',kind:'challenge',concept:'quantityRelation',
+      prompt:groups(framed(objects(4,1)),framed(objects(4,4))),
+      answer:EQUALQ,retain:'quantityRelation'
+    },
+    {
+      id:'Q17',kind:'challenge',concept:'relation',
+      prompt:groups([H,L,H],[L,H,H]),answer:DIFFERENT,retain:'relation'
+    },
+    {
+      id:'Q18',kind:'challenge',concept:'quantityRelation',
+      prompt:groups(framed(objects(3,0)),framed(objects(3,5))),
+      answer:EQUALQ,retain:'quantityRelation'
+    },
+    {
+      id:'Q19',kind:'lesson',concept:'order',
+      demonstrations:orderDemos
+    },
+    {
+      id:'Q20',kind:'challenge',concept:'order',
+      prompt:groups(N4,NEXT),answer:N5,retain:'order'
+    },
+    {
+      id:'Q21',kind:'challenge',concept:'order',
+      prompt:groups(N4,PREV),answer:N3,retain:'order'
+    },
+    {
+      id:'Q22',kind:'challenge',concept:'order',
+      prompt:groups(N1,NEXT),answer:N2,retain:'order'
+    },
+    {
+      id:'Q23',kind:'challenge',concept:'number',
+      prompt:framed(objects(5,4)),answer:N5,retain:'number'
+    },
+    {
+      id:'Q24',kind:'lesson',concept:'conservation',
+      demonstrations:conservationDemos
+    },
+    {
+      id:'Q25',kind:'challenge',concept:'conservation',
+      prompt:groups(framed(objects(2,0)),framed(objects(2,5))),
+      answer:EQUALQ,retain:'conservation'
+    },
+    {
+      id:'Q26',kind:'challenge',concept:'conservation',
+      prompt:groups(framed(objects(3,4)),framed(objects(4,1))),
+      answer:LESS,retain:'quantityRelation'
+    },
+    {
+      id:'Q27',kind:'challenge',concept:'compound',
+      contextConcepts:['number','quantityRelation'],
+      prompt:groups(framed(objects(4,5)),framed(objects(2,0))),
+      answer:MORE
+    },
+    {
+      id:'Q28',kind:'challenge',concept:'compound',
+      contextConcepts:['number','order'],
+      prompt:groups(framed(objects(3,2)),NEXT),
+      answer:N4
+    },
+    {
+      id:'Q29',kind:'challenge',concept:'compound',
+      contextConcepts:['zero','quantityRelation'],
+      prompt:groups(framed([]),framed(objects(1,4))),
+      answer:LESS
+    },
+    {
+      id:'Q30',kind:'challenge',concept:'compound',
+      contextConcepts:['number','relation'],
+      prompt:groups(framed(objects(5,0)),framed(objects(5,3))),
+      answer:EQUALQ
+    },
+    {
+      id:'Q31',kind:'lesson',concept:'extendedNumber',
+      demonstrations:[
+        groups(framed(objects(6,0)),N6),
+        groups(framed(objects(7,1)),N7),
+        groups(framed(objects(8,2)),N8)
       ]
     },
     {
-      kind:'echo',
-      prompt:[H,L,H,H,L,H],
-      answer:[H,L,H,H,L,H],
-      context:'prompt'
+      id:'Q32',kind:'challenge',concept:'extendedNumber',
+      prompt:framed(objects(6,4)),answer:N6,retain:'extendedNumber'
     },
     {
-      kind:'echo',
-      prompt:[L,H,O,H,L,H,O,L],
-      answer:[L,H,O,H,L,H,O,L],
-      context:'prompt'
+      id:'Q33',kind:'challenge',concept:'extendedNumber',
+      prompt:framed(objects(8,5)),answer:N8,retain:'extendedNumber'
     },
     {
-      kind:'lessonBundle',
-      concept:'relation',
-      demonstrations:lesson.relationExamples
+      id:'Q34',kind:'challenge',concept:'compound',
+      contextConcepts:['extendedNumber','order'],
+      prompt:groups(N7,PREV),answer:N6
     },
     {
-      kind:'relation',
-      concept:'relation',
-      prompt:groups([H,H,L,H],[H,H,L,H]),
-      answer:SAME,
-      context:'relation',
-      remediation:[lesson.relationContrast]
+      id:'Q35',kind:'challenge',concept:'compound',
+      contextConcepts:['extendedNumber','quantityRelation'],
+      prompt:groups(framed(objects(7,2)),framed(objects(6,3))),
+      answer:MORE
     },
     {
-      kind:'relation',
-      concept:'relation',
-      prompt:groups([H,H,L],[H,L,H]),
-      answer:DIFFERENT,
-      context:'relation',
-      remediation:[lesson.relationContrast]
+      id:'Q36',kind:'checkpoint',
+      contextConcepts:['number','zero','quantityRelation','order'],
+      prompt:groups(framed(objects(4,4)),NEXT),
+      answer:N5
     },
     {
-      kind:'relation',
-      concept:'relation',
-      prompt:groups([H,O,L,H],[H,O,L,H]),
-      answer:SAME,
-      context:'relation',
-      remediation:[lesson.relationContrast]
+      id:'Q37',kind:'checkpoint',
+      contextConcepts:['number','quantityRelation','conservation'],
+      prompt:groups(framed(objects(5,5)),framed(objects(5,0))),
+      answer:EQUALQ
     },
     {
-      kind:'progress',
-      prompt:groups([L],[L,L],[L,L,L],[L,L,L,L]),
-      answer:[L,L,L,L,L],
-      context:'prompt'
+      id:'Q38',kind:'checkpoint',
+      contextConcepts:['relation','quantityRelation'],
+      prompt:groups([H,L,H],[H,L,H]),
+      answer:SAME
     },
     {
-      kind:'echo',
-      prompt:[H,O,L,L,H,O,H,L],
-      answer:[H,O,L,L,H,O,H,L],
-      context:'prompt'
-    },
-    {
-      kind:'relation',
-      concept:'relation',
-      prompt:groups([L,H,O,L],[L,H,L,O]),
-      answer:DIFFERENT,
-      context:'relation',
-      remediation:[lesson.relationContrast]
-    },
-    {
-      kind:'open',
-      prompt:[H,H,H,L,L,L,H,H,H],
-      context:'prompt'
+      id:'Q39',kind:'chapter',
+      kicker:'QUANTITY ESTABLISHED',
+      title:'EPOCH I COMPLETE',
+      final:true
     }
   ];
 
@@ -746,7 +1073,38 @@
     return x.length===y.length&&x.every((v,i)=>v===y[i])
   }
 
-  function currentTask(){return tasks[state.step]}
+  function currentTask(){return tasks[state.step]||null}
+
+  function save(){
+    const payload={
+      step:state.step,
+      failures:state.failures,
+      signature:state.signature,
+      transmissions:state.transmissions,
+      selectedId:state.selectedId,
+      contextIds:state.contextIds,
+      conceptContexts:state.conceptContexts,
+      notes:state.notes,
+      currentContextId:state.currentContextId,
+      awaitingPresentation:state.awaitingPresentation,
+      chapterGate:state.chapterGate,
+      complete:state.complete
+    };
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload))
+  }
+
+  function load(){
+    try{
+      const raw=localStorage.getItem(STORAGE_KEY);
+      if(!raw)return false;
+      const saved=JSON.parse(raw);
+      state={...freshState(),...saved,compose:Array(16).fill(O),autoScroll:true,playing:false};
+      return true
+    }catch{
+      localStorage.removeItem(STORAGE_KEY);
+      return false
+    }
+  }
 
   function signalDOM(signal,side='source'){
     const line=document.createElement('div');
@@ -763,11 +1121,7 @@
     return state.transmissions.find(t=>t.id===id)||null
   }
 
-  function addTransmission(side,signal,{bundleId=null,context=false,current=false}={}){
-    const id='t'+(state.transmissions.length+1);
-    const tx={id,side,signal:signal.slice(),bundleId};
-    state.transmissions.push(tx);
-
+  function createBundle(bundleId){
     let bundle=bundleId?ledger.querySelector(`[data-bundle="${bundleId}"]`):null;
     if(!bundle){
       bundle=document.createElement('section');
@@ -775,25 +1129,35 @@
       if(bundleId)bundle.dataset.bundle=bundleId;
       ledger.insertBefore(bundle,incomingBtn)
     }
+    return bundle
+  }
 
+  function renderTransmission(tx){
+    const bundle=createBundle(tx.bundleId);
     const row=document.createElement('div');
-    row.className='entry '+side;
-    row.dataset.tx=id;
+    row.className='entry '+tx.side;
+    row.dataset.tx=tx.id;
 
     const bubble=document.createElement('button');
     bubble.type='button';
-    bubble.className='bubble'+(context?' context-member':'');
-    bubble.appendChild(signalDOM(signal,side));
-    bubble.addEventListener('click',()=>selectTransmission(id,true));
+    bubble.className='bubble'+(tx.context?' context-member':'');
+    bubble.appendChild(signalDOM(tx.signal,tx.side));
+    bubble.addEventListener('click',()=>selectTransmission(tx.id,true));
 
     row.appendChild(bubble);
-    bundle.appendChild(row);
+    bundle.appendChild(row)
+  }
 
-    if(context){
-      state.contextIds.push(id);
-      if(current)state.currentContextId=id;
-      renderContext()
-    }
+  function addTransmission(side,signal,{bundleId=null,context=false,current=false}={}){
+    const id='t'+(state.transmissions.length+1);
+    const tx={id,side,signal:signal.slice(),bundleId,context};
+    state.transmissions.push(tx);
+    renderTransmission(tx);
+
+    if(context&&!state.contextIds.includes(id))state.contextIds.push(id);
+    if(current)state.currentContextId=id;
+
+    renderContext();
 
     if(state.autoScroll){
       requestAnimationFrame(()=>ledger.scrollTop=ledger.scrollHeight)
@@ -802,7 +1166,21 @@
     }
 
     selectTransmission(id,true);
+    save();
     return id
+  }
+
+  function rebuildConversation(){
+    ledger.querySelectorAll('.bundle').forEach(el=>el.remove());
+    state.transmissions.forEach(renderTransmission);
+    renderContext();
+    renderNotes();
+
+    const selected=transmissionById(state.selectedId);
+    if(selected)selectTransmission(selected.id,false);
+    else drawNoise();
+
+    requestAnimationFrame(()=>ledger.scrollTop=ledger.scrollHeight)
   }
 
   function selectTransmission(id,replay=false){
@@ -821,7 +1199,8 @@
 
     scopeOrigin.textContent=tx.side==='source'?'RECEIVED':'TRANSMITTED';
     scopeOrigin.className='scope-origin '+tx.side;
-    drawWave(tx.signal,tx.side,replay)
+    drawWave(tx.signal,tx.side,replay);
+    save()
   }
 
   function renderContext(){
@@ -849,10 +1228,17 @@
     renderContext()
   }
 
-  function restoreConceptContext(concept){
-    if(!concept)return;
-    const saved=state.conceptContexts[concept]||[];
-    state.contextIds.push(...saved.filter(id=>transmissionById(id)));
+  function restoreContexts(task){
+    const concepts=[];
+    if(task.retain)concepts.push(task.retain);
+    if(task.contextConcepts)concepts.push(...task.contextConcepts);
+
+    concepts.forEach(concept=>{
+      const ids=state.conceptContexts[concept]||[];
+      ids.forEach(id=>{
+        if(transmissionById(id)&&!state.contextIds.includes(id))state.contextIds.push(id)
+      })
+    })
   }
 
   function renderComposer(){
@@ -871,7 +1257,7 @@
   }
 
   function clearComposer(){
-    state.compose=Array(12).fill(O);
+    state.compose=Array(16).fill(O);
     renderComposer()
   }
 
@@ -928,7 +1314,7 @@
     }
 
     const start=performance.now();
-    const duration=Math.max(500,sig.length*100);
+    const duration=Math.max(500,sig.length*85);
     state.playing=true;
 
     function frame(now){
@@ -946,39 +1332,84 @@
     setTimeout(()=>stateMark.textContent='•',430)
   }
 
+  function showChapter(task){
+    state.chapterGate=task.id;
+    state.awaitingPresentation=false;
+    chapterKicker.textContent=task.kicker;
+    chapterTitle.textContent=task.title;
+    chapterSigil.innerHTML='';
+
+    const pattern=task.final
+      ? [1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1]
+      : [0,0,1,0,0,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,0,0,1,0,0];
+
+    pattern.forEach(v=>{
+      const s=document.createElement('span');
+      if(v)s.className='on';
+      chapterSigil.appendChild(s)
+    });
+
+    continueChapterBtn.textContent=task.final?'RESTART':'CONTINUE';
+    chapterOverlay.classList.add('show');
+    save()
+  }
+
   function presentTask(){
     const task=currentTask();
-    if(!task)return;
+    if(!task){
+      state.complete=true;
+      save();
+      return
+    }
 
+    state.awaitingPresentation=false;
     state.failures=0;
     clearContext();
 
-    if(task.kind==='lessonBundle'){
-      const bundleId='lesson-'+state.step;
+    if(task.kind==='chapter'){
+      showChapter(task);
+      return
+    }
+
+    if(task.kind==='lesson'){
+      const bundleId='lesson-'+task.id;
       const lessonIds=[];
+
       task.demonstrations.forEach(sig=>{
         const id=addTransmission('source',sig,{bundleId,context:true});
         lessonIds.push(id)
       });
-      if(task.concept)state.conceptContexts[task.concept]=lessonIds.slice();
 
+      const prior=task.appendContext?(state.conceptContexts[task.concept]||[]):[];
+      state.conceptContexts[task.concept]=[...prior,...lessonIds];
+
+      state.step++;
+      state.awaitingPresentation=true;
+      save();
       setTimeout(()=>{
-        state.step++;
+        state.awaitingPresentation=false;
         presentTask()
-      },1350);
+      },Math.min(2200,900+task.demonstrations.length*180));
       return
     }
 
-    restoreConceptContext(task.concept);
+    restoreContexts(task);
     const id=addTransmission('source',task.prompt,{context:true,current:true});
     state.currentContextId=id;
-    renderContext()
+    renderContext();
+    save()
   }
 
   function correctResponse(sent){
     addTransmission('source',sent);
     state.step++;
-    setTimeout(presentTask,850)
+    state.awaitingPresentation=true;
+    save();
+
+    setTimeout(()=>{
+      state.awaitingPresentation=false;
+      presentTask()
+    },780)
   }
 
   function remediation(task){
@@ -986,7 +1417,8 @@
     pulseError();
 
     if(state.failures===1){
-      addTransmission('source',task.prompt,{context:false,current:false});
+      addTransmission('source',task.prompt);
+      save();
       return
     }
 
@@ -995,36 +1427,29 @@
       replayIds.forEach((id,index)=>{
         const tx=transmissionById(id);
         if(!tx)return;
-        setTimeout(()=>{
-          addTransmission('source',tx.signal,{bundleId:'repair-'+state.step,context:false})
-        },index*240)
+        setTimeout(()=>addTransmission('source',tx.signal,{bundleId:'repair-'+task.id}),index*220)
       });
-      setTimeout(()=>{
-        addTransmission('source',task.prompt,{context:false,current:false})
-      },Math.max(450,replayIds.length*240+150));
+      setTimeout(()=>addTransmission('source',task.prompt),Math.max(420,replayIds.length*220+120));
       return
     }
 
-    if(state.failures===3 && task.remediation?.length){
+    if(state.failures===3&&task.remediation?.length){
       task.remediation.forEach((sig,index)=>{
         setTimeout(()=>{
-          const id=addTransmission('source',sig,{
-            bundleId:'contrast-'+state.step,
-            context:true
-          });
-          if(task.concept){
-            const saved=state.conceptContexts[task.concept]||[];
-            if(!saved.includes(id))state.conceptContexts[task.concept]=[...saved,id]
+          const id=addTransmission('source',sig,{bundleId:'contrast-'+task.id,context:true});
+          const key=task.retain||task.concept;
+          if(key){
+            const saved=state.conceptContexts[key]||[];
+            if(!saved.includes(id))state.conceptContexts[key]=[...saved,id]
           }
-        },index*360)
+        },index*330)
       });
-      setTimeout(()=>{
-        addTransmission('source',task.prompt,{context:false,current:false})
-      },task.remediation.length*360+450);
+      setTimeout(()=>addTransmission('source',task.prompt),task.remediation.length*330+400);
       return
     }
 
-    addTransmission('source',task.prompt,{context:false,current:false})
+    addTransmission('source',task.prompt);
+    save()
   }
 
   function transmit(){
@@ -1034,33 +1459,33 @@
     clearComposer();
 
     const task=currentTask();
-    if(!task)return;
+    if(!task||task.kind==='chapter'||task.kind==='lesson')return;
 
     if(task.kind==='open'){
       if(sent.length===0){
-        setTimeout(()=>remediation(task),450);
+        setTimeout(()=>remediation(task),430);
         return
       }
 
       state.signature=sent.slice();
       setTimeout(()=>{
         addTransmission('source',sent);
-        setTimeout(reveal,1100)
-      },500);
+        state.step++;
+        state.awaitingPresentation=true;
+        save();
+        setTimeout(()=>{
+          state.awaitingPresentation=false;
+          presentTask()
+        },950)
+      },480);
       return
     }
 
     if(same(sent,task.answer)){
-      setTimeout(()=>correctResponse(sent),500)
+      setTimeout(()=>correctResponse(sent),480)
     }else{
-      setTimeout(()=>remediation(task),500)
+      setTimeout(()=>remediation(task),480)
     }
-  }
-
-  function reveal(){
-    remembered.innerHTML='';
-    remembered.appendChild(signalDOM(state.signature,'player'));
-    overlay.classList.add('show')
   }
 
   function saveNote(){
@@ -1076,7 +1501,8 @@
     });
 
     noteInput.value='';
-    renderNotes()
+    renderNotes();
+    save()
   }
 
   function renderNotes(){
@@ -1100,6 +1526,26 @@
       notesEl.appendChild(el)
     })
   }
+
+  continueChapterBtn.addEventListener('click',()=>{
+    const task=currentTask();
+    if(task?.final){
+      localStorage.removeItem(STORAGE_KEY);
+      location.reload();
+      return
+    }
+
+    chapterOverlay.classList.remove('show');
+    state.chapterGate=null;
+    state.step++;
+    state.awaitingPresentation=true;
+    save();
+
+    setTimeout(()=>{
+      state.awaitingPresentation=false;
+      presentTask()
+    },400)
+  });
 
   ledger.addEventListener('scroll',()=>{
     const distance=ledger.scrollHeight-ledger.scrollTop-ledger.clientHeight;
@@ -1130,11 +1576,14 @@
   });
 
   document.getElementById('saveNoteBtn').addEventListener('click',saveNote);
-  noteInput.addEventListener('keydown',e=>{
-    if(e.key==='Enter')saveNote()
+  noteInput.addEventListener('keydown',event=>{
+    if(event.key==='Enter')saveNote()
   });
 
-  document.getElementById('restartBtn').addEventListener('click',()=>location.reload());
+  document.getElementById('restartBtn').addEventListener('click',()=>{
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload()
+  });
 
   let deferredInstall=null;
   const installBtn=document.getElementById('installBtn');
@@ -1164,10 +1613,26 @@
     })
   }
 
+  const resumed=load();
   renderComposer();
-  renderContext();
-  drawNoise();
-  setTimeout(presentTask,850)
+
+  if(resumed&&state.transmissions.length){
+    rebuildConversation();
+
+    const task=currentTask();
+    if(task?.kind==='chapter'){
+      showChapter(task)
+    }else if(state.awaitingPresentation){
+      state.awaitingPresentation=false;
+      presentTask()
+    }
+  }else{
+    drawNoise();
+    setTimeout(()=>{
+      state.awaitingPresentation=false;
+      presentTask()
+    },850)
+  }
 })();
 </script>
 </body>

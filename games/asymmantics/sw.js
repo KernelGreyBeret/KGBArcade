@@ -1,10 +1,10 @@
 /*
- * Asymmantics Beta 0.2.2
+ * Asymmantics Beta 0.3
  * Copyright © 2026 Tommy Burke / KGB Arcade. All rights reserved.
  * Proprietary software. See LICENSE.md and NOTICE.md.
  */
 
-const CACHE_NAME = 'asymmantics-beta-v0-2-2';
+const CACHE_NAME = 'asymmantics-beta-v0-3';
 const APP_SHELL = [
   './',
   './index.html',

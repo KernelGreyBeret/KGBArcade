@@ -1,48 +1,40 @@
 # Changelog
 
-## Beta 0.2.2 — 2026-07-25
-
-### Changed
-
-- Active-context transmissions now occupy the full rack width.
-- Removed side-by-side context cards that could wrap one signal across multiple rows.
-- Preserved each signal's horizontal structure consistently on desktop and mobile.
-
-## Beta 0.2.1 — 2026-07-25
-
-### Fixed
-
-- Same/different teaching transmissions now remain in the active-context rack throughout dependent relation challenges.
-- Repeated wrong-answer retries no longer create duplicate copies of the current challenge in active context.
-- Concept-level context is preserved independently from chronological conversation history.
-
-## Beta 0.2 — 2026-07-25
+## Beta 0.3 — 2026-07-27
 
 ### Added
 
-- Persistent active-context rack for unresolved challenges.
-- Tap-to-select and tap-scope-to-replay signal inspection.
-- Scope waveform tied to the selected transmission.
-- Grouped multi-transmission lesson bundles.
-- Incoming-transmission indicator when the player is reviewing history.
-- Player-authored signal notebook with private labels.
-- Data-defined remediation stages.
+- Complete Prologue: Presence.
+- Complete Epoch I: Quantity.
+- Thirty-nine authored semantic stages.
+- Compact number vocabulary from zero through eight.
+- Framed sets for communicating absence and count.
+- More, less, and equal-quantity relations.
+- Successor and predecessor operations.
+- Quantity conservation across changed signal forms.
+- Delayed recall and compound semantic checkpoints.
+- Persistent save and resume using local browser storage.
+- Prologue-to-Epoch chapter transition.
+- Epoch completion state.
 
 ### Changed
 
-- Only conversation history scrolls; scope, context, and transmitter remain fixed.
-- Correct responses are always acknowledged by exact echo.
-- First incorrect response always repeats the exact challenge.
-- Repeated failures progressively replay context, add contrast, and simplify.
-- Received and transmitted signals remain visually distinct everywhere.
+- Expanded the transmitter from 12 to 16 tri-state positions.
+- Refactored progression into a data-defined chapter curriculum.
+- Active context can combine multiple previously learned concept sets.
+- Correctness grammar remains exact echo; incorrect response remains exact
+  challenge repetition before progressive remediation.
 
-### Preserved
+## Beta 0.2.2 — 2026-07-25
 
-- No premise, tutorial, vocabulary labels, or explanatory puzzle text.
-- Tri-state high, low, and off transmitter.
-- Offline PWA installation.
-- Proprietary repository notices.
+- Active-context transmissions occupy the full rack width.
+- Preserved each signal's horizontal structure on desktop and mobile.
 
-## Beta 0.1 — 2026
+## Beta 0.2.1 — 2026-07-25
 
-- Initial installable PWA package based on Prototype 0.5.
+- Preserved same/different lesson context through dependent challenges.
+- Removed duplicate challenge entries from active context.
+
+## Beta 0.2 — 2026-07-25
+
+- Established the permanent interface and semantic puzzle-engine foundation.
