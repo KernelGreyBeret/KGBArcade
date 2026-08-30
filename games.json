@@ -79,14 +79,14 @@
       "id": "riftwake",
       "title": "Riftwake: Signal Skimmer",
       "vault": "8BitOps",
-      "status": "release-candidate",
+      "status": "live",
       "path": "/games/riftwake/",
-      "currentBuild": "Signal Skimmer PWA Final v1",
+      "currentBuild": "Public v1.0.0 \u2014 deterministic Arcade-True release",
       "targetPublicVersion": "1.0.0",
       "aliases": [
         "Signal Skimmer"
       ],
-      "next": "Recover/verify final PWA, release-gate, switch Arsenal On Deck \u2192 Live."
+      "next": "Deployed; production smoke test, then move to Jungle Breakout."
     },
     {
       "id": "bayou-breakout",

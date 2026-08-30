@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "riftwake",
+  "title": "Riftwake: Signal Skimmer",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/riftwake/",
+  "playPath": "/games/riftwake/play/",
+  "sourceLineage": "Signal Skimmer v1\u2192v6 \u2192 Signal Skimmer Final v1 \u2192 PWA Final v1",
+  "preservedLineageFeatures": [
+    "mobile aiming and arena boundary clamps",
+    "Nosefire aim mode",
+    "Arrow/WASD movement",
+    "selectable Pointer/Mouse Aim mode"
+  ],
+  "arcadeTrue": {
+    "deterministicWaveScript": true,
+    "sameDifficultySameCycle": true,
+    "gameplayRngAffectsLoss": false,
+    "failureTeachesFutureSpawns": true,
+    "instantRetry": true
+  },
+  "controls": {
+    "desktop": "WASD / arrows move; Space fires; mouse aims/fires in Pointer Aim",
+    "mobile": "left thumb move; right thumb aim/fire or Nosefire trigger",
+    "pause": "P / Escape or Pause button"
+  }
+}

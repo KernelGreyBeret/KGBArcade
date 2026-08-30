@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#060813">
+<title>Riftwake: Signal Skimmer — KGB Arcade</title>
+<meta name="description" content="Riftwake: Signal Skimmer is a deterministic arcade survival shooter from KGB Arcade. Learn the rift cycle, skim signal cores, and outlast the wake.">
+<style>
+:root{--bg:#060813;--fg:#e8f6ff;--cyan:#45e6ff;--violet:#ba78ff;--pink:#ff4f91;--gold:#ffd66b;--green:#7cffb5;--line:rgba(255,255,255,.11)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:radial-gradient(circle at 55% 12%,#182354 0,#090c1d 34%,#05060c 76%)}
+a{color:inherit;text-decoration:none}.nav{padding:14px 20px;border-bottom:1px solid var(--line);background:#050712dd;backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}.navin{max-width:1080px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px}.brand{font-weight:1000;letter-spacing:.08em}.back{padding:9px 12px;border:1px solid #45e6ff66;border-radius:10px;color:#d7f9ff;font-weight:800}
+.wrap{max-width:1080px;margin:auto;padding:44px 20px 64px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:34px;align-items:center}.chip{display:inline-flex;padding:6px 10px;border:1px solid #45e6ff66;border-radius:999px;color:#9af4ff;font:900 12px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}
+h1{font-size:clamp(42px,7.2vw,78px);line-height:.9;margin:14px 0 18px;letter-spacing:.025em}.lead{font-size:clamp(17px,2.4vw,21px);line-height:1.55;color:#cee6f8;max-width:650px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{padding:14px 21px;border-radius:13px;background:linear-gradient(180deg,#eaffff,#9eecff);color:#06111b;font-weight:1000;box-shadow:0 0 26px #45e6ff35}.ghost{padding:14px 20px;border-radius:13px;border:1px solid #ba78ff66;background:#120d28;color:#f1e5ff;font-weight:900}
+.rift{height:360px;position:relative;overflow:hidden;border-radius:26px;border:1px solid #ffffff16;background:radial-gradient(ellipse at center,#28145a 0,#0d0a26 38%,#05070f 72%);box-shadow:0 0 55px #7947ff33,inset 0 0 80px #000}.rift:before,.rift:after{content:"";position:absolute;left:50%;top:50%;width:84%;height:14px;transform-origin:center;background:linear-gradient(90deg,transparent,#45e6ff,#fff,#ff4f91,transparent);filter:blur(1px);box-shadow:0 0 30px #45e6ff,0 0 55px #ba78ff}.rift:before{transform:translate(-50%,-50%) rotate(24deg)}.rift:after{transform:translate(-50%,-50%) rotate(-31deg);opacity:.7}.ship{position:absolute;left:50%;top:52%;width:70px;height:50px;transform:translate(-50%,-50%);clip-path:polygon(50% 0,100% 85%,55% 66%,50% 100%,44% 66%,0 85%);background:linear-gradient(180deg,#eaffff,#45e6ff 55%,#8760ff);filter:drop-shadow(0 0 14px #45e6ff)}.wake{position:absolute;left:50%;top:63%;width:7px;height:118px;transform:translateX(-50%);background:linear-gradient(#45e6ffcc,transparent);filter:blur(3px)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}.card{padding:20px;border-radius:16px;background:#ffffff08;border:1px solid var(--line)}.card h2{margin:0 0 9px;color:var(--cyan);font-size:19px}.card p{margin:0;color:#bfd4e6;line-height:1.52}.arcade{margin-top:22px;padding:20px;border-left:3px solid var(--gold);background:#ffd66b0b;border-radius:0 14px 14px 0;color:#e2efff}.arcade strong{color:var(--gold)}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.rift{height:260px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap">
+<section class="hero">
+<div>
+<span class="chip">8BitOps · Live · v1.0.0</span>
+<h1>RIFTWAKE:<br>SIGNAL SKIMMER</h1>
+<p class="lead">Fly the fracture. Cut down hostile drones. Skim the signal cores they leave behind. The rift attacks in the same authored cycle every run—then accelerates until your knowledge or your reflexes finally run out.</p>
+<div class="actions"><a class="play" href="./play/">▶ PLAY NOW</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade-True by design.</strong> Combat waves are authored, repeatable, and learnable. The visuals can misbehave; the rules cannot.</div>
+</div>
+<div class="rift" aria-hidden="true"><div class="wake"></div><div class="ship"></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>NOSEFIRE</h2><p>Classic steering mode. Move the ship, point the nose, and fire straight down your flight line. Simple input; hard positioning.</p></div>
+<div class="card"><h2>POINTER AIM</h2><p>Move independently while aiming with mouse or right-thumb touch. Same attack cycle, different skill expression.</p></div>
+<div class="card"><h2>LEARN THE WAKE</h2><p>Enemy entrances, formations, and escalation follow the same script at a given difficulty. Failed runs become reconnaissance.</p></div>
+</section>
+</main>
+</body>
+</html>
