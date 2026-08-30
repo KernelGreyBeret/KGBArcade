@@ -1,0 +1,23 @@
+{
+  "name": "Sector KGB \u2014 Mission 01: Power Cycle",
+  "short_name": "Sector KGB",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020503",
+  "theme_color": "#030705",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#030705">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Sector KGB — Power Cycle v1.0.0</title>
+<style>
+:root{--green:#82ff4f;--red:#ff4949;--amber:#ffd259;--cyan:#4bdcff;--ink:#edfff0;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020503;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{display:block;position:fixed;inset:0;width:100%;height:100%;background:#030705}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 7px #000}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}.panel{background:#031006c7;border:1px solid #82ff4f22;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px);box-shadow:0 7px 22px #0009}.left{justify-self:start}.right{justify-self:end;text-align:right}.center{text-align:center}.k{font:900 9px ui-monospace,monospace;letter-spacing:.14em;color:#aaff83;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(17px,3vw,24px);line-height:1.05}.sceneName{color:#ffd259}.score{color:#82ff4f}.best{color:#4bdcff}.pause,.sound{position:fixed;z-index:13;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #82ff4f55;background:#041008df;color:#eaffdf;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 32%,#16371be3,#010201f5 68%);text-align:center}.card{width:min(720px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #82ff4f44;background:#041008ec;box-shadow:0 25px 70px #000c}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.15em;color:#aaff84}.logo{font-size:clamp(42px,9vw,78px);line-height:.82;text-transform:uppercase;font-weight:1000;margin:8px 0;color:#eef7ea}.logo span{display:block;color:#ff4141}.sub{font-size:15px;line-height:1.5;color:#cddccc;max-width:600px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#dfff9f,#75e43e);color:#0c1808;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#0a160c;color:#e8f6e4;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.missionGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0}.m{padding:10px;border:1px solid #ffffff14;border-radius:10px;background:#ffffff07;text-align:left}.m b{display:block;color:#aaff83;font-size:12px}.m span{display:block;margin-top:4px;font-size:12px;color:#bed0bc}.hidden{display:none!important}.result{font-size:25px;color:#ffd259;font-weight:1000;margin:9px 0}
+.platformControls{position:fixed;z-index:10;left:8px;right:8px;bottom:calc(8px + var(--safe));display:none;justify-content:space-between;pointer-events:none}.pc{display:flex;gap:7px;pointer-events:auto}.pbtn{width:64px;height:64px;border-radius:16px;border:2px solid #82ff4f66;background:#06110add;color:#dfffce;font-size:28px;font-weight:1000}.pbtn.jump{border-color:#ffd25977;color:#ffe18b}.pbtn:active,.pbtn.down{transform:translateY(2px);filter:brightness(1.3)}
+.nodeStatus{position:fixed;z-index:8;left:50%;bottom:calc(12px + var(--safe));transform:translateX(-50%);width:min(92vw,620px);padding:10px 12px;border-radius:12px;background:#020a04dd;border:1px solid #82ff4f28;text-align:center;font:800 13px ui-monospace,monospace;color:#d8f5d1;display:none}
+.relayHelp{position:fixed;z-index:8;left:50%;bottom:calc(10px + var(--safe));transform:translateX(-50%);padding:8px 11px;border-radius:10px;background:#020a04d9;border:1px solid #82ff4f28;color:#d8f5d1;font:800 11px ui-monospace,monospace;display:none}
+@media(max-width:620px){.center{display:none}.missionGrid{grid-template-columns:1fr 1fr}.card{padding:18px 13px}.panel{padding:6px 8px}.pause,.sound{top:max(54px,calc(env(safe-area-inset-top) + 48px))}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel left"><div class="k">Mission Score</div><div class="big score" id="score">000000</div></div>
+<div class="panel center"><div class="k">Sector KGB</div><div class="big sceneName" id="sceneHud">MISSION 01 · POWER CYCLE</div></div>
+<div class="panel right"><div class="k">Best Complete</div><div class="big best" id="bestHud">000000</div></div>
+</div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="platformControls" id="platformControls"><div class="pc"><button class="pbtn" id="leftBtn">←</button><button class="pbtn" id="rightBtn">→</button></div><div class="pc"><button class="pbtn jump" id="jumpBtn">↑</button></div></div>
+<div class="nodeStatus" id="nodeStatus"></div><div class="relayHelp" id="relayHelp">Tap the lit approach lane at the defense ring · Desktop: keys 1–6</div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · MINIMISSION · v1.0.0</div><div class="logo">Sector <span>KGB</span></div><div style="font-size:21px;color:#ffd259;font-weight:1000">MISSION 01 · POWER CYCLE</div>
+<p class="sub">Four connected scenes. One shared mission score. The complete mission is authored and repeatable from start to finish.</p>
+<div class="missionGrid"><div class="m"><b>01 · BUNKER ENTRY</b><span>Restore the dead node chain.</span></div><div class="m"><b>02 · CIRCUIT STABILIZER</b><span>Sync the bus for 35 seconds.</span></div><div class="m"><b>03 · SIGNAL SHAFT</b><span>Climb the fixed relay route.</span></div><div class="m"><b>04 · RELAY DEFENSE</b><span>Hold six lanes for 35 seconds.</span></div></div>
+<button class="main" id="startMission">BEGIN MISSION</button><div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="brief"><div class="card"><div class="kicker" id="briefKicker">SCENE 01</div><div class="logo" id="briefTitle">Bunker <span>Entry</span></div><p class="sub" id="briefCopy"></p><button class="main" id="beginScene">BEGIN SCENE</button></div></div>
+<div class="overlay hidden" id="sceneResult"><div class="card"><div class="kicker" id="sceneResultKick">SCENE COMPLETE</div><div class="logo" id="sceneResultTitle">POWER <span>RESTORED</span></div><div class="result" id="sceneResultScore"></div><p class="sub" id="sceneResultCopy"></p><button class="main" id="sceneNext">NEXT SCENE</button><div class="row"><button class="small" id="retryScene">RETRY SCENE</button><button class="small" id="restartMission">RESTART MISSION</button></div></div></div>
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">MISSION HOLD</div><div class="logo">PAUSED</div><p class="sub">Power Cycle is frozen exactly where you left it.</p><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="pauseRetry">RETRY SCENE</button><button class="small" id="pauseQuit">QUIT</button></div></div></div>
+<div class="overlay hidden" id="missionComplete"><div class="card"><div class="kicker">MISSION COMPLETE</div><div class="logo">Power <span>Cycle</span></div><div class="result" id="finalScore"></div><p class="sub">The sector is powered, synchronized, connected, and defended. None of the mission logic changed while you learned it.</p><div id="newBest" style="color:#aaff83;font-weight:1000"></div><button class="main" id="runAgain">RUN MISSION AGAIN</button><div class="row"><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id);
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,sceneIndex=0,sceneBaseScore=0,totalScore=0;
+let best=+(localStorage.getItem('sector_kgb_best')||0),soundOn=(localStorage.getItem('sector_kgb_sound')??'1')==='1',AC=null;
+const SCENES=[
+ {name:'BUNKER ENTRY',title:'Bunker <span>Entry</span>',brief:'Emergency power is down inside Sector KGB. Inspect the bunker node, restore the generator, unlock the blast door, and reach the exit hatch.'},
+ {name:'CIRCUIT STABILIZER',title:'Circuit <span>Stabilizer</span>',brief:'The generator is online, but the circuit board is unstable. Tap clean SYNC and LOCK nodes. Leave red SURGE nodes alone until the power bus stabilizes.'},
+ {name:'SIGNAL SHAFT',title:'Signal <span>Shaft</span>',brief:'Power is stable, but the uplink relay is isolated. Traverse the fixed maintenance shaft and reach the relay access marker.'},
+ {name:'RELAY DEFENSE',title:'Relay <span>Defense</span>',brief:'The relay is active and drawing hostile signal corruption. Defend the six approach lanes for the final 35-second uplink cycle.'}
+];
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=440,d=.08,type='sine',v=.06,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={ok:()=>tone(720,.08,'triangle',.06,1.35),bad:()=>tone(125,.15,'square',.08,.55),lock:()=>tone(970,.1,'sine',.07,1.25),jump:()=>tone(270,.1,'triangle',.045,1.6),scene:()=>{tone(420,.12,'triangle',.05,1.4);setTimeout(()=>tone(650,.13,'triangle',.05,1.4),110)},win:()=>{tone(440,.14,'triangle',.06,1.4);setTimeout(()=>tone(660,.14,'triangle',.06,1.35),130);setTimeout(()=>tone(880,.22,'triangle',.06,1.25),260)}};
+function hud(){ $('score').textContent=String(Math.max(0,Math.floor(totalScore))).padStart(6,'0');$('bestHud').textContent=String(best).padStart(6,'0');$('sceneHud').textContent=running?('0'+(sceneIndex+1)+' · '+SCENES[sceneIndex].name):'MISSION 01 · POWER CYCLE';$('sound').textContent=soundOn?'🔊':'🔇'}
+function showBrief(i){sceneIndex=i;running=false;paused=false;$('briefKicker').textContent='SCENE 0'+(i+1);$('briefTitle').innerHTML=SCENES[i].title;$('briefCopy').textContent=SCENES[i].brief;$('brief').classList.remove('hidden');hud();toggleSceneUI()}
+function beginScene(){sceneBaseScore=totalScore;$('brief').classList.add('hidden');$('sceneResult').classList.add('hidden');initScene(sceneIndex);running=true;paused=false;last=performance.now();audio();hud();toggleSceneUI()}
+function retryCurrent(){totalScore=sceneBaseScore;$('sceneResult').classList.add('hidden');$('pauseOverlay').classList.add('hidden');initScene(sceneIndex);running=true;paused=false;last=performance.now();hud();toggleSceneUI()}
+function startMission(){totalScore=0;sceneBaseScore=0;$('menu').classList.add('hidden');$('missionComplete').classList.add('hidden');showBrief(0)}
+function sceneEnd(pass,title,copy,bonus=0){if(!running)return;running=false;totalScore=Math.max(0,totalScore+bonus);$('sceneResultKick').textContent=pass?'SCENE COMPLETE':'SCENE FAILED';$('sceneResultTitle').innerHTML=title;$('sceneResultCopy').textContent=copy;$('sceneResultScore').textContent='MISSION SCORE '+String(Math.floor(totalScore)).padStart(6,'0');$('sceneNext').textContent=sceneIndex===3?'COMPLETE MISSION':'NEXT SCENE';$('sceneNext').style.display=pass?'inline-block':'none';$('sceneResult').classList.remove('hidden');toggleSceneUI();if(pass)sfx.scene();else sfx.bad()}
+function nextScene(){if(sceneIndex>=3){missionWin();return}$('sceneResult').classList.add('hidden');showBrief(sceneIndex+1)}
+function missionWin(){best=Math.max(best,Math.floor(totalScore));localStorage.setItem('sector_kgb_best',best);$('sceneResult').classList.add('hidden');$('finalScore').textContent=String(Math.floor(totalScore)).padStart(6,'0')+' POINTS';$('newBest').textContent=totalScore>=best?'BEST COMPLETE '+String(best).padStart(6,'0'):'BEST '+String(best).padStart(6,'0');$('missionComplete').classList.remove('hidden');sfx.win();hud()}
+function togglePause(force){if(!running)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now();toggleSceneUI()}
+function toggleSceneUI(){const plat=running&&!paused&&sceneIndex===2, node=running&&!paused&&sceneIndex===0, relay=running&&!paused&&sceneIndex===3;$('platformControls').style.display=plat?'flex':'none';$('nodeStatus').style.display=node?'block':'none';$('relayHelp').style.display=relay?'block':'none'}
+
+let state={};
+function initScene(i){
+ if(i===0)initNode();
+ if(i===1)initCircuit();
+ if(i===2)initPlatform();
+ if(i===3)initRelay();
+}
+function bgGrid(color='#82ff4f'){ctx.fillStyle='#030705';ctx.fillRect(0,0,W,H);ctx.strokeStyle=color+'13';ctx.lineWidth=1;for(let x=0;x<W;x+=34){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke()}for(let y=0;y<H;y+=34){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}}
+
+// SCENE 1: fixed dependency puzzle
+const NODE_LABELS=['DIAG','AUX BUS','GENERATOR','DOOR CTRL','EXIT HATCH'];
+const NODE_SEQ=[0,1,2,3,4];
+function initNode(){state={step:0,strikes:0,time:45,nodes:[
+ {x:.18,y:.36},{x:.35,y:.62},{x:.54,y:.34},{x:.72,y:.58},{x:.86,y:.29}
+]};nodeText()}
+function nodeText(){const msgs=['TRACE: run DIAG first','TRACE: energize AUX BUS','TRACE: start GENERATOR','TRACE: unlock DOOR CTRL','TRACE: route to EXIT HATCH','POWER CHAIN COMPLETE'];$('nodeStatus').textContent=msgs[state.step]+` · faults ${state.strikes}/3 · ${Math.ceil(state.time)}s`}
+function nodeStep(dt){state.time-=dt;if(state.time<=0){sceneEnd(false,'Bunker <span>Locked</span>','The dependency chain is fixed. Run the sequence cleaner.');return}nodeText()}
+function nodeClick(x,y){if(sceneIndex!==0||!running||paused)return;for(let i=0;i<state.nodes.length;i++){let n=state.nodes[i],nx=n.x*W,ny=n.y*H;if(Math.hypot(x-nx,y-ny)<44){if(i===NODE_SEQ[state.step]){state.step++;totalScore+=250;sfx.ok();if(state.step>=NODE_SEQ.length){totalScore+=Math.floor(state.time*25);sceneEnd(true,'Power <span>Restored</span>','The generator is online and the blast door is open.',800)}else nodeText()}else{state.strikes++;totalScore=Math.max(sceneBaseScore,totalScore-150);sfx.bad();nodeText();if(state.strikes>=3)sceneEnd(false,'Sequence <span>Fault</span>','Wrong dependency order. The node chain will be identical on retry.')}break}}}
+function nodeDraw(){bgGrid();ctx.strokeStyle='#82ff4f55';ctx.lineWidth=3;for(let i=0;i<state.nodes.length-1;i++){const a=state.nodes[i],b=state.nodes[i+1];ctx.beginPath();ctx.moveTo(a.x*W,a.y*H);ctx.lineTo(b.x*W,b.y*H);ctx.stroke()}for(let i=0;i<state.nodes.length;i++){const n=state.nodes[i],done=i<state.step,next=i===state.step;ctx.fillStyle=done?'#14351a':next?'#163b1a':'#081009';ctx.strokeStyle=done?'#82ff4f':next?'#ffd259':'#47604b';ctx.lineWidth=3;ctx.shadowColor=next?'#ffd259':'transparent';ctx.shadowBlur=next?20:0;ctx.beginPath();ctx.arc(n.x*W,n.y*H,38,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle=done?'#baff9c':next?'#ffe08b':'#93a794';ctx.font='900 11px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(NODE_LABELS[i],n.x*W,n.y*H+4)}ctx.fillStyle='#dff7db';ctx.font='900 15px ui-monospace,monospace';ctx.fillText('RESTORE THE BUNKER POWER CHAIN',W/2,92)}
+
+// SCENE 2: fixed 35-second target script
+const CIR_POS=[[.18,.30],[.50,.25],[.82,.31],[.27,.57],[.58,.56],[.78,.69],[.42,.78]];
+const CIR_KIND=['sync','sync','surge','lock','sync','surge','sync','lock','sync','sync','surge','lock','sync','sync','surge','sync','lock','sync','surge','sync','lock','sync','sync','surge','sync','lock','sync','surge','sync','sync','lock','surge','sync','lock','sync','sync','surge','lock','sync'];
+const CIR_P=[0,4,2,1,5,3,6,2,3,0,5,4,1,6,2,5,0,3,6,1,4,2,5,0,6,3,1,5,4,2,0,6,4,1,3,5,2,6,0];
+function initCircuit(){state={time:35,event:0,current:null,hits:0,score:0,nextAt:.55};}
+function circuitSpawn(){if(state.event>=CIR_KIND.length)return;state.current={kind:CIR_KIND[state.event],p:CIR_P[state.event],ttl:CIR_KIND[state.event]==='lock'?.72:1.0};state.event++;state.nextAt=.82}
+function circuitStep(dt){state.time-=dt;if(state.current){state.current.ttl-=dt;if(state.current.ttl<=0)state.current=null}else{state.nextAt-=dt;if(state.nextAt<=0)circuitSpawn()}if(state.time<=0){let pass=state.score>=18;if(pass){totalScore+=state.score*90+state.hits*25;sceneEnd(true,'Bus <span>Stable</span>',`Circuit stabilized at ${state.score} points.`,700)}else sceneEnd(false,'Bus <span>Unstable</span>',`You finished at ${state.score}. Reach 18. The target script repeats exactly.`)}}
+function circuitClick(x,y){if(sceneIndex!==1||!running||paused||!state.current)return;const p=CIR_POS[state.current.p],px=p[0]*W,py=p[1]*H;if(Math.hypot(x-px,y-py)<46){if(state.current.kind==='surge'){state.score=Math.max(0,state.score-3);totalScore=Math.max(sceneBaseScore,totalScore-120);sfx.bad()}else if(state.current.kind==='lock'){state.score+=3;state.hits++;totalScore+=120;sfx.lock()}else{state.score+=1;state.hits++;totalScore+=50;sfx.ok()}state.current=null}}
+function circuitDraw(){bgGrid('#4bdcff');ctx.fillStyle='#e9f8e8';ctx.font='900 15px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('CIRCUIT STABILIZER',W/2,92);ctx.fillStyle='#b8ccb8';ctx.font='800 12px ui-monospace,monospace';ctx.fillText(`${Math.ceil(state.time)}s · BUS ${state.score}/18 · GREEN +1 · GOLD +3 · RED -3`,W/2,116);if(state.current){const p=CIR_POS[state.current.p],kind=state.current.kind,col=kind==='surge'?'#ff4949':kind==='lock'?'#ffd259':'#82ff4f',lab=kind==='surge'?'SURGE':kind==='lock'?'LOCK':'SYNC';ctx.shadowColor=col;ctx.shadowBlur=22;ctx.strokeStyle=col;ctx.fillStyle=col+'22';ctx.lineWidth=4;ctx.beginPath();ctx.arc(p[0]*W,p[1]*H,38,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.fillStyle=col;ctx.font='1000 13px ui-monospace,monospace';ctx.fillText(lab,p[0]*W,p[1]*H+5)}}
+
+// SCENE 3: fixed platform route
+const LW=900,LH=600;
+const PLATS=[
+ [0,570,900,30],[80,500,170,18],[300,438,160,18],[540,376,175,18],[390,314,145,18],
+ [155,252,155,18],[365,190,160,18],[610,128,175,18]
+];
+function initPlatform(){state={x:95,y:530,w:28,h:36,vx:0,vy:0,on:false,time:90,checkpoint:{x:95,y:530},highest:0};}
+function platformInput(){let x=0;if(keys.has('a')||keys.has('arrowleft')||hold.left)x--;if(keys.has('d')||keys.has('arrowright')||hold.right)x++;return x}
+function platformJump(){if(sceneIndex!==2||!running||paused||!state.on)return;state.vy=-390;state.on=false;sfx.jump()}
+function platformStep(dt){state.time-=dt;if(state.time<=0){sceneEnd(false,'Signal <span>Lost</span>','The shaft route is fixed. Reach the relay before the 90-second maintenance window closes.');return}state.vx=platformInput()*205;state.vy+=930*dt;let ox=state.x,oy=state.y;state.x+=state.vx*dt;state.y+=state.vy*dt;state.x=Math.max(0,Math.min(LW-state.w,state.x));state.on=false;for(let i=0;i<PLATS.length;i++){const p=PLATS[i];if(state.vy>=0&&oy+state.h<=p[1]+5&&state.y+state.h>=p[1]&&state.x+state.w>p[0]+5&&state.x<p[0]+p[2]-5){state.y=p[1]-state.h;state.vy=0;state.on=true;if(i>state.highest){state.highest=i;if(i===3||i===5)state.checkpoint={x:p[0]+20,y:p[1]-state.h};totalScore+=120}}}if(state.y>LH+80){state.x=state.checkpoint.x;state.y=state.checkpoint.y;state.vy=0;totalScore=Math.max(sceneBaseScore,totalScore-120);sfx.bad()}if(state.y<115&&state.x>625){totalScore+=Math.floor(state.time*12);sceneEnd(true,'Relay <span>Reached</span>','The uplink relay is accessible.',850)}}
+function platformDraw(){ctx.save();let sx=W/LW,sy=H/LH,s=Math.min(sx,sy),ox=(W-LW*s)/2,oy=(H-LH*s)/2;ctx.fillStyle='#04070a';ctx.fillRect(0,0,W,H);ctx.translate(ox,oy);ctx.scale(s,s);ctx.strokeStyle='#4bdcff18';for(let x=0;x<LW;x+=45){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,LH);ctx.stroke()}for(let y=0;y<LH;y+=45){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(LW,y);ctx.stroke()}ctx.fillStyle='#28322b';ctx.strokeStyle='#82ff4f55';for(const p of PLATS){ctx.fillRect(...p);ctx.strokeRect(...p)}ctx.fillStyle='#ff4949';ctx.fillRect(640,82,110,32);ctx.fillStyle='#fff';ctx.font='900 13px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('RELAY ACCESS',695,103);ctx.fillStyle='#82ff4f';ctx.fillRect(state.x,state.y,state.w,state.h);ctx.fillStyle='#020402';ctx.fillRect(state.x+7,state.y+9,5,5);ctx.fillRect(state.x+17,state.y+9,5,5);ctx.restore();ctx.fillStyle='#dff4df';ctx.font='900 13px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(`SIGNAL SHAFT · ${Math.ceil(state.time)}s`,W/2,94)}
+
+// SCENE 4: six-zone fixed relay pattern
+const RELAY_SEQ=[0,3,1,5,2,4,0,2,5,1,4,3, 1,4,0,5,3,2, 0,3,5,2,4,1, 2,5,1,4,0,3, 5,2,0,4,1,3, 0,5,2,3,1,4];
+function initRelay(){state={time:35,lives:5,next:.45,event:0,threats:[],blocked:0};}
+function relaySpawn(){let lane=RELAY_SEQ[state.event%RELAY_SEQ.length];state.event++;state.threats.push({lane,r:Math.min(W,H)*.44,speed:Math.min(W,H)*.13,hit:false});state.next=.72;if(state.event%9===0){let lane2=(lane+3)%6;state.threats.push({lane:lane2,r:Math.min(W,H)*.49,speed:Math.min(W,H)*.13,hit:false})}}
+function relayStep(dt){state.time-=dt;state.next-=dt;if(state.next<=0&&state.time>1)relaySpawn();for(let i=state.threats.length-1;i>=0;i--){let t=state.threats[i];t.r-=t.speed*dt;if(t.r<58){state.threats.splice(i,1);state.lives--;totalScore=Math.max(sceneBaseScore,totalScore-180);sfx.bad();if(state.lives<=0){sceneEnd(false,'Relay <span>Overrun</span>','The six-lane attack order is fixed. Learn the rhythm and hold the ring.');return}}}if(state.time<=0){totalScore+=state.lives*350+state.blocked*75;sceneEnd(true,'Uplink <span>Complete</span>',`Relay held with ${state.lives} integrity remaining.`,1200)}}
+function laneAngle(l){return -Math.PI/2+l*Math.PI/3}
+function relayPress(lane){if(sceneIndex!==3||!running||paused)return;let candidates=state.threats.map((t,i)=>({t,i,d:Math.abs(t.r-145)})).filter(o=>o.t.lane===lane&&o.t.r>112&&o.t.r<178).sort((a,b)=>a.d-b.d);if(candidates.length){state.threats.splice(candidates[0].i,1);state.blocked++;totalScore+=120;sfx.ok()}else{totalScore=Math.max(sceneBaseScore,totalScore-20)}}
+function relayClick(x,y){let cx=W/2,cy=H/2,ang=Math.atan2(y-cy,x-cx)+Math.PI/2;if(ang<0)ang+=Math.PI*2;let lane=Math.round(ang/(Math.PI/3))%6;relayPress(lane)}
+function relayDraw(){bgGrid('#82ff4f');const cx=W/2,cy=H/2,R=Math.min(W,H)*.31;ctx.strokeStyle='#82ff4f33';ctx.lineWidth=3;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.stroke();ctx.strokeStyle='#ffd25955';ctx.lineWidth=5;ctx.beginPath();ctx.arc(cx,cy,145,0,Math.PI*2);ctx.stroke();for(let l=0;l<6;l++){const a=laneAngle(l),x=cx+Math.cos(a)*R,y=cy+Math.sin(a)*R;ctx.strokeStyle='#82ff4f28';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x,y);ctx.stroke();ctx.fillStyle='#0c1f10';ctx.strokeStyle='#82ff4f66';ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,28,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#cfffbd';ctx.font='1000 13px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText(String(l+1),x,y+5)}for(const t of state.threats){const a=laneAngle(t.lane),x=cx+Math.cos(a)*t.r,y=cy+Math.sin(a)*t.r;const hot=t.r>112&&t.r<178;ctx.shadowColor=hot?'#ffd259':'#ff4949';ctx.shadowBlur=hot?22:12;ctx.fillStyle=hot?'#ffd259':'#ff4949';ctx.beginPath();ctx.arc(x,y,10,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0}ctx.fillStyle='#0a210e';ctx.strokeStyle='#82ff4f';ctx.lineWidth=4;ctx.beginPath();ctx.arc(cx,cy,48,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.fillStyle='#dfffce';ctx.font='1000 12px ui-monospace,monospace';ctx.fillText('RELAY',cx,cy+4);ctx.fillStyle='#dff4df';ctx.font='900 13px ui-monospace,monospace';ctx.fillText(`RELAY DEFENSE · ${Math.ceil(state.time)}s · INTEGRITY ${'◆'.repeat(state.lives)} · BLOCKED ${state.blocked}`,W/2,94)}
+
+const keys=new Set(),hold={left:false,right:false};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup',' ','escape','1','2','3','4','5','6'].includes(k))e.preventDefault();if(e.repeat)return;keys.add(k);if(k==='escape'&&running){togglePause();return}if(sceneIndex===2&&running&&!paused&&(k==='w'||k==='arrowup'||k===' '))platformJump();if(sceneIndex===3&&running&&!paused&&/^[1-6]$/.test(k))relayPress(+k-1)},{passive:false});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+function holdButton(id,key){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();hold[key]=true;b.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[key]=false;b.classList.remove('down')},{passive:false}))}
+holdButton('leftBtn','left');holdButton('rightBtn','right');$('jumpBtn').addEventListener('pointerdown',e=>{e.preventDefault();platformJump()},{passive:false});
+c.addEventListener('pointerdown',e=>{if(!running||paused)return;audio();if(sceneIndex===0)nodeClick(e.clientX,e.clientY);else if(sceneIndex===1)circuitClick(e.clientX,e.clientY);else if(sceneIndex===3)relayClick(e.clientX,e.clientY)},{passive:false});
+
+function step(dt){if(sceneIndex===0)nodeStep(dt);else if(sceneIndex===1)circuitStep(dt);else if(sceneIndex===2)platformStep(dt);else relayStep(dt)}
+function draw(){if(sceneIndex===0)nodeDraw();else if(sceneIndex===1)circuitDraw();else if(sceneIndex===2)platformDraw();else relayDraw()}
+function frame(ts){const dt=Math.min(.035,(ts-last)/1000);last=ts;if(running&&!paused)step(dt);draw();requestAnimationFrame(frame)}
+
+$('startMission').onclick=startMission;$('beginScene').onclick=beginScene;$('sceneNext').onclick=nextScene;$('retryScene').onclick=retryCurrent;$('restartMission').onclick=startMission;$('runAgain').onclick=startMission;
+$('pauseBtn').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('pauseRetry').onclick=retryCurrent;$('pauseQuit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden');toggleSceneUI();hud()};
+$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';
+$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('sector_kgb_sound',soundOn?'1':'0');hud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();initNode();hud();toggleSceneUI();requestAnimationFrame(frame);
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>
