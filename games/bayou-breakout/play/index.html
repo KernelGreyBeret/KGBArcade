@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#061617">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Bayou Breakout v1.0.0 — Warm-Up Run</title>
+<style>
+:root{--aqua:#64e6d4;--lime:#b4f06f;--orange:#ff9b45;--red:#ff5f49;--ink:#edfff5;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#041315;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 8px #001}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start}.panel{background:#031416c9;border:1px solid #64e6d426;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px);box-shadow:0 7px 22px #0008}.k{font:900 9px ui-monospace,monospace;letter-spacing:.13em;color:#a7f4e9;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(17px,3.1vw,25px)}.distance{color:#dfffac}.center{text-align:center}.right{text-align:right}.pack{color:#ffb070}.danger{position:absolute;left:50%;top:82px;transform:translateX(-50%);width:min(78vw,420px);text-align:center}.gapbar{height:13px;border:1px solid #ffffff27;background:#260b06;border-radius:99px;overflow:hidden;margin-top:5px}.gapfill{height:100%;width:76%;background:linear-gradient(90deg,#ff4e38,#ff9b45,#ffe16a,#9dea72);transition:width .08s linear}.gaptext{margin-top:3px;font:900 11px ui-monospace,monospace;color:#ffd0a7}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #64e6d455;background:#06191bdd;color:#eafff7;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:7px;right:7px;bottom:calc(8px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.cluster{display:flex;gap:7px;pointer-events:auto}.btn{width:68px;height:76px;border-radius:17px;border:2px solid #64e6d466;background:#051718df;color:#b8fbf2;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 8px 22px #0008;-webkit-tap-highlight-color:transparent}.btn b{font-size:28px}.btn small{font-size:9px;letter-spacing:.04em}.btn.boost{width:76px;border-color:#ff9b4588;color:#ffc38f}.btn.down,.btn:active{transform:translateY(2px);filter:brightness(1.3)}.boostbar{position:fixed;z-index:7;left:50%;bottom:calc(15px + var(--safe));transform:translateX(-50%);width:min(34vw,170px);height:10px;border-radius:99px;background:#1a271e;border:1px solid #ffffff24;overflow:hidden}.boostfill{height:100%;width:100%;background:linear-gradient(90deg,#ff9b45,#ffe16a)}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 30%,#15544fe5,#021011f5 70%);text-align:center}.card{width:min(720px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #64e6d444;background:#041719ed;box-shadow:0 25px 70px #000c}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#9ff3e7}.logo{font-size:clamp(42px,9vw,78px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#effff5;margin:8px 0}.logo span{display:block;color:#ff9b45}.sub{font-size:15px;line-height:1.5;color:#c7dfd4;max-width:600px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#dfffab,#66d9c7);color:#08201c;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#0a2423;color:#e5f6ee;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;text-align:left;margin:15px 0}.how div{background:#ffffff07;border:1px solid #ffffff12;border-radius:11px;padding:10px;color:#c5dcd1;font:500 13px/1.42 system-ui}.how b{color:#9ef2e6}.hidden{display:none!important}.result{font-size:24px;color:#ffe083;font-weight:1000;margin:9px 0}.callout{margin:12px auto;padding:11px;border-left:3px solid #64e6d4;background:#64e6d408;color:#d5e9df;text-align:left;font-size:13px;line-height:1.45}
+@media(max-width:560px){.btn{width:58px;height:69px}.btn.boost{width:68px}.how{grid-template-columns:1fr}.card{padding:18px 13px}.center{display:none}.top{grid-template-columns:1fr 1fr}.danger{top:78px}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel"><div class="k">Distance</div><div class="big distance"><span id="dist">0</span> / 1620 m</div></div>
+<div class="panel center"><div class="k">Bayou Breakout</div><div class="big">WARM-UP RUN</div></div>
+<div class="panel right"><div class="k">Pack</div><div class="big pack"><span id="pack">2</span> GATORS</div></div>
+</div>
+<div class="danger"><div class="panel"><div class="k">Gator Gap</div><div class="gapbar"><div class="gapfill" id="gap"></div></div><div class="gaptext" id="gapText">LEAD +7.6 SEC</div></div></div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="controls"><div class="cluster"><button class="btn" id="left"><b>←</b><small>LEFT</small></button><button class="btn" id="right"><b>→</b><small>RIGHT</small></button></div><div class="cluster"><button class="btn boost" id="boost"><b>⚡</b><small>BOOST</small></button></div></div>
+<div class="boostbar"><div class="boostfill" id="boostFill"></div></div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · 8BITOPS · v1.0.0</div><div class="logo">Bayou <span>Breakout</span></div><div style="font-size:20px;color:#dfffab;font-weight:1000">WARM-UP RUN</div>
+<p class="sub">One fixed winding river. One extraction point. A gator pack behind you and more waiting on the shore to join in.</p>
+<div class="how">
+<div><b>Steer</b><br>A/D, arrows, swipe, or LEFT/RIGHT. You're steering across the river while the run drives forward.</div>
+<div><b>Boost</b><br>Space / Shift or BOOST. Use it to buy separation or recover from a bad hit. It recharges when released.</div>
+<div><b>Hazards</b><br>Rocks, logs, sandbars, and downed-tree gaps are fixed. Collisions cost speed and gator separation.</div>
+<div><b>Win / Lose</b><br>Reach extraction at 1,620 m. If the gator-gap meter empties first, dinner is served.</div>
+</div>
+<div class="callout"><b>ARCADE-TRUE:</b> river bends, widths, hazards, and gator join points are identical every run. Nothing rerolls after you fail.</div>
+<button class="main" id="start">START WARM-UP RUN</button>
+<div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">DRIFT HOLD</div><div class="logo">PAUSED</div><p class="sub">Even the gators respect pause.</p><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="restart">RESTART RUN</button><button class="small" id="quit">QUIT</button></div></div></div>
+
+<div class="overlay hidden" id="over"><div class="card"><div class="kicker" id="endKick">PACK CLOSED</div><div class="logo" id="endTitle">Bayou <span>Wins</span></div><div class="result" id="result"></div><p class="sub" id="endCopy"></p><div id="best" style="color:#b9ff9b;font-weight:1000"></div><button class="main" id="retry">RUN IT AGAIN</button><div class="row"><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id),TAU=Math.PI*2;
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,ended=false,soundOn=(localStorage.getItem('bayou_sound')??'1')==='1',AC=null;
+const ROUTE=1620;
+const COURSE=[[0,0.0,0.31],[90,-0.12,0.3],[180,-0.28,0.27],[270,-0.1,0.3],[360,0.18,0.28],[450,0.31,0.25],[540,0.12,0.27],[630,-0.18,0.29],[720,-0.32,0.24],[810,-0.08,0.26],[900,0.24,0.29],[990,0.35,0.25],[1080,0.15,0.23],[1170,-0.16,0.26],[1260,-0.3,0.25],[1350,-0.05,0.28],[1440,0.24,0.26],[1530,0.08,0.24],[1620,0,0.29]];
+const HAZ=[[115,"rock",-0.46],[170,"log",0.22],[235,"sandbar",-0.1],[315,"rock",0.55],[385,"treegap",-0.34],[455,"log",0.46],[520,"sandbar",0.28],[590,"rock",-0.52],[665,"treegap",0.2],[735,"log",-0.35],[805,"rock",0.52],[865,"sandbar",-0.22],[935,"log",0.34],[1000,"treegap",-0.4],[1065,"rock",0.1],[1125,"sandbar",0.5],[1195,"log",-0.18],[1265,"rock",0.48],[1330,"treegap",0.12],[1395,"sandbar",-0.45],[1460,"log",0.38],[1525,"rock",-0.22]];
+const JOIN=[[205,"left"],[420,"right"],[610,"left"],[790,"right"],[1015,"right"],[1240,"left"],[1450,"right"]];
+const HAZ_COL={rock:'#7c817b',log:'#75451f',sandbar:'#b68b58',treegap:'#50331e'};
+let bestTime=+(localStorage.getItem('bayou_best_time')||0),bestDistance=+(localStorage.getItem('bayou_best_distance')||0);
+let g={d:0,t:0,lane:0,steerV:0,speed:18.5,base:18.5,boost:100,boosting:false,gap:76,pack:2,hit:new Set(),join:new Set(),slow:0,flash:0,shake:0,clean:0};
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=300,d=.08,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),gg=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),t+d);gg.gain.setValueAtTime(.0001,t);gg.gain.exponentialRampToValueAtTime(v,t+.006);gg.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(gg);gg.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={hit:()=>tone(105,.16,'square',.08,.55),boost:()=>tone(180,.08,'sawtooth',.025,1.5),join:()=>tone(125,.18,'triangle',.06,.72),win:()=>{tone(440,.13,'triangle',.06,1.4);setTimeout(()=>tone(660,.13,'triangle',.06,1.35),120);setTimeout(()=>tone(880,.22,'triangle',.06,1.25),250)},lose:()=>tone(80,.35,'sawtooth',.09,.45)};
+
+function courseAt(m){
+ m=Math.max(0,Math.min(ROUTE,m));
+ let a=COURSE[0],b=COURSE[COURSE.length-1];
+ for(let i=0;i<COURSE.length-1;i++)if(m>=COURSE[i][0]&&m<=COURSE[i+1][0]){a=COURSE[i];b=COURSE[i+1];break}
+ const t=(m-a[0])/Math.max(1,b[0]-a[0]),q=t*t*(3-2*t);
+ return{c:a[1]+(b[1]-a[1])*q,w:a[2]+(b[2]-a[2])*q}
+}
+function screenRiver(m,y){const q=courseAt(m);return{cx:W*.5+q.c*W*.42,half:Math.max(92,q.w*W)}}
+function reset(){
+ g={d:0,t:0,lane:0,steerV:0,speed:18.5,base:18.5,boost:100,boosting:false,gap:76,pack:2,hit:new Set(),join:new Set(),slow:0,flash:0,shake:0,clean:0};
+ ended=false;updateHud()
+}
+const key=new Set(),hold={left:false,right:false,boost:false};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright',' ','shift','escape'].includes(k))e.preventDefault();key.add(k);if(k==='escape'&&running)togglePause()},{passive:false});
+addEventListener('keyup',e=>key.delete(e.key.toLowerCase()));
+function bindHold(id,name){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();audio();hold[name]=true;b.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[name]=false;b.classList.remove('down')},{passive:false}))}
+bindHold('left','left');bindHold('right','right');bindHold('boost','boost');
+let swipe=null;c.addEventListener('pointerdown',e=>{if(e.pointerType!=='mouse')swipe={x:e.clientX,y:e.clientY}},{passive:true});
+c.addEventListener('pointerup',e=>{if(!swipe)return;let dx=e.clientX-swipe.x;if(Math.abs(dx)>35)g.lane=Math.max(-.92,Math.min(.92,g.lane+Math.sign(dx)*.30));swipe=null},{passive:true});
+
+function steerInput(){return ((key.has('d')||key.has('arrowright')||hold.right)?1:0)-((key.has('a')||key.has('arrowleft')||hold.left)?1:0)}
+function fail(reason){if(ended)return;ended=true;running=false;sfx.lose();bestDistance=Math.max(bestDistance,Math.floor(g.d));localStorage.setItem('bayou_best_distance',bestDistance);$('endKick').textContent='PACK CLOSED';$('endTitle').innerHTML='Gators <span>Win</span>';$('result').textContent=Math.floor(g.d)+' m · '+g.t.toFixed(1)+' sec';$('endCopy').textContent=reason==='bank'?'You spent too long eating shoreline. The river bend will be identical on retry.':'The pack erased your lead. The hazard and join sequence is unchanged—use what you just learned.';$('best').textContent=(bestTime?`BEST CLEAR ${bestTime.toFixed(1)}s · `:'')+'FARTHEST '+bestDistance+' m';$('over').classList.remove('hidden')}
+function win(){if(ended)return;ended=true;running=false;sfx.win();if(!bestTime||g.t<bestTime){bestTime=g.t;localStorage.setItem('bayou_best_time',bestTime)}bestDistance=ROUTE;localStorage.setItem('bayou_best_distance',ROUTE);$('endKick').textContent='EXTRACTION REACHED';$('endTitle').innerHTML='Bayou <span>Broken</span>';$('result').textContent=g.t.toFixed(1)+' sec · '+g.pack+' gators in the pack';$('endCopy').textContent='You did not get a lucky river. You learned Warm-Up Run.';$('best').textContent='BEST CLEAR '+bestTime.toFixed(1)+'s';$('over').classList.remove('hidden')}
+
+function resolveHazards(){
+ for(let i=0;i<HAZ.length;i++){if(g.hit.has(i))continue;const [m,type,u]=HAZ[i];if(g.d<m-2)continue;if(g.d>m+9){g.hit.add(i);continue}if(Math.abs(g.d-m)<4.5&&Math.abs(g.lane-u)<(type==='treegap'?.25:.20)){g.hit.add(i);let penalty=type==='sandbar'?7:type==='log'?11:type==='rock'?13:15;g.gap-=penalty;g.slow=type==='sandbar'?.8:1.15;g.shake=.35;g.flash=.20;sfx.hit()}}
+ for(let i=0;i<JOIN.length;i++){if(g.join.has(i))continue;const [m,side]=JOIN[i];if(g.d>=m){g.join.add(i);g.pack++;g.gap-=3.5;sfx.join()}}
+}
+function step(dt){
+ g.t+=dt;const steer=steerInput();g.steerV+=(steer*.72-g.steerV)*Math.min(1,8*dt);g.lane+=g.steerV*dt;g.lane=Math.max(-1.05,Math.min(1.05,g.lane));
+ const wantBoost=(key.has(' ')||key.has('shift')||hold.boost)&&g.boost>1;g.boosting=wantBoost;
+ if(wantBoost){g.boost=Math.max(0,g.boost-29*dt);if(Math.floor(performance.now()/120)%4===0)sfx.boost()}else g.boost=Math.min(100,g.boost+9.5*dt);
+ g.slow=Math.max(0,g.slow-dt);let target=g.base*(g.slow>0?.53:1)*(wantBoost?1.47:1);g.speed+=(target-g.speed)*Math.min(1,3.7*dt);
+ g.d+=g.speed*dt;
+ // Pack pressure rises predictably as more fixed shore gators join.
+ let pressure=(1.05+(g.pack-2)*.16);g.gap-=pressure*dt;if(wantBoost)g.gap+=2.65*dt;
+ // Shoreline contact: readable and punishing, not instant-death.
+ if(Math.abs(g.lane)>.91){g.gap-=5.7*dt;g.speed*=Math.pow(.975,dt*60);g.shake=Math.max(g.shake,.06)}else g.clean+=dt;
+ g.gap=Math.min(92,g.gap);resolveHazards();
+ if(g.gap<=0){fail('pack');return}if(g.d>=ROUTE){win();return}updateHud()
+}
+function updateHud(){$('dist').textContent=Math.min(ROUTE,Math.floor(g.d));$('pack').textContent=g.pack;$('gap').style.width=Math.max(0,Math.min(100,g.gap))+'%';$('gapText').textContent='LEAD +'+Math.max(0,g.gap/10).toFixed(1)+' SEC';$('boostFill').style.width=g.boost+'%';$('sound').textContent=soundOn?'🔊':'🔇'}
+
+function proj(m){let ahead=m-g.d;let n=1-Math.max(0,Math.min(1,ahead/380));return H*.13+n*n*(H*.76-H*.13)}
+function drawBackground(){
+ const grad=ctx.createLinearGradient(0,0,0,H);grad.addColorStop(0,'#294d3b');grad.addColorStop(.52,'#1e4932');grad.addColorStop(1,'#0f291c');ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+ // deterministic swamp tree silhouettes
+ for(let i=0;i<14;i++){let x=((i*173)%W),side=i%2===0?1:-1;ctx.fillStyle='#12341f';ctx.fillRect(x-7,H*.18+(i%4)*22,14,H);ctx.beginPath();ctx.arc(x,H*.17+(i%4)*22,31+(i%3)*10,0,TAU);ctx.fill()}
+}
+function drawRiver(){
+ const left=[],right=[];for(let s=32;s>=0;s--){let ahead=s/32*390,m=g.d+ahead,y=proj(m),q=screenRiver(m,y);left.push([q.cx-q.half*(.36+.64*(1-ahead/500)),y]);right.push([q.cx+q.half*(.36+.64*(1-ahead/500)),y])}
+ ctx.beginPath();ctx.moveTo(left[0][0],left[0][1]);for(const p of left)ctx.lineTo(p[0],p[1]);for(let i=right.length-1;i>=0;i--)ctx.lineTo(right[i][0],right[i][1]);ctx.closePath();let wg=ctx.createLinearGradient(0,H*.1,0,H);wg.addColorStop(0,'#1d6870');wg.addColorStop(1,'#0d4b5b');ctx.fillStyle=wg;ctx.fill();
+ ctx.strokeStyle='#5e8255';ctx.lineWidth=6;ctx.beginPath();left.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();ctx.beginPath();right.forEach((p,i)=>i?ctx.lineTo(...p):ctx.moveTo(...p));ctx.stroke();
+ // fixed current streaks, purely visual
+ ctx.strokeStyle='#7de0df33';ctx.lineWidth=2;for(let k=0;k<7;k++){let m=g.d+40+k*47,y=proj(m),q=screenRiver(m,y);ctx.beginPath();ctx.moveTo(q.cx-18,y);ctx.lineTo(q.cx+12,y+7);ctx.stroke()}
+}
+function drawHazard(h){
+ const [m,type,u]=h,ahead=m-g.d;if(ahead<-12||ahead>390)return;const y=proj(m),q=screenRiver(m,y),pers=.28+(1-Math.max(0,ahead)/390)*.82,x=q.cx+u*q.half*.72,s=pers;
+ ctx.save();ctx.translate(x,y);ctx.scale(s,s);if(type==='rock'){ctx.fillStyle='#7a807b';ctx.beginPath();ctx.moveTo(-24,8);ctx.lineTo(-15,-19);ctx.lineTo(8,-27);ctx.lineTo(26,7);ctx.closePath();ctx.fill()}else if(type==='log'){ctx.fillStyle='#75451f';ctx.rotate(.12);ctx.fillRect(-37,-7,74,14);ctx.fillStyle='#9b6735';ctx.beginPath();ctx.arc(-37,0,7,0,TAU);ctx.fill()}else if(type==='sandbar'){ctx.fillStyle='#b68b58';ctx.beginPath();ctx.ellipse(0,3,43,13,0,0,TAU);ctx.fill()}else{ctx.fillStyle='#51321d';ctx.fillRect(-45,-7,90,14);ctx.fillStyle='#183d20';ctx.beginPath();ctx.arc(-43,-12,20,0,TAU);ctx.arc(42,-11,22,0,TAU);ctx.fill();ctx.strokeStyle='#d4a55d';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-12,8);ctx.lineTo(12,-14);ctx.lineTo(30,8);ctx.stroke()}ctx.restore()
+}
+function drawJoiners(){
+ for(let i=0;i<JOIN.length;i++){if(g.join.has(i))continue;let [m,side]=JOIN[i],ahead=m-g.d;if(ahead<-10||ahead>390)continue;let y=proj(m),q=screenRiver(m,y),x=q.cx+(side==='left'?-1:1)*(q.half+32),s=.35+(1-ahead/390)*.7;ctx.save();ctx.translate(x,y);ctx.scale(s,s);ctx.rotate(side==='left'?.2:-.2);ctx.fillStyle='#718f45';ctx.beginPath();ctx.ellipse(0,0,31,10,0,0,TAU);ctx.fill();ctx.beginPath();ctx.arc(side==='left'?24:-24,-2,9,0,TAU);ctx.fill();ctx.restore()}
+}
+function drawPack(){
+ let close=1-g.gap/92,y=H*.91-close*H*.09;for(let i=0;i<Math.min(7,g.pack);i++){let x=W*.5+(i-(Math.min(7,g.pack)-1)/2)*(31+close*14),s=.6+close*.45;ctx.save();ctx.translate(x,y+(i%2)*5);ctx.scale(s,s);ctx.fillStyle='#6f9143';ctx.beginPath();ctx.ellipse(0,0,24,8,0,0,TAU);ctx.fill();ctx.beginPath();ctx.arc(18,-2,7,0,TAU);ctx.fill();ctx.restore()}
+}
+function drawBoat(){
+ let q=screenRiver(g.d,0),x=q.cx+g.lane*q.half*.72,y=H*.76;if(g.shake>0){g.shake=Math.max(0,g.shake-.018);x+=Math.sin(performance.now()*.08)*7*g.shake}ctx.save();ctx.translate(x,y);ctx.rotate(g.steerV*.16);ctx.fillStyle='#d1773c';ctx.strokeStyle='#4d2a1b';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-36);ctx.lineTo(22,-8);ctx.lineTo(16,35);ctx.lineTo(-16,35);ctx.lineTo(-22,-8);ctx.closePath();ctx.fill();ctx.stroke();ctx.fillStyle='#232c2d';ctx.fillRect(-7,-6,14,25);ctx.fillStyle='#ffe6a9';ctx.fillRect(-11,-23,22,7);ctx.restore();
+ // wake
+ ctx.strokeStyle='#c9ffff88';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(x-6,y+36);ctx.lineTo(x-20,y+62);ctx.moveTo(x+6,y+36);ctx.lineTo(x+20,y+62);ctx.stroke()
+}
+function draw(){
+ drawBackground();drawRiver();for(const h of HAZ)drawHazard(h);drawJoiners();drawBoat();drawPack();
+ if(g.flash>0){ctx.fillStyle=`rgba(255,180,110,${Math.min(.20,g.flash)})`;ctx.fillRect(0,0,W,H);g.flash=Math.max(0,g.flash-.016)}
+}
+function frame(ts){const dt=Math.min(.034,(ts-last)/1000);last=ts;if(running&&!paused&&!ended)step(dt);draw();requestAnimationFrame(frame)}
+function start(){reset();$('menu').classList.add('hidden');$('over').classList.add('hidden');$('pauseOverlay').classList.add('hidden');running=true;paused=false;last=performance.now();audio()}
+function togglePause(force){if(!running||ended)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+$('start').onclick=$('retry').onclick=start;$('pauseBtn').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('restart').onclick=start;$('quit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden')};$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('bayou_sound',soundOn?'1':'0');updateHud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();reset();requestAnimationFrame(frame);if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>

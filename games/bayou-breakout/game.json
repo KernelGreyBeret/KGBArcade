@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "bayou-breakout",
+  "title": "Bayou Breakout",
+  "subtitle": "Warm-Up Run",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/bayou-breakout/",
+  "playPath": "/games/bayou-breakout/play/",
+  "sourceLineage": "River Gator Boat Chase concept \u2192 Bayou Breakout / 8BitOps \u2192 Warm-Up Run smoke test on KGB Arcade Engine v0.1/v0.1.1 \u2192 canonical public v1 rebuild",
+  "historicalMvpPromise": [
+    "steer boat through a scrolling winding river",
+    "visible land on both sides with trees/swamp props",
+    "shore gators, some of which join the chase as passed",
+    "danger/gator pursuit meter",
+    "distance",
+    "boost",
+    "rocks, logs, downed-tree gaps, sandbars",
+    "win at course end",
+    "lose when the gators catch the boat"
+  ],
+  "excludedFromV1": [
+    "upgrades",
+    "bosses",
+    "branching routes",
+    "store",
+    "complex AI"
+  ],
+  "course": {
+    "id": "warm-up-run",
+    "lengthMeters": 1620,
+    "authoredRiverWaypoints": 19,
+    "authoredHazards": 22,
+    "authoredGatorJoinPoints": 7
+  },
+  "arcadeTrue": {
+    "fixedRiverRoute": true,
+    "fixedHazardPositions": true,
+    "fixedGatorJoinPoints": true,
+    "gameplayRngAffectsOutcome": false,
+    "failureTeachesRoute": true,
+    "instantRetry": true
+  }
+}
