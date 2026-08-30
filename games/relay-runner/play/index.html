@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#071119">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Relay Runner v1.0.0</title>
+<style>
+:root{--cyan:#4fe7ff;--green:#8cff74;--gold:#ffd65c;--red:#ff5364;--ink:#eefaff;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#05090d;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 8px #000}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}.panel{background:#06131dc8;border:1px solid #4fe7ff25;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px)}.left{justify-self:start}.center{text-align:center}.right{justify-self:end;text-align:right}.k{font:900 9px ui-monospace,monospace;letter-spacing:.13em;color:#9cf4ff;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(16px,3vw,24px)}.obj{color:#ffd65c}.hp{color:#ff7480}.charges{color:#8cff74}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #4fe7ff55;background:#081722de;color:#e9fbff;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:6px;right:6px;bottom:calc(7px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.cluster{display:flex;gap:6px;pointer-events:auto}.btn{width:58px;height:70px;border-radius:15px;border:2px solid #4fe7ff66;background:#071722df;color:#c6f6ff;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent}.btn b{font-size:24px}.btn small{font-size:9px;letter-spacing:.03em}.btn.green{border-color:#8cff7477;color:#baffaa}.btn.gold{border-color:#ffd65c77;color:#ffe48e}.btn.red{border-color:#ff536477;color:#ff9ba4}.btn.down,.btn:active{transform:translateY(2px);filter:brightness(1.3)}
+.contextHint{position:fixed;z-index:7;left:50%;bottom:calc(87px + var(--safe));transform:translateX(-50%);max-width:min(85vw,620px);padding:7px 10px;border-radius:10px;background:#041019d8;border:1px solid #4fe7ff28;color:#d8f4fb;text-align:center;font:900 11px ui-monospace,monospace;opacity:0;transition:opacity .12s}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 30%,#17394de5,#030609f6 70%);text-align:center}.card{width:min(760px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #4fe7ff44;background:#07131ded;box-shadow:0 25px 70px #000c}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#9ef4ff}.logo{font-size:clamp(42px,9vw,78px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#effaff;margin:8px 0}.logo span{display:block;color:#4fe7ff}.sub{font-size:15px;line-height:1.5;color:#c9dce5;max-width:620px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#dcfbff,#63d9ec);color:#071a20;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#0a1d29;color:#e9f7fc;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.missionGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:15px 0;text-align:left}.mission{padding:13px;border:1px solid #ffffff13;border-radius:12px;background:#ffffff07}.mission b{color:#9ef4ff}.mission p{margin:5px 0 0;font-size:12px;color:#bdd0d9;line-height:1.4}.mission.locked{opacity:.45}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;text-align:left;margin:15px 0}.how div{padding:10px;background:#ffffff07;border:1px solid #ffffff12;border-radius:10px;color:#c5d9e2;font:500 13px/1.42 system-ui}.how b{color:#a7f5ff}.hidden{display:none!important}.result{font-size:24px;color:#ffd65c;font-weight:1000;margin:8px 0}
+@media(max-width:560px){.center{display:none}.top{grid-template-columns:1fr 1fr}.btn{width:49px;height:65px}.how,.missionGrid{grid-template-columns:1fr}.card{padding:17px 12px}.contextHint{bottom:calc(80px + var(--safe));font-size:9px}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel left"><div class="k">Objective</div><div class="big obj" id="obj">MISSION SELECT</div></div>
+<div class="panel center"><div class="k">Relay Runner</div><div class="big" id="missionHud">STATIC WAR · FIELD OPS</div></div>
+<div class="panel right"><div class="k">Status</div><div class="big"><span class="hp" id="hp">◆◆◆</span> <span class="charges" id="chargeHud"></span></div></div>
+</div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="contextHint" id="hint"></div>
+<div class="controls">
+<div class="cluster"><button class="btn" id="left"><b>←</b><small>LEFT</small></button><button class="btn" id="right"><b>→</b><small>RIGHT</small></button></div>
+<div class="cluster"><button class="btn green" id="jump"><b>↑</b><small>JUMP</small></button><button class="btn gold" id="action"><b>⚡</b><small>ACTION</small></button><button class="btn red" id="slam"><b>↓</b><small>SLAM</small></button></div>
+</div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · 8BITOPS · v1.0.0</div><div class="logo">Relay <span>Runner</span></div>
+<p class="sub">The tactical platformer formerly developed as Pixel Patrol and Kernel Courier finally has its canonical identity. Two real missions. One standardized Signal Baton.</p>
+<div class="missionGrid">
+<div class="mission"><b>01 · DEAD DROP RIDGE</b><p>Sync 3 relays, recover up to 4 satchel charges, then destroy the 100-HP jammer generator.</p><button class="small" id="m1" style="margin-top:9px">PLAY MISSION 01</button></div>
+<div class="mission" id="m2box"><b>02 · BROKEN NET VALLEY</b><p>Break fixed firewall barriers, tag three isolated evacuation teams, then reach extraction.</p><button class="small" id="m2" style="margin-top:9px">PLAY MISSION 02</button></div>
+</div>
+<div class="how">
+<div><b>Move / Jump</b><br>A/D or arrows move. Space jumps. Mobile has dedicated buttons.</div>
+<div><b>Signal Baton / Context</b><br>W/Up or ACTION syncs relays, tags teams, collects/plants charges, or swings the baton.</div>
+<div><b>Signal Slam</b><br>S/Down while airborne slams downward and damages enemies, firewalls, or the jammer.</div>
+<div><b>Arcade-True</b><br>Both maps, objectives, barriers, enemies, charges, teams, and finale locations are fixed every run.</div>
+</div>
+<div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="brief"><div class="card"><div class="kicker" id="briefK">MISSION 01</div><div class="logo" id="briefTitle">Dead Drop <span>Ridge</span></div><p class="sub" id="briefCopy"></p><button class="main" id="begin">BEGIN DROP</button><div class="row"><button class="small" id="backSelect">MISSION SELECT</button></div></div></div>
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">FIELD HOLD</div><div class="logo">PAUSED</div><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="restart">RESTART MISSION</button><button class="small" id="quit">MISSION SELECT</button></div></div></div>
+<div class="overlay hidden" id="over"><div class="card"><div class="kicker" id="endK">MISSION FAILED</div><div class="logo" id="endTitle">Grid <span>Dark</span></div><div class="result" id="result"></div><p class="sub" id="endCopy"></p><button class="main" id="retry">RUN IT AGAIN</button><div class="row"><button class="small" id="select2">MISSION SELECT</button><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id),TAU=Math.PI*2;
+const LW=1280,LH=720;
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,ended=false,mission=1,cam=0,soundOn=(localStorage.getItem('rr_sound')??'1')==='1',AC=null;
+let unlocked2=(localStorage.getItem('rr_m2_unlocked')||'0')==='1';
+const keys=new Set(),hold={left:false,right:false};
+const P={x:80,y:520,w:30,h:46,vx:0,vy:0,on:false,hp:3,inv:0,dir:1,attack:0,slam:false,charges:0};
+let platforms=[],relays=[],enemies=[],barriers=[],charges=[],teams=[],jammer=null,extract=null,particles=[],objective='',score=0,elapsed=0;
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function scale(){return Math.min(W/LW,H/LH)} function ox(){return (W-LW*scale())/2} function oy(){return (H-LH*scale())/2}
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=400,d=.07,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={baton:()=>tone(680,.06,'square',.045,1.3),sync:()=>tone(900,.10,'triangle',.06,1.35),hit:()=>tone(105,.14,'square',.08,.55),slam:()=>tone(145,.11,'sawtooth',.055,.7),charge:()=>tone(250,.14,'triangle',.055,1.7),team:()=>tone(760,.13,'triangle',.06,1.35),complete:()=>{tone(430,.12,'triangle',.06,1.4);setTimeout(()=>tone(660,.14,'triangle',.06,1.35),120)}};
+
+function initCommon(){P.x=80;P.y=500;P.vx=P.vy=0;P.hp=3;P.inv=0;P.attack=0;P.slam=false;P.charges=0;cam=0;score=0;elapsed=0;particles=[];ended=false}
+function m1(){
+ mission=1;initCommon();
+ platforms=[[0,590,3900,130],[360,500,170,18],[680,450,180,18],[990,520,170,18],[1280,420,180,18],[1610,500,190,18],[1950,440,160,18],[2240,510,170,18],[2580,430,190,18],[2940,500,180,18]];
+ relays=[{x:520,y:455,on:false},{x:1510,y:455,on:false},{x:2440,y:465,on:false}];
+ charges=[{x:820,y:405,taken:false},{x:1730,y:455,taken:false},{x:2690,y:385,taken:false},{x:3070,y:455,taken:false}];
+ barriers=[{x:1120,y:500,w:35,h:90,hp:16},{x:2110,y:490,w:35,h:100,hp:16}];
+ enemies=[{x:930,y:548,hp:16,base:930},{x:1860,y:548,hp:16,base:1860},{x:2810,y:548,hp:16,base:2810}];
+ jammer={x:3460,y:460,w:120,h:130,hp:100,max:100};
+ teams=[];extract=null;updateObjective()
+}
+function m2(){
+ mission=2;initCommon();
+ platforms=[[0,590,3900,130],[290,500,160,18],[590,430,170,18],[900,510,170,18],[1210,420,190,18],[1530,500,170,18],[1840,430,175,18],[2170,510,180,18],[2500,420,185,18],[2830,500,170,18],[3160,430,180,18]];
+ relays=[];charges=[];jammer=null;
+ barriers=[{x:760,y:495,w:38,h:95,hp:20},{x:1660,y:480,w:38,h:110,hp:20},{x:2570,y:480,w:38,h:110,hp:20}];
+ enemies=[{x:540,y:548,hp:16,base:540},{x:1120,y:548,hp:16,base:1120},{x:1450,y:548,hp:16,base:1450},{x:2220,y:548,hp:16,base:2220},{x:3010,y:548,hp:16,base:3010}];
+ teams=[{x:970,y:470,name:'TEAM ALPHA',tag:false},{x:1960,y:390,name:'EVAC TEAM 2',tag:false},{x:2870,y:455,name:'EVAC TEAM 3',tag:false}];
+ extract={x:3500,y:470,w:120,h:120};updateObjective()
+}
+function updateObjective(){
+ if(mission===1){let n=relays.filter(r=>r.on).length;if(n<3)objective=`SYNC RELAYS ${n}/3`;else if(jammer&&jammer.hp>0)objective=`JAMMER HP ${Math.max(0,jammer.hp)}/100`;else objective='COMMS RESTORED'}
+ else{let n=teams.filter(t=>t.tag).length;objective=n<3?`EVAC ${n}/3`:'REACH EXTRACTION'}
+ $('obj').textContent=objective;$('missionHud').textContent=(mission===1?'01 · DEAD DROP RIDGE':'02 · BROKEN NET VALLEY');$('hp').textContent='◆'.repeat(Math.max(0,P.hp));$('chargeHud').textContent=mission===1?`CHG ${P.charges}/4`:'';hint()
+}
+function worldToScreen(x,y){const s=scale();return{x:ox()+(x-cam)*s,y:oy()+y*s}}
+function nearby(a,b,d=70){return Math.hypot((a.x+a.w/2||a.x)-b.x,(a.y+a.h/2||a.y)-b.y)<d}
+function hint(){
+ let txt='';
+ if(!running||paused||ended){$('hint').style.opacity=0;return}
+ if(mission===1){
+   const r=relays.find(r=>!r.on&&Math.hypot(P.x-r.x,P.y-r.y)<85);const q=charges.find(q=>!q.taken&&Math.hypot(P.x-q.x,P.y-q.y)<70);
+   if(r)txt='ACTION · SYNC RELAY';else if(q)txt='ACTION · RECOVER SATCHEL CHARGE';else if(jammer&&relays.every(r=>r.on)&&Math.hypot(P.x-jammer.x,P.y-jammer.y)<130)txt=P.charges?'ACTION · PLANT CHARGE / BATON':'ACTION · BATON JAMMER';else txt='ACTION · SIGNAL BATON';
+ }else{
+   const t=teams.find(t=>!t.tag&&Math.hypot(P.x-t.x,P.y-t.y)<85);if(t)txt=`ACTION · TAG ${t.name}`;else txt='ACTION · SIGNAL BATON';
+ }
+ $('hint').textContent=txt;$('hint').style.opacity=txt?1:0
+}
+function jump(){if(P.on&&running&&!paused){P.vy=-420;P.on=false}}
+function action(){
+ if(!running||paused||ended)return;audio();
+ if(mission===1){
+   let r=relays.find(r=>!r.on&&Math.hypot(P.x-r.x,P.y-r.y)<85);if(r){r.on=true;score+=300;sfx.sync();updateObjective();return}
+   let q=charges.find(q=>!q.taken&&Math.hypot(P.x-q.x,P.y-q.y)<70);if(q){q.taken=true;P.charges=Math.min(4,P.charges+1);score+=100;sfx.charge();updateObjective();return}
+   if(jammer&&relays.every(r=>r.on)&&Math.hypot(P.x-jammer.x,P.y-jammer.y)<145){
+      if(P.charges>0){P.charges--;damageJammer(20);sfx.charge()}else{damageJammer(8);sfx.baton()}updateObjective();return
+   }
+ }else{
+   let t=teams.find(t=>!t.tag&&Math.hypot(P.x-t.x,P.y-t.y)<85);if(t){t.tag=true;score+=350;sfx.team();updateObjective();return}
+ }
+ // Baton standardized across both levels.
+ P.attack=.18;sfx.baton();const reach={x:P.x+P.dir*38,y:P.y+20};
+ for(const e of enemies)if(e.hp>0&&Math.abs(e.x-reach.x)<55&&Math.abs(e.y-reach.y)<65){e.hp-=8;score+=30;burst(e.x,e.y,'#8cff74')}
+ for(const b of barriers)if(b.hp>0&&Math.abs(b.x-reach.x)<55&&Math.abs(b.y-reach.y)<75){b.hp-=8;score+=20;burst(b.x,b.y,'#ffd65c')}
+}
+function doSlam(){if(!running||paused||ended||P.on)return;P.slam=true;P.vy=620;sfx.slam()}
+function damageJammer(n){if(!jammer||jammer.hp<=0)return;jammer.hp=Math.max(0,jammer.hp-n);score+=n*4;burst(jammer.x,jammer.y,'#ff5364',14);if(jammer.hp<=0){score+=1000;sfx.complete();setTimeout(()=>finish(true),420)}}
+function hurt(){if(P.inv>0)return;P.hp--;P.inv=1.1;P.vy=-210;P.vx=-P.dir*150;sfx.hit();burst(P.x,P.y,'#ff5364',12);updateObjective();if(P.hp<=0)finish(false)}
+function burst(x,y,col,n=8){for(let i=0;i<n;i++){const a=i/n*TAU,s=50+(i%4)*30;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,life:.5,max:.5,col})}}
+function finish(ok){
+ if(ended)return;ended=true;running=false;
+ if(ok&&mission===1){unlocked2=true;localStorage.setItem('rr_m2_unlocked','1')}
+ $('endK').textContent=ok?'MISSION COMPLETE':'MISSION FAILED';
+ $('endTitle').innerHTML=ok?(mission===1?'Comms <span>Restored</span>':'Teams <span>Extracted</span>'):'Grid <span>Dark</span>';
+ $('result').textContent=`${Math.floor(score)} pts · ${elapsed.toFixed(1)} sec`;
+ $('endCopy').textContent=ok?(mission===1?'Dead Drop Ridge is back on the net. Broken Net Valley is now available.':'All three evacuation teams are tagged and the valley route is clear.'):'The geometry and objective order are unchanged. Use what the failed run just taught you.';
+ $('over').classList.remove('hidden');updateMenuLock();if(ok)sfx.complete()
+}
+function updateMenuLock(){const box=$('m2box'),btn=$('m2');box.classList.toggle('locked',!unlocked2);btn.disabled=!unlocked2;btn.textContent=unlocked2?'PLAY MISSION 02':'COMPLETE MISSION 01 TO UNLOCK'}
+function startBrief(n){
+ mission=n;$('menu').classList.add('hidden');$('over').classList.add('hidden');
+ $('briefK').textContent=`MISSION 0${n}`;$('briefTitle').innerHTML=n===1?'Dead Drop <span>Ridge</span>':'Broken Net <span>Valley</span>';
+ $('briefCopy').textContent=n===1?'Comms are dark. The valley net is jammed and units cannot coordinate. Courier One drops alone: sync all three relays, recover dead-drop charges, locate the jammer, and destroy its generator.':'The first ridge is back online, but isolated teams are stranded across the broken valley network. Break through the fixed firewall barriers, tag all three evacuation positions, then reach extraction.';
+ $('brief').classList.remove('hidden')
+}
+function begin(){ $('brief').classList.add('hidden'); mission===1?m1():m2(); running=true;paused=false;last=performance.now();audio();updateObjective()}
+function restart(){mission===1?m1():m2();$('pauseOverlay').classList.add('hidden');$('over').classList.add('hidden');running=true;paused=false;last=performance.now();updateObjective()}
+function selectMenu(){running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('over').classList.add('hidden');$('brief').classList.add('hidden');$('menu').classList.remove('hidden');updateMenuLock();$('obj').textContent='MISSION SELECT';$('missionHud').textContent='STATIC WAR · FIELD OPS';$('hint').style.opacity=0}
+function togglePause(force){if(!running||ended)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now();hint()}
+
+const holdBtn=(id,key)=>{const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();hold[key]=true;b.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[key]=false;b.classList.remove('down')},{passive:false}))};
+holdBtn('left','left');holdBtn('right','right');$('jump').addEventListener('pointerdown',e=>{e.preventDefault();jump()},{passive:false});$('action').addEventListener('pointerdown',e=>{e.preventDefault();action()},{passive:false});$('slam').addEventListener('pointerdown',e=>{e.preventDefault();doSlam()},{passive:false});
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown',' ','w','s','escape'].includes(k))e.preventDefault();if(e.repeat)return;keys.add(k);if(k==='escape'&&running)togglePause();else if(running&&!paused){if(k===' ' )jump();if(k==='w'||k==='arrowup')action();if(k==='s'||k==='arrowdown')doSlam()}},{passive:false});
+addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));
+
+function phys(dt){
+ elapsed+=dt;P.inv=Math.max(0,P.inv-dt);P.attack=Math.max(0,P.attack-dt);
+ let move=((keys.has('d')||keys.has('arrowright')||hold.right)?1:0)-((keys.has('a')||keys.has('arrowleft')||hold.left)?1:0);if(move)P.dir=Math.sign(move);
+ P.vx+=(move*215-P.vx)*Math.min(1,8*dt);P.vy+=980*dt;let oxp=P.x,oyp=P.y;P.x+=P.vx*dt;P.y+=P.vy*dt;P.on=false;
+ for(const p of platforms){if(P.vy>=0&&oyp+P.h<=p[1]+6&&P.y+P.h>=p[1]&&P.x+P.w>p[0]+4&&P.x<p[0]+p[2]-4){P.y=p[1]-P.h;P.vy=0;P.on=true;if(P.slam){P.slam=false;slamImpact()}}}
+ for(const b of barriers){if(b.hp<=0)continue;if(P.x+P.w>b.x&&P.x<b.x+b.w&&P.y+P.h>b.y&&P.y<b.y+b.h){if(P.vx>0)P.x=b.x-P.w;else if(P.vx<0)P.x=b.x+b.w;P.vx=0}}
+ if(P.y>760){P.x=Math.max(40,P.x-180);P.y=430;P.vy=0;hurt()}
+ if(P.x<0){P.x=0;P.vx=0}
+ P.x=Math.min(3820,P.x);
+ for(const e of enemies){if(e.hp<=0)continue;e.x=e.base+Math.sin(elapsed*1.5+e.base*.01)*38;if(Math.abs((P.x+P.w/2)-e.x)<28&&Math.abs((P.y+P.h/2)-e.y)<45)hurt()}
+ // contact jammer only after relay sync.
+ if(mission===1&&jammer&&jammer.hp>0&&P.x+P.w>jammer.x&&P.x<jammer.x+jammer.w&&P.y+P.h>jammer.y){P.x=jammer.x-P.w;P.vx=0}
+ if(mission===2&&teams.every(t=>t.tag)&&extract&&P.x>extract.x&&P.y+P.h>extract.y){finish(true)}
+ // particles
+ for(const q of particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=250*dt;q.life-=dt}particles=particles.filter(q=>q.life>0);
+ cam+=(Math.max(0,Math.min(2600,P.x-380))-cam)*Math.min(1,5*dt);hint();updateObjective()
+}
+function slamImpact(){
+ burst(P.x+P.w/2,P.y+P.h,'#4fe7ff',12);
+ for(const e of enemies)if(e.hp>0&&Math.abs(e.x-(P.x+P.w/2))<75&&Math.abs(e.y-(P.y+P.h))<65){e.hp-=5;score+=20}
+ for(const b of barriers)if(b.hp>0&&Math.abs(b.x-(P.x+P.w/2))<78&&Math.abs(b.y-(P.y+P.h))<85){b.hp-=5;score+=15}
+ if(mission===1&&jammer&&relays.every(r=>r.on)&&jammer.hp>0&&Math.abs(jammer.x-(P.x+P.w/2))<120){damageJammer(5)}
+}
+function drawWorld(){
+ ctx.fillStyle='#071119';ctx.fillRect(0,0,W,H);const s=scale(),X=x=>ox()+(x-cam)*s,Y=y=>oy()+y*s;
+ ctx.save();ctx.translate(ox(),oy());ctx.scale(s,s);ctx.translate(-cam,0);
+ // fixed parallax/grid
+ ctx.fillStyle='#101b25';ctx.fillRect(cam,0,1280,720);ctx.strokeStyle='#4fe7ff10';for(let x=Math.floor(cam/50)*50;x<cam+1400;x+=50){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,720);ctx.stroke()}for(let y=0;y<720;y+=50){ctx.beginPath();ctx.moveTo(cam,y);ctx.lineTo(cam+1400,y);ctx.stroke()}
+ // distant ridge
+ ctx.fillStyle='#172631';ctx.beginPath();ctx.moveTo(cam,590);for(let x=cam;x<cam+1400;x+=120)ctx.lineTo(x,380+(Math.sin(x*.008)*55));ctx.lineTo(cam+1400,590);ctx.closePath();ctx.fill();
+ // platforms
+ for(const p of platforms){ctx.fillStyle=p[1]>=580?'#26323a':'#33424b';ctx.strokeStyle='#596a72';ctx.fillRect(...p);ctx.strokeRect(...p)}
+ // relays
+ for(const r of relays){ctx.strokeStyle=r.on?'#8cff74':'#4fe7ff';ctx.fillStyle=r.on?'#14351a':'#10232d';ctx.lineWidth=3;ctx.fillRect(r.x-18,r.y-65,36,65);ctx.strokeRect(r.x-18,r.y-65,36,65);ctx.beginPath();ctx.arc(r.x,r.y-78,18,0,TAU);ctx.stroke()}
+ // charges
+ for(const q of charges){if(q.taken)continue;ctx.fillStyle='#ffd65c';ctx.strokeStyle='#fff0aa';ctx.fillRect(q.x-12,q.y-12,24,24);ctx.strokeRect(q.x-12,q.y-12,24,24);ctx.fillStyle='#352c12';ctx.font='900 10px ui-monospace';ctx.fillText('C',q.x-4,q.y+4)}
+ // barriers/firewalls
+ for(const b of barriers){if(b.hp<=0)continue;ctx.fillStyle='#ff536422';ctx.strokeStyle='#ff5364';ctx.lineWidth=3;ctx.fillRect(b.x,b.y,b.w,b.h);ctx.strokeRect(b.x,b.y,b.w,b.h);for(let y=b.y+8;y<b.y+b.h;y+=14){ctx.beginPath();ctx.moveTo(b.x,y);ctx.lineTo(b.x+b.w,y);ctx.stroke()}}
+ // enemies
+ for(const e of enemies){if(e.hp<=0)continue;ctx.fillStyle='#a94b58';ctx.strokeStyle='#ff8290';ctx.beginPath();ctx.roundRect(e.x-17,e.y-36,34,36,7);ctx.fill();ctx.stroke();ctx.fillStyle='#ff5364';ctx.fillRect(e.x-10,e.y-26,20,4)}
+ // teams
+ for(const t of teams){ctx.fillStyle=t.tag?'#173a1b':'#193246';ctx.strokeStyle=t.tag?'#8cff74':'#4fe7ff';ctx.lineWidth=2;ctx.fillRect(t.x-18,t.y-44,36,44);ctx.strokeRect(t.x-18,t.y-44,36,44);ctx.fillStyle=t.tag?'#aaff98':'#bfefff';ctx.font='900 10px ui-monospace';ctx.textAlign='center';ctx.fillText(t.tag?'EVAC':'TEAM',t.x,t.y-52)}
+ // jammer
+ if(jammer&&jammer.hp>0){ctx.fillStyle='#2b151b';ctx.strokeStyle=relays.every(r=>r.on)?'#ff5364':'#73434b';ctx.lineWidth=4;ctx.fillRect(jammer.x,jammer.y,jammer.w,jammer.h);ctx.strokeRect(jammer.x,jammer.y,jammer.w,jammer.h);ctx.fillStyle='#ff8c98';ctx.font='1000 14px ui-monospace';ctx.textAlign='center';ctx.fillText('JAMMER',jammer.x+jammer.w/2,jammer.y+42);ctx.fillStyle='#391218';ctx.fillRect(jammer.x+15,jammer.y+75,jammer.w-30,10);ctx.fillStyle='#ff5364';ctx.fillRect(jammer.x+15,jammer.y+75,(jammer.w-30)*jammer.hp/jammer.max,10)}
+ // extraction
+ if(extract){ctx.fillStyle='#8cff7415';ctx.strokeStyle=teams.every(t=>t.tag)?'#8cff74':'#496750';ctx.lineWidth=4;ctx.fillRect(extract.x,extract.y,extract.w,extract.h);ctx.strokeRect(extract.x,extract.y,extract.w,extract.h);ctx.fillStyle='#baffaa';ctx.font='1000 12px ui-monospace';ctx.textAlign='center';ctx.fillText('EXTRACT',extract.x+extract.w/2,extract.y+45)}
+ // player
+ ctx.save();if(P.inv>0&&Math.floor(performance.now()/80)%2===0)ctx.globalAlpha=.35;ctx.translate(P.x+P.w/2,P.y+P.h/2);ctx.scale(P.dir,1);ctx.fillStyle='#407da2';ctx.strokeStyle='#8eeaff';ctx.lineWidth=2;ctx.beginPath();ctx.roundRect(-15,-22,30,44,7);ctx.fill();ctx.stroke();ctx.fillStyle='#dce7e8';ctx.beginPath();ctx.arc(0,-31,10,0,TAU);ctx.fill();ctx.strokeStyle='#8cff74';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(10,-4);ctx.lineTo(33,P.attack>0?-10:8);ctx.stroke();ctx.restore();
+ // particles
+ for(const q of particles){ctx.globalAlpha=Math.max(0,q.life/q.max);ctx.fillStyle=q.col;ctx.fillRect(q.x-2,q.y-2,4,4)}ctx.globalAlpha=1;
+ ctx.restore();
+}
+function frame(ts){const dt=Math.min(.034,(ts-last)/1000);last=ts;if(running&&!paused&&!ended)phys(dt);drawWorld();requestAnimationFrame(frame)}
+
+$('m1').onclick=()=>startBrief(1);$('m2').onclick=()=>{if(unlocked2)startBrief(2)};$('begin').onclick=begin;$('backSelect').onclick=selectMenu;$('retry').onclick=restart;$('restart').onclick=restart;$('resume').onclick=()=>togglePause(false);$('pauseBtn').onclick=()=>togglePause();$('quit').onclick=$('select2').onclick=selectMenu;$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('rr_sound',soundOn?'1':'0');$('sound').textContent=soundOn?'🔊':'🔇';audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();m1();running=false;updateMenuLock();$('sound').textContent=soundOn?'🔊':'🔇';requestAnimationFrame(frame);
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script></body></html>

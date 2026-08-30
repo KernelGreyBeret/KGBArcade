@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "id": "relay-runner",
+  "title": "Relay Runner",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/relay-runner/",
+  "playPath": "/games/relay-runner/play/",
+  "sourceLineage": "Pixel Patrol: Neon Ridge / Signal Breaker \u2192 Kernel Courier: Dead Drop Ridge + Broken Net Valley \u2192 renamed Relay Runner",
+  "missions": [
+    {
+      "number": 1,
+      "title": "Dead Drop Ridge",
+      "verifiedHistorical": true,
+      "objectives": [
+        "sync 3 relays",
+        "recover dead-drop satchel charges",
+        "destroy 100-HP jammer"
+      ],
+      "damage": {
+        "satchelCharge": 20,
+        "signalBaton": 8,
+        "signalSlam": 5,
+        "maxCharges": 4
+      }
+    },
+    {
+      "number": 2,
+      "title": "Broken Net Valley",
+      "verifiedHistorical": true,
+      "verifiedElements": [
+        "EVAC 1/3 HUD progression",
+        "Team Alpha interaction",
+        "Signal Baton standard equipment",
+        "firewalls",
+        "Team Alpha sfx.team() freeze fix"
+      ],
+      "publicV1Consolidation": "three fixed evacuation-team objectives followed by extraction; later two team labels kept generic because exact lost source text is not recoverable"
+    }
+  ],
+  "controls": {
+    "move": "Left/Right or A/D",
+    "jump": "Space / dedicated button",
+    "action": "Up/W or ACTION; contextual sync/tag/open/charge/baton",
+    "slam": "Down/S while airborne"
+  },
+  "arcadeTrue": {
+    "fixedMissionGeometry": true,
+    "fixedEnemyPlacement": true,
+    "fixedObjectiveLocations": true,
+    "fixedBarrierLocations": true,
+    "gameplayRngAffectsOutcome": false,
+    "failureTeachesMap": true
+  }
+}
