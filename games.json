@@ -69,11 +69,11 @@
       "id": "jungle-breakout",
       "title": "Jungle Breakout",
       "vault": "8BitOps",
-      "status": "release-candidate",
+      "status": "live",
       "path": "/games/jungle-breakout/",
-      "currentBuild": "v0.11 Readability Graphics Pass",
+      "currentBuild": "Public v1.0.0 \u2014 Mudline Run canonical release",
       "targetPublicVersion": "1.0.0",
-      "next": "Run Arcade-True/release gate; package canonical play route."
+      "next": "Deployed; build Canopy Cutback as post-v1 course update after backlog clear."
     },
     {
       "id": "riftwake",

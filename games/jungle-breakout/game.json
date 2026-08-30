@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "jungle-breakout",
+  "title": "Jungle Breakout",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/jungle-breakout/",
+  "playPath": "/games/jungle-breakout/play/",
+  "sourceLineage": "v0.1 \u2192 v0.11 Readability Graphics Pass",
+  "canonicalCourse": {
+    "id": "mudline-run",
+    "name": "Mudline Run",
+    "lengthMeters": 1180,
+    "authoredTrailSections": 40,
+    "authoredEvents": 71
+  },
+  "plannedPostV1Courses": [
+    "Canopy Cutback",
+    "Ravine Teeth",
+    "Temple Runoff"
+  ],
+  "arcadeTrue": {
+    "fixedCourse": true,
+    "sameHazardsEveryRun": true,
+    "sameTrailTopologyEveryRun": true,
+    "failureTeachesRoute": true,
+    "gameplayRngAffectsCourse": false,
+    "instantRetry": true
+  }
+}

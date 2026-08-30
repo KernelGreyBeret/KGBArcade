@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#061109">
+<title>Jungle Breakout — KGB Arcade</title>
+<meta name="description" content="Jungle Breakout is a fixed-course arcade chase from KGB Arcade. Learn Mudline Run, read the trail, and stay ahead of the jaguar pack.">
+<style>
+:root{--bg:#030704;--ink:#f5fff0;--green:#9cff27;--orange:#ff9228;--gold:#ffd34b;--muted:#b9cbb6;--line:#ffffff18}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 55% 5%,#173c18,#071209 36%,#020403 78%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:inherit;text-decoration:none}.nav{position:sticky;top:0;z-index:5;background:#030704dd;backdrop-filter:blur(9px);border-bottom:1px solid var(--line)}.navin{max-width:1100px;margin:auto;padding:13px 20px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.08em}.back{padding:9px 12px;border:1px solid #9cff2755;border-radius:10px;font-weight:850}
+.wrap{max-width:1100px;margin:auto;padding:44px 20px 70px}.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:34px;align-items:center}.chip{display:inline-flex;border:1px solid #9cff2766;border-radius:999px;padding:6px 10px;color:#c7ff8c;font:900 12px ui-monospace,monospace;letter-spacing:.1em}
+h1{font-size:clamp(46px,8vw,88px);font-style:italic;text-transform:uppercase;line-height:.82;margin:15px 0 18px;color:var(--green);text-shadow:0 3px 0 #0d2008}h1 span{display:block;color:var(--orange)}.lead{color:#d7e8d4;font-size:clamp(17px,2.3vw,21px);line-height:1.55;max-width:660px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{background:linear-gradient(#ffe074,#ff9428);color:#211300;padding:14px 21px;border-radius:13px;font-weight:1000;box-shadow:0 0 28px #ff922833}.ghost{padding:14px 20px;border:1px solid #9cff2744;border-radius:13px;background:#0b190d;font-weight:900}
+.poster{height:380px;border:1px solid #ffffff17;border-radius:28px;position:relative;overflow:hidden;background:linear-gradient(#173a23 0 32%,#315324 32% 58%,#654a24 58% 100%);box-shadow:0 25px 70px #0008}.sun{position:absolute;right:12%;top:10%;width:72px;height:72px;border-radius:50%;background:#ffda65;box-shadow:0 0 40px #ffce4266}.trail{position:absolute;left:50%;bottom:-12%;width:72%;height:72%;transform:translateX(-50%);clip-path:polygon(39% 0,61% 0,94% 100%,6% 100%);background:#a9773f;box-shadow:inset 0 0 0 6px #6c4d2d}.bike{position:absolute;left:50%;bottom:17%;width:76px;height:62px;transform:translateX(-50%)}.bike:before{content:"";position:absolute;left:16px;top:7px;width:43px;height:31px;background:#f06426;transform:skew(-9deg);border-radius:7px}.bike:after{content:"";position:absolute;left:8px;top:39px;width:60px;height:17px;border-top:8px solid #222;border-bottom:8px solid #222}.jag{position:absolute;bottom:5%;width:72px;height:34px;border-radius:60% 45% 50% 45%;background:#e3a446;box-shadow:inset -10px -7px #b97528}.j1{left:20%}.j2{right:18%;transform:scale(.86)}.vine{position:absolute;width:30%;height:45%;top:0;border-left:9px solid #1b692c;border-radius:50%}.v1{left:8%;transform:rotate(-12deg)}.v2{right:2%;transform:rotate(18deg)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:42px}.card{padding:20px;border:1px solid var(--line);border-radius:16px;background:#ffffff08}.card h2{margin:0 0 8px;color:var(--green);font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.52}.arcade{margin-top:22px;padding:20px;background:#9cff2709;border-left:3px solid var(--green);border-radius:0 14px 14px 0;line-height:1.55;color:#dbeed7}.arcade strong{color:#caff8c}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.poster{height:270px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style></head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap"><section class="hero">
+<div><span class="chip">8BitOps · Live · v1.0.0</span><h1>Jungle <span>Breakout</span></h1>
+<p class="lead">One motorcycle. One authored 1,180-meter jungle course. Mud, vines, logs, collapsing trail, ravines, monkeys, and a jaguar pack that never quits. Mudline Run is the same course every time—survival turns failure into route knowledge.</p>
+<div class="actions"><a class="play" href="./play/">▶ RIDE OUT</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade-True:</strong> Mudline Run is fixed and learnable. Hazards do not reroll after a loss. If the creek caught you at 530 meters, the creek will still be waiting at 530 meters next run.</div>
+</div>
+<div class="poster" aria-hidden="true"><div class="sun"></div><div class="vine v1"></div><div class="vine v2"></div><div class="trail"></div><div class="bike"></div><div class="jag j1"></div><div class="jag j2"></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>READ THE TRAIL</h2><p>Three lanes are not always three lanes. Watch the dirt, commit early, and remember where the course collapses into single-lane chokes.</p></div>
+<div class="card"><h2>RIDE THE BIKE</h2><p>Steer, jump, duck, brake, and boost. Each control solves a different problem—and using the right move at the wrong time can feed the pack.</p></div>
+<div class="card"><h2>BEAT THE PACK</h2><p>The jaguar gap is your living pressure meter. Mud, crashes, braking, and bad lines surrender ground. Clean riding and boost buy it back.</p></div>
+</section></main></body></html>
