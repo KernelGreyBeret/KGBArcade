@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<title>FIRETRUCK DASH — Tap & Spray</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#071018;overscroll-behavior:none;touch-action:manipulation}
+  body{-webkit-user-select:none;user-select:none}
+  canvas{display:block;position:fixed;inset:0;touch-action:none;background:#071018}
+
+  /* HUD */
+  .hud{position:fixed;left:0;right:0;top:6px;z-index:15;text-align:center;
+       font:800 clamp(22px,3.6vw,34px) system-ui,Segoe UI,Roboto,Arial;color:#fff;pointer-events:none;
+       text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .lives{position:fixed;left:10px;top:8px;z-index:15;font:800 clamp(18px,3vw,26px) system-ui;color:#ff9a9a;pointer-events:none}
+  .water{position:fixed;right:10px;top:10px;z-index:15;width:min(200px,32vw);height:12px;border:2px solid #66c5ff;border-radius:10px;background:#0b1b2a}
+  .waterfill{height:100%;width:100%;background:#66c5ff;border-radius:8px;box-shadow:0 0 12px #66c5ff}
+
+  /* Menu */
+  .menu{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+        z-index:30;color:#dff4ff;text-align:center;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+  .title{font:900 clamp(28px,8vw,56px) system-ui}
+  .sub{font:600 clamp(16px,3.2vw,20px) system-ui;opacity:.9;max-width:min(760px,92vw)}
+  .btn{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:16px;padding:14px 22px;
+       font:800 clamp(16px,2.8vw,18px) system-ui}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+  select{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:14px;padding:12px 14px;font:700 16px system-ui}
+
+  /* Giant toddler movement zones */
+  .zone{position:fixed;top:0;bottom:0;z-index:12;opacity:0}
+  .zone.left{left:0;right:50%}
+  .zone.right{left:50%;right:0}
+  .zone{position:fixed;top:0;bottom:0;z-index:12;opacity:0;touch-action:none}
+
+  /* Hose button */
+  .sprayBtn{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:20;
+            width:min(160px,30vw);height:min(160px,30vw);border-radius:50%;
+            background:radial-gradient(circle at 50% 40%, #82d2ff, #2a78b5 60%, #164568);
+            border:3px solid #baf0ff; box-shadow:0 6px 24px rgba(0,0,0,.5), 0 0 20px rgba(130,210,255,.35);
+            display:flex;align-items:center;justify-content:center;color:#042033;
+            font:900 clamp(14px,3.2vw,20px) system-ui;user-select:none}
+  .sprayBtn:active{filter:brightness(1.08)}
+</style>
+
+<div class="hud" id="score">0</div>
+<div class="lives" id="lives">♥♥♥</div>
+<div class="water"><div class="waterfill" id="waterfill"></div></div>
+
+<canvas id="c"></canvas>
+
+<!-- Movement zones -->
+<div class="zone left" id="zoneL" aria-label="Move Left"></div>
+<div class="zone right" id="zoneR" aria-label="Move Right"></div>
+
+<!-- Hose button -->
+<div class="sprayBtn" id="spray">HOLD TO<br>SPRAY</div>
+
+<!-- Menu -->
+<div class="menu" id="menu">
+  <div class="title">F I R E T R U C K  &nbsp; D A S H</div>
+  <div class="sub">
+    Hold the big <b>Hose</b> button to spray water. Move the truck with the left/right halves of the screen.<br>
+    Put out <span style="color:#ffb347">fires</span> at the top to score. Drive over <span style="color:#66c5ff">hydrants</span> to refill water.
+    Avoid <span style="color:#ffa15b">cones</span>!
+  </div>
+  <div class="row">
+    <button class="btn" id="start">Tap to Start</button>
+    <select id="difficulty" aria-label="Difficulty">
+      <option value="super">Super Simple</option>
+      <option value="easy" selected>Easy</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Hard</option>
+      <option value="insane">Insane</option>
+    </select>
+  </div>
+  <div id="best" style="opacity:.85;font:700 16px system-ui"></div>
+</div>
+
+<script>
+(() => {
+  const cnv = document.getElementById('c');
+  const ctx = cnv.getContext('2d');
+  const HUD = document.getElementById('score');
+  const LIVES = document.getElementById('lives');
+  const WATER = document.getElementById('waterfill');
+  const MENU = document.getElementById('menu');
+  const START = document.getElementById('start');
+  const DIFFSEL = document.getElementById('difficulty');
+  const BEST = document.getElementById('best');
+  const ZL = document.getElementById('zoneL');
+  const ZR = document.getElementById('zoneR');
+  const SPRAY = document.getElementById('spray');
+
+  let W=0,H=0,DPR=Math.min(2, window.devicePixelRatio||1);
+  function resize(){
+    W=Math.floor(innerWidth*DPR); H=Math.floor(innerHeight*DPR);
+    cnv.width=W; cnv.height=H; cnv.style.width=innerWidth+'px'; cnv.style.height=innerHeight+'px';
+  }
+  addEventListener('resize', resize, {passive:true}); resize();
+
+  // Colors
+  const SKY='#071018', ROAD='#0c141e', BUILD='#0d1b2a', WINDOW_OFF='#0f2237', WINDOW_ON='#ffb347';
+  const HYDRANT='#66c5ff', CONE='#ffa15b', FIRE='#ff6b4a', SMOKE='rgba(255,120,90,0.25)', WATERJET='#94dfff';
+  const LANE_LINES='#1b2a3b';
+
+  // Difficulty presets
+  const DIFFS = {
+    super:  { LIVES:7, FIRE_HP:2, FIRE_SPAWN:1.0, CONE_SPAWN:2.4, HYD_SPAWN:2.0, FALL:340, SPRAY_DPS:220, TANK:140, TICK_WATER:38 },
+    easy:   { LIVES:5, FIRE_HP:3, FIRE_SPAWN:0.9, CONE_SPAWN:2.0, HYD_SPAWN:1.8, FALL:420, SPRAY_DPS:240, TANK:120, TICK_WATER:42 },
+    normal: { LIVES:3, FIRE_HP:4, FIRE_SPAWN:0.8, CONE_SPAWN:1.7, HYD_SPAWN:1.6, FALL:520, SPRAY_DPS:260, TANK:100, TICK_WATER:48 },
+    hard:   { LIVES:3, FIRE_HP:5, FIRE_SPAWN:0.7, CONE_SPAWN:1.4, HYD_SPAWN:1.5, FALL:640, SPRAY_DPS:260, TANK:90,  TICK_WATER:54 },
+    insane: { LIVES:2, FIRE_HP:6, FIRE_SPAWN:0.6, CONE_SPAWN:1.2, HYD_SPAWN:1.4, FALL:760, SPRAY_DPS:260, TANK:80,  TICK_WATER:60 },
+  };
+
+  // Persistent settings
+  let diffKey = localStorage.getItem('ftdash_diff') || 'easy';
+  DIFFSEL.value = diffKey;
+  DIFFSEL.addEventListener('change', (e)=>{ e.stopPropagation(); e.preventDefault();
+    diffKey = DIFFSEL.value; localStorage.setItem('ftdash_diff', diffKey);
+  });
+
+  // Game state
+  let running=false, gameOver=false;
+  let score=0, best=+localStorage.getItem('ftdash_best')||0;
+  let lives=3, water=100, tankMax=100;
+  let spray=false;
+  let lane=1; // 0,1,2
+  let laneX=[0,0,0]; // computed
+  const fires=[]; // {lane, hp, y}
+  const cones=[]; // obstacles falling {lane,y}
+  const hydrs=[]; // hydrants falling {lane,y}
+  let spawnF=0, spawnC=0, spawnH=0;
+
+  // Active diff params
+  let FIRE_HP=3, FIRE_SPAWN=0.9, CONE_SPAWN=1.7, HYD_SPAWN=1.6, FALL=520, SPRAY_DPS=260, TICK_WATER=48;
+
+  function applyDiff(){
+    const d=DIFFS[diffKey]||DIFFS.easy;
+    lives=d.LIVES; FIRE_HP=d.FIRE_HP; FIRE_SPAWN=d.FIRE_SPAWN; CONE_SPAWN=d.CONE_SPAWN; HYD_SPAWN=d.HYD_SPAWN;
+    FALL=d.FALL; SPRAY_DPS=d.SPRAY_DPS; tankMax=d.TANK; TICK_WATER=d.TICK_WATER;
+  }
+
+  function reset(){
+    applyDiff();
+    score=0; HUD.textContent='0';
+    LIVES.textContent='♥'.repeat(lives);
+    water=tankMax; WATER.style.width='100%';
+    fires.length=cones.length=hydrs.length=0;
+    spawnF=spawnC=spawnH=0;
+    lane=1; gameOver=false;
+    BEST.textContent = best ? `Best: ${best}` : '';
+  }
+
+  // Controls (single event to avoid double-firing)
+function moveLeft(e){
+  if(!running||gameOver) return;
+  e.preventDefault(); e.stopPropagation();
+  lane = Math.max(0, lane-1);
+}
+function moveRight(e){
+  if(!running||gameOver) return;
+  e.preventDefault(); e.stopPropagation();
+  lane = Math.min(2, lane+1);
+}
+
+// Use ONLY pointerdown (no touchstart/mousedown/click duplicates)
+ZL.addEventListener('pointerdown', moveLeft,  {passive:false});
+ZR.addEventListener('pointerdown', moveRight, {passive:false});
+
+  // Spray button (hold to spray)
+  SPRAY.addEventListener('pointerdown', e=>{ e.preventDefault(); if(!running||gameOver) return; spray=true; }, {passive:false});
+  SPRAY.addEventListener('pointerup',   e=>{ e.preventDefault(); spray=false; }, {passive:false});
+  SPRAY.addEventListener('pointercancel',e=>{ spray=false; });
+  SPRAY.addEventListener('pointerleave', e=>{ spray=false; });
+
+  // Start
+  function startGame(){
+    if(running) return;
+    running=true; MENU.style.display='none';
+    reset();
+  }
+  ['pointerup','click'].forEach(ev=>{
+    START.addEventListener(ev, (e)=>{ e.stopPropagation(); e.preventDefault(); startGame(); }, {passive:false});
+  });
+
+  // Layout helpers
+  function computeLanes(){
+    const roadW = Math.min(W*0.8, 900*DPR);
+    const cx = W/2;
+    const laneW = roadW/3;
+    laneX[0]=cx-roadW/2 + laneW*0.5;
+    laneX[1]=cx-roadW/2 + laneW*1.5;
+    laneX[2]=cx-roadW/2 + laneW*2.5;
+  }
+  computeLanes();
+
+  // Spawning
+  function spawnFire(){
+    const l=(Math.random()*3)|0;
+    fires.push({lane:l, hp:FIRE_HP, y: 60*DPR}); // near top
+  }
+  function spawnCone(){
+    const l=(Math.random()*3)|0;
+    cones.push({lane:l, y:-40*DPR});
+  }
+  function spawnHyd(){
+    const l=(Math.random()*3)|0;
+    hydrs.push({lane:l, y:-40*DPR});
+  }
+
+  // Draw city and road
+  function drawBackdrop(){
+    // sky
+    ctx.fillStyle=SKY; ctx.fillRect(0,0,W,H);
+    // buildings silhouettes
+    const baseY = H*0.18;
+    for(let i=0;i<7;i++){
+      const bw = (W/7)*0.8, bh = (Math.random()*0.4+0.25)*H*0.3;
+      const x = (i+0.1)*(W/7), y = baseY - bh;
+      ctx.fillStyle=BUILD; ctx.fillRect(x,y,bw,bh);
+      // windows
+      const cols=4, rows=3;
+      for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+        const wx=x+10*DPR + c*(bw-20*DPR)/(cols-1) - 8*DPR;
+        const wy=y+10*DPR + r*(bh-20*DPR)/(rows-1) - 8*DPR;
+        ctx.fillStyle = Math.random()<0.1? WINDOW_ON: WINDOW_OFF;
+        ctx.fillRect(wx, wy, 16*DPR, 16*DPR);
+      }
+    }
+    // road
+    const roadTop = H*0.25;
+    ctx.fillStyle=ROAD; ctx.fillRect(W*0.1, roadTop, W*0.8, H-roadTop);
+    // lane lines
+    ctx.strokeStyle=LANE_LINES; ctx.lineWidth=2*DPR; ctx.setLineDash([14*DPR, 14*DPR]);
+    for(let i=1;i<=2;i++){
+      const x = (laneX[i-1]+laneX[i])/2;
+      ctx.beginPath(); ctx.moveTo(x, roadTop); ctx.lineTo(x, H); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+  }
+
+  // Draw fire at top
+  function drawFire(f){
+    const x = laneX[f.lane];
+    // flame
+    ctx.fillStyle=FIRE;
+    ctx.beginPath();
+    ctx.ellipse(x, 80*DPR, 24*DPR, 28*DPR, 0, 0, Math.PI*2);
+    ctx.fill();
+    // little flicker
+    ctx.fillStyle=SMOKE;
+    ctx.beginPath(); ctx.arc(x-10*DPR, 62*DPR, 8*DPR, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+12*DPR, 70*DPR, 10*DPR, 0, Math.PI*2); ctx.fill();
+    // hp bar
+    ctx.fillStyle='#222'; ctx.fillRect(x-22*DPR, 100*DPR, 44*DPR, 6*DPR);
+    ctx.fillStyle='#ffd1a6'; ctx.fillRect(x-22*DPR, 100*DPR, 44*DPR*(f.hp/FIRE_HP), 6*DPR);
+  }
+
+  // Draw hydrant / cone
+  function drawHyd(h){
+    const x=laneX[h.lane], y=h.y;
+    ctx.fillStyle=HYDRANT;
+    ctx.beginPath(); ctx.arc(x, y, 12*DPR, 0, Math.PI*2); ctx.fill();
+    ctx.fillRect(x-6*DPR, y-10*DPR, 12*DPR, 18*DPR);
+  }
+  function drawCone(o){
+    const x=laneX[o.lane], y=o.y;
+    ctx.fillStyle=CONE;
+    ctx.beginPath();
+    ctx.moveTo(x, y-16*DPR); ctx.lineTo(x-12*DPR, y+16*DPR); ctx.lineTo(x+12*DPR, y+16*DPR); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#fff'; ctx.fillRect(x-10*DPR, y+6*DPR, 20*DPR, 4*DPR);
+  }
+
+  // Draw truck
+  function drawTruck(){
+    const y = H*0.82;
+    const x = laneX[lane];
+    const w = 80*DPR, h = 36*DPR;
+    // body
+    ctx.fillStyle='#e0352f';
+    ctx.fillRect(x-w/2, y-h/2, w, h);
+    // cab window
+    ctx.fillStyle='#9ad2ff';
+    ctx.fillRect(x-w/2+8*DPR, y-h/2+6*DPR, 26*DPR, 14*DPR);
+    // wheel wells
+    ctx.fillStyle='#222';
+    ctx.beginPath(); ctx.arc(x-w/3, y+h/2, 10*DPR, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+w/3, y+h/2, 10*DPR, 0, Math.PI*2); ctx.fill();
+    // light bar
+    ctx.fillStyle='#2ecbff'; ctx.fillRect(x-10*DPR, y-h/2-6*DPR, 20*DPR, 6*DPR);
+    // ladder lines
+    ctx.strokeStyle='#ffd1a6'; ctx.lineWidth=2*DPR;
+    ctx.beginPath(); ctx.moveTo(x-w/2+36*DPR, y-h/2+6*DPR); ctx.lineTo(x+w/2-8*DPR, y-h/2+6*DPR); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x-w/2+36*DPR, y-h/2+14*DPR); ctx.lineTo(x+w/2-8*DPR, y-h/2+14*DPR); ctx.stroke();
+  }
+
+  // Water jet
+  function drawWaterJet(){
+    if(!spray || water<=0) return;
+    const x = laneX[lane];
+    const y0 = H*0.82 - 18*DPR;
+    const y1 = 110*DPR;
+    const w = 10*DPR;
+    // glow
+    ctx.strokeStyle='rgba(148,223,255,0.35)'; ctx.lineWidth=18*DPR;
+    ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,y1); ctx.stroke();
+    // core
+    ctx.strokeStyle=WATERJET; ctx.lineWidth=w;
+    ctx.beginPath(); ctx.moveTo(x,y0); ctx.lineTo(x,y1); ctx.stroke();
+    // splash
+    ctx.fillStyle='rgba(148,223,255,0.28)';
+    ctx.beginPath(); ctx.arc(x, y1, 16*DPR, 0, Math.PI*2); ctx.fill();
+  }
+
+  // Collisions
+  function circleHit(ax,ay,ar,bx,by,br){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy <= (ar+br)*(ar+br); }
+
+  // Game loop
+  let last=performance.now();
+  function loop(ts){
+    const dt = Math.min(0.05,(ts-last)/1000); last=ts;
+    computeLanes();
+
+    // Backdrop
+    drawBackdrop();
+
+    // Spawns (timers count up; spawn when exceed interval)
+    if(running && !gameOver){
+      spawnF += dt; spawnC += dt; spawnH += dt;
+      if(spawnF >= FIRE_SPAWN){ spawnF = 0; if(fires.length<3) spawnFire(); }
+      if(spawnC >= CONE_SPAWN){ spawnC = 0; cones.push({lane:(Math.random()*3)|0, y:-40*DPR}); }
+      if(spawnH >= HYD_SPAWN){ spawnH = 0; hydrs.push({lane:(Math.random()*3)|0, y:-40*DPR}); }
+    }
+
+    // Update falling objects
+    const fall = FALL*DPR;
+    for(const o of cones) o.y += fall*dt;
+    for(const o of hydrs) o.y += fall*dt;
+
+    // Remove off-screen
+    for(let i=cones.length-1;i>=0;i--) if(cones[i].y > H+60*DPR) cones.splice(i,1);
+    for(let i=hydrs.length-1;i>=0;i--) if(hydrs[i].y > H+60*DPR) hydrs.splice(i,1);
+
+    // Draw fires
+    for(const f of fires) drawFire(f);
+
+    // Hose & fire damage
+    if(running && !gameOver && spray && water>0){
+      // water consumption
+      water = Math.max(0, water - TICK_WATER*dt);
+      WATER.style.width = (Math.round((water/tankMax)*100)) + '%';
+
+      // apply dps to matching lane fire (closest)
+      let targetIndex = -1, closestY = 1e9;
+      for(let i=0;i<fires.length;i++){
+        if(fires[i].lane === lane){
+          if(fires[i].y < closestY){ closestY = fires[i].y; targetIndex = i; }
+        }
+      }
+      if(targetIndex>=0){
+        const f = fires[targetIndex];
+        // visual jiggle
+        f.y = 60*DPR + (Math.random()*2-1)*2*DPR;
+        f.hp -= (SPRAY_DPS/100) * dt; // reduce HP
+        if(f.hp <= 0){
+          // extinguished -> score
+          fires.splice(targetIndex,1);
+          score++; HUD.textContent = String(score);
+        }
+      }
+    }
+
+    // Draw falling items
+    for(const h of hydrs) drawHyd(h);
+    for(const c of cones) drawCone(c);
+
+    // Truck
+    drawTruck();
+    drawWaterJet();
+
+    // Collisions with truck
+    if(running && !gameOver){
+      const tx = laneX[lane], ty = H*0.82, tr = 20*DPR;
+      // hydrants -> refill
+      for(let i=hydrs.length-1;i>=0;i--){
+        const h=hydrs[i];
+        if(h.lane===lane && circleHit(tx,ty,tr, laneX[h.lane], h.y, 16*DPR)){
+          hydrs.splice(i,1);
+          water = Math.min(tankMax, water + tankMax*0.6);
+          WATER.style.width = (Math.round((water/tankMax)*100)) + '%';
+        }
+      }
+      // cones -> damage
+      for(let i=cones.length-1;i>=0;i--){
+        const o=cones[i];
+        if(o.lane===lane && circleHit(tx,ty,tr, laneX[o.lane], o.y+10*DPR, 18*DPR)){
+          cones.splice(i,1);
+          lives--; LIVES.textContent='♥'.repeat(Math.max(0,lives));
+          if(lives<=0){
+            gameOver=true; running=false;
+            best=Math.max(best,score); localStorage.setItem('ftdash_best', best);
+            MENU.style.display='flex';
+            START.textContent='Tap to Restart';
+            BEST.textContent=`Best: ${best}`;
+          }
+        }
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  MENU.style.display='flex';
+  BEST.textContent = best ? `Best: ${best}` : '';
+  requestAnimationFrame(loop);
+})();
+</script>
+</html>

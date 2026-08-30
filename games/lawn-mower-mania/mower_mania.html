@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<title>MOWER MANIA — Cut & Cruise (v5, Hum + FX)</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#0a1217;overscroll-behavior:none;touch-action:manipulation}
+  body{-webkit-user-select:none;user-select:none}
+  canvas{display:block;position:fixed;inset:0;touch-action:none;background:#0a1217}
+
+  /* HUD */
+  .hud{position:fixed;left:0;right:0;top:6px;z-index:15;text-align:center;
+       font:800 clamp(22px,3.6vw,34px) system-ui,Segoe UI,Roboto,Arial;color:#fff;pointer-events:none;
+       text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .lives{position:fixed;left:10px;top:8px;z-index:15;font:800 clamp(18px,3vw,26px) system-ui;color:#ff9a9a;pointer-events:none}
+  .fuel{position:fixed;right:10px;top:10px;z-index:15;width:min(200px,32vw);height:12px;border:2px solid #ff6a6a;border-radius:10px;background:#1a0f0f}
+  .fuelfill{height:100%;width:100%;background:#ff6a6a;border-radius:8px;box-shadow:0 0 12px #ff6a6a}
+
+  /* Menu */
+  .menu{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+        z-index:30;color:#e8fff4;text-align:center;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+  .title{font:900 clamp(28px,8vw,56px) system-ui}
+  .sub{font:600 clamp(16px,3.2vw,20px) system-ui;opacity:.9;max-width:min(760px,92vw)}
+  .btn{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:16px;padding:14px 22px;
+       font:800 clamp(16px,2.8vw,18px) system-ui}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+  select{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:14px;padding:12px 14px;font:700 16px system-ui}
+  .chk{display:inline-flex;gap:10px;align-items:center;background:#0d1f3b;border:2px solid #3bd4ff;border-radius:14px;padding:10px 14px}
+
+  /* Toddler movement zones */
+  .zone{position:fixed;top:0;bottom:0;z-index:12;opacity:0;touch-action:none}
+  .zone.left{left:0;right:50%}
+  .zone.right{left:50%;right:0}
+
+  /* Blade button */
+  .bladeBtn{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:20;
+            width:min(160px,30vw);height:min(160px,30vw);border-radius:50%;
+            background:radial-gradient(circle at 50% 40%, #76ff8a, #2e9b4a 60%, #0f5a28);
+            border:3px solid #caffd0; box-shadow:0 6px 24px rgba(0,0,0,.5), 0 0 20px rgba(118,255,138,.35);
+            display:flex;align-items:center;justify-content:center;color:#02240f;
+            font:900 clamp(14px,3.2vw,20px) system-ui;user-select:none}
+  .bladeBtn:active{filter:brightness(1.08)}
+
+  /* Sandbox badge & sound toggle */
+  .badge{position:fixed;right:10px;bottom:10px;z-index:16;padding:8px 12px;border-radius:10px;
+         background:#0d1f3b;border:2px solid #3bd4ff;color:#c8f6ff;font:800 14px system-ui;opacity:.9;display:none}
+  .sound{position:fixed;left:10px;bottom:10px;z-index:16;padding:8px 12px;border-radius:10px;
+         background:#0d1f3b;border:2px solid #3bd4ff;color:#c8f6ff;font:800 14px system-ui;opacity:.95}
+</style>
+
+<div class="hud" id="score">0</div>
+<div class="lives" id="lives">♥♥♥</div>
+<div class="fuel"><div class="fuelfill" id="fuelfill"></div></div>
+<div class="badge" id="badge">SANDBOX</div>
+<button class="sound" id="soundBtn" aria-label="Toggle sound">🔊 Sound: On</button>
+
+<canvas id="c"></canvas>
+
+<!-- Movement zones -->
+<div class="zone left" id="zoneL" aria-label="Move Left"></div>
+<div class="zone right" id="zoneR" aria-label="Move Right"></div>
+
+<!-- Blade button -->
+<div class="bladeBtn" id="blade">HOLD TO<br> MOW</div>
+
+<!-- Menu -->
+<div class="menu" id="menu">
+  <div class="title">M O W E R &nbsp; M A N I A</div>
+  <div class="sub">
+    Hold the big <b>Blade</b> button to mow. Move the mower with the left/right halves of the screen.<br>
+    Cut <span style="color:#76ff8a">tall grass</span> to score. Grab <span style="color:#ff6a6a">gas cans</span> to refuel.
+    Avoid <span style="color:#c9c9c9">rocks</span>… or turn on Sandbox for chill mowing.
+  </div>
+  <div class="row">
+    <button class="btn" id="start">Tap to Start</button>
+    <select id="difficulty" aria-label="Difficulty">
+      <option value="super">Super Simple</option>
+      <option value="easy" selected>Easy</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Hard</option>
+      <option value="insane">Insane</option>
+    </select>
+    <label class="chk">
+      <input type="checkbox" id="sandbox" />
+      Free-Mow Sandbox
+    </label>
+  </div>
+  <div id="best" style="opacity:.85;font:700 16px system-ui"></div>
+</div>
+
+<script>
+(() => {
+  const cnv = document.getElementById('c');
+  const ctx = cnv.getContext('2d');
+  const HUD = document.getElementById('score');
+  const LIVES = document.getElementById('lives');
+  const FUEL = document.getElementById('fuelfill');
+  const MENU = document.getElementById('menu');
+  const START = document.getElementById('start');
+  const DIFFSEL = document.getElementById('difficulty');
+  const BEST = document.getElementById('best');
+  const ZL = document.getElementById('zoneL');
+  const ZR = document.getElementById('zoneR');
+  const BLADE = document.getElementById('blade');
+  const SANDBOX = document.getElementById('sandbox');
+  const BADGE = document.getElementById('badge');
+  const SOUND_BTN = document.getElementById('soundBtn');
+
+  let W=0,H=0,DPR=Math.min(2, window.devicePixelRatio||1);
+  function resize(){ W=Math.floor(innerWidth*DPR); H=Math.floor(innerHeight*DPR);
+    cnv.width=W; cnv.height=H; cnv.style.width=innerWidth+'px'; cnv.style.height=innerHeight+'px'; }
+  addEventListener('resize', resize, {passive:true}); resize();
+
+  // Colors
+  const SKY='#0a1217';
+  const TURF_DARK='#0e2a16', TURF_LIGHT='#114f24';
+  const STRIPE_LIGHT='#146b2e';
+  const ROCK='#c9c9c9';
+  const GAS='#ff6a6a';
+  const GRASS='#76ff8a';
+  const GRASS_EDGE='rgba(118,255,138,0.35)';
+  const BLADE_GLOW='rgba(118,255,138,0.35)';
+
+  // Difficulty presets
+  const DIFFS = {
+    super:  { LIVES:7, FALL:340, GRASS_SPAWN:0.80, ROCK_SPAWN:2.4, GAS_SPAWN:2.0, BLADE_DPS:320, TANK:140, TICK_FUEL:34, CUT_PER_TUFT:1, TUFT_HP:70 },
+    easy:   { LIVES:5, FALL:420, GRASS_SPAWN:0.70, ROCK_SPAWN:2.0, GAS_SPAWN:1.8, BLADE_DPS:340, TANK:120, TICK_FUEL:40, CUT_PER_TUFT:1, TUFT_HP:80 },
+    normal: { LIVES:3, FALL:520, GRASS_SPAWN:0.62, ROCK_SPAWN:1.7, GAS_SPAWN:1.6, BLADE_DPS:360, TANK:100, TICK_FUEL:46, CUT_PER_TUFT:1, TUFT_HP:90 },
+    hard:   { LIVES:3, FALL:640, GRASS_SPAWN:0.54, ROCK_SPAWN:1.5, GAS_SPAWN:1.5, BLADE_DPS:380, TANK:90,  TICK_FUEL:52, CUT_PER_TUFT:1, TUFT_HP:100 },
+    insane: { LIVES:2, FALL:760, GRASS_SPAWN:0.46, ROCK_SPAWN:1.25,GAS_SPAWN:1.4, BLADE_DPS:400, TANK:80,  TICK_FUEL:58, CUT_PER_TUFT:1, TUFT_HP:110 },
+  };
+
+  // Persistent settings
+  let diffKey = localStorage.getItem('mow_diff') || 'easy';
+  DIFFSEL.value = diffKey;
+  DIFFSEL.addEventListener('change', (e)=>{ e.stopPropagation(); e.preventDefault();
+    diffKey = DIFFSEL.value; localStorage.setItem('mow_diff', diffKey); });
+
+  SANDBOX.checked = localStorage.getItem('mow_sandbox') === '1';
+  SANDBOX.addEventListener('change', ()=>{ localStorage.setItem('mow_sandbox', SANDBOX.checked ? '1' : '0');
+    BADGE.style.display = SANDBOX.checked ? 'block' : 'none'; });
+
+  let soundOn = (localStorage.getItem('mow_sound') ?? '1') === '1';
+  SOUND_BTN.textContent = soundOn ? '🔊 Sound: On' : '🔇 Sound: Off';
+  SOUND_BTN.addEventListener('click', (e)=>{ e.preventDefault();
+    soundOn = !soundOn;
+    localStorage.setItem('mow_sound', soundOn ? '1' : '0');
+    SOUND_BTN.textContent = soundOn ? '🔊 Sound: On' : '🔇 Sound: Off';
+    if(!soundOn) stopHum(); // kill immediately if toggled off
+  });
+
+  // Game state
+  let running=false, gameOver=false;
+  let score=0, best=+localStorage.getItem('mow_best')||0;
+  let lives=3, fuel=100, tankMax=100;
+  let mowing=false;
+  let lane=1; // 0,1,2
+  let laneX=[0,0,0];
+  const tufts=[]; const rocks=[]; const cans=[];
+  let spawnG=0, spawnR=0, spawnC=0;
+
+  // Particles
+  const particles=[]; const MAX_PARTICLES=400;
+
+  // Active diff params
+  let FALL=520, GRASS_SPAWN=0.65, ROCK_SPAWN=1.7, GAS_SPAWN=1.6, BLADE_DPS=360, TANK=100, TICK_FUEL=46, CUT_PER_TUFT=1, TUFT_HP=90;
+  const CUT_ZONE = 160; // px (before DPR)
+
+  function applyDiff(){
+    const d=DIFFS[diffKey]||DIFFS.easy;
+    lives=d.LIVES; FALL=d.FALL; GRASS_SPAWN=d.GRASS_SPAWN; ROCK_SPAWN=d.ROCK_SPAWN; GAS_SPAWN=d.GAS_SPAWN;
+    BLADE_DPS=d.BLADE_DPS; tankMax=d.TANK; TICK_FUEL=d.TICK_FUEL; CUT_PER_TUFT=d.CUT_PER_TUFT; TUFT_HP=d.TUFT_HP;
+  }
+
+  function reset(){
+    applyDiff();
+    score=0; HUD.textContent='0';
+    LIVES.textContent='♥'.repeat(lives);
+    fuel=tankMax; FUEL.style.width='100%';
+    tufts.length=rocks.length=cans.length=particles.length=0;
+    spawnG=spawnR=spawnC=0;
+    lane=1; gameOver=false;
+    BEST.textContent = best ? `Best: ${best}` : '';
+    BADGE.style.display = SANDBOX.checked ? 'block' : 'none';
+    stopHum();
+  }
+
+  // Controls
+  function moveLeft(e){ if(!running||gameOver) return; e.preventDefault(); e.stopPropagation(); lane=Math.max(0,lane-1); }
+  function moveRight(e){ if(!running||gameOver) return; e.preventDefault(); e.stopPropagation(); lane=Math.min(2,lane+1); }
+  ZL.addEventListener('pointerdown', moveLeft,  {passive:false});
+  ZR.addEventListener('pointerdown', moveRight, {passive:false});
+
+  // === WebAudio mini-synth ===
+  let AC=null, unlocked=false;
+  function unlockAudio(){
+    if(unlocked) return;
+    try{
+      if(!AC) AC = new (window.AudioContext||window.webkitAudioContext)();
+      if(AC.state==='suspended') AC.resume();
+      const b = AC.createBuffer(1,1,22050);
+      const s = AC.createBufferSource(); s.buffer=b; s.connect(AC.destination); s.start(0);
+      unlocked=true;
+    }catch(e){}
+  }
+
+  // One-shots
+  function playRustle(){
+    if(!soundOn || !AC) return;
+    const dur = 0.18 + Math.random()*0.06;
+    const len = Math.floor(AC.sampleRate * dur);
+    const buf = AC.createBuffer(1, len, AC.sampleRate);
+    const data = buf.getChannelData(0);
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for(let i=0;i<len;i++){
+      const white = Math.random()*2-1;
+      b0 = 0.99886*b0 + white*0.0555179;
+      b1 = 0.99332*b1 + white*0.0750759;
+      b2 = 0.96900*b2 + white*0.1538520;
+      b3 = 0.86650*b3 + white*0.3104856;
+      b4 = 0.55000*b4 + white*0.5329522;
+      b5 = -0.7616*b5 - white*0.0168980;
+      const pink = b0+b1+b2+b3+b4+b5+b6*0.5362; b6 = white*0.115926;
+      const t = i/len; const env = Math.min(1, t*30) * (1 - t) ** 2;
+      data[i] = (pink*0.08) * env;
+    }
+    const src = AC.createBufferSource(); src.buffer=buf;
+    const biq = AC.createBiquadFilter(); biq.type='lowpass'; biq.frequency.value = 3500 + Math.random()*1500;
+    const g = AC.createGain(); g.gain.value=0.6;
+    src.connect(biq); biq.connect(g); g.connect(AC.destination); src.start();
+  }
+  function playPickup(){
+    if(!soundOn || !AC) return;
+    const now = AC.currentTime;
+    const o = AC.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(660, now);
+    const g = AC.createGain(); g.gain.setValueAtTime(0.0, now);
+    g.gain.linearRampToValueAtTime(0.25, now+0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+0.20);
+    o.connect(g); g.connect(AC.destination); o.start(now);
+    o.frequency.exponentialRampToValueAtTime(990, now+0.08);
+    o.stop(now+0.22);
+  }
+  function playBonk(){
+    if(!soundOn || !AC) return;
+    const now = AC.currentTime;
+    const o = AC.createOscillator(); o.type='square'; o.frequency.setValueAtTime(220, now);
+    const g = AC.createGain(); g.gain.setValueAtTime(0.0, now);
+    g.gain.linearRampToValueAtTime(0.3, now+0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, now+0.18);
+    o.connect(g); g.connect(AC.destination); o.start(now);
+    o.frequency.exponentialRampToValueAtTime(120, now+0.08);
+    o.stop(now+0.2);
+  }
+
+  // Looping mower hum
+  let humOn=false, humGain=null, humOsc=null, humSub=null, humLP=null, humLFO=null, humLFOGain=null;
+  function startHum(){
+    if(!soundOn) return;
+    unlockAudio();
+    if(!AC) return;
+    if(humOn) return;
+    const now = AC.currentTime;
+
+    humGain = AC.createGain(); humGain.gain.setValueAtTime(0.0001, now);
+
+    // main engine tone (saw), base ~140 Hz
+    humOsc = AC.createOscillator(); humOsc.type='sawtooth'; humOsc.frequency.setValueAtTime(140, now);
+
+    // sub for meat (sine) ~70 Hz
+    humSub = AC.createOscillator(); humSub.type='sine'; humSub.frequency.setValueAtTime(70, now);
+
+    // low-pass to smooth buzz
+    humLP = AC.createBiquadFilter(); humLP.type='lowpass'; humLP.frequency.value = 900; humLP.Q.value = 0.8;
+
+    // gentle LFO to add “chug” (freq & volume)
+    humLFO = AC.createOscillator(); humLFO.type='sine'; humLFO.frequency.setValueAtTime(5, now); // 5 Hz
+    humLFOGain = AC.createGain(); humLFOGain.gain.value = 12; // Hz modulation depth
+    humLFO.connect(humLFOGain);
+    humLFOGain.connect(humOsc.frequency);
+
+    // also modulate output level slightly for throb
+    const lvlLFOGain = AC.createGain(); lvlLFOGain.gain.value = 0.08;
+    humLFO.connect(lvlLFOGain); lvlLFOGain.connect(humGain.gain);
+
+    humOsc.connect(humLP);
+    humSub.connect(humLP);
+    humLP.connect(humGain);
+    humGain.connect(AC.destination);
+
+    humOsc.start(); humSub.start(); humLFO.start();
+
+    // quick fade-in
+    humGain.gain.exponentialRampToValueAtTime(0.35, now+0.06);
+
+    humOn = true;
+  }
+  function stopHum(){
+    if(!humOn || !AC) return;
+    const now = AC.currentTime;
+    try{
+      humGain.gain.cancelScheduledValues(now);
+      humGain.gain.exponentialRampToValueAtTime(0.0001, now+0.06);
+      // stop slightly later to avoid clicks
+      const t = now+0.09;
+      [humOsc, humSub, humLFO].forEach(n=>{ try{ n.stop(t); }catch(e){} });
+      setTimeout(()=>{ humOsc=humSub=humLFO=null; humLP=null; humGain=null; humLFOGain=null; humOn=false; }, 120);
+    }catch(e){ humOsc=humSub=humLFO=null; humLP=null; humGain=null; humLFOGain=null; humOn=false; }
+  }
+
+  // Blade button (hold to mow)
+  BLADE.addEventListener('pointerdown', e=>{
+    e.preventDefault(); if(!running||gameOver) return;
+    mowing=true; unlockAudio();
+    // only hum if we actually can cut (fuel or sandbox)
+    if(SANDBOX.checked || fuel>0) startHum();
+  }, {passive:false});
+  BLADE.addEventListener('pointerup',   e=>{ e.preventDefault(); mowing=false; stopHum(); }, {passive:false});
+  BLADE.addEventListener('pointercancel',()=>{ mowing=false; stopHum(); });
+  BLADE.addEventListener('pointerleave', ()=>{ mowing=false; stopHum(); });
+
+  // Start / Restart
+  function startGame(){ if(running) return; running=true; MENU.style.display='none'; reset(); unlockAudio(); }
+  ['pointerup','click'].forEach(ev=>{
+    START.addEventListener(ev, (e)=>{ e.stopPropagation(); e.preventDefault(); startGame(); }, {passive:false});
+  });
+
+  // Layout helpers
+  function computeLanes(){
+    const roadW = Math.min(W*0.86, 900*DPR);
+    const cx = W/2; const laneW = roadW/3;
+    laneX[0]=cx-roadW/2 + laneW*0.5;
+    laneX[1]=cx-roadW/2 + laneW*1.5;
+    laneX[2]=cx-roadW/2 + laneW*2.5;
+  } computeLanes();
+
+  // Spawning
+  function spawnTuft(){ const l=(Math.random()*3)|0; tufts.push({lane:l, y:-30*DPR, hp:TUFT_HP}); }
+  function spawnRock(){ const l=(Math.random()*3)|0; rocks.push({lane:l, y:-30*DPR}); }
+  function spawnCan(){  const l=(Math.random()*3)|0; cans.push({lane:l, y:-30*DPR}); }
+
+  // Particles
+  function spawnGrassBurst(x, y){
+    if(particles.length > MAX_PARTICLES) particles.splice(0, particles.length - MAX_PARTICLES);
+    const count = 18 + (Math.random()*8|0);
+    for(let i=0;i<count;i++){
+      const ang = (-Math.PI/2) + (Math.random()*Math.PI*0.9 - Math.PI*0.45);
+      const spd = (60 + Math.random()*140) * DPR;
+      particles.push({ x,y, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd, life:0, max:0.6+Math.random()*0.5, sz:(1+Math.random()*2)*DPR, hue:110+Math.random()*30 });
+    }
+  }
+  function updateParticles(dt){
+    for(let i=particles.length-1;i>=0;i--){
+      const p=particles[i]; p.life += dt; if(p.life>=p.max){ particles.splice(i,1); continue; }
+      p.vy += 420*DPR*dt*0.8; p.vx *= (1 - 1.5*dt); p.vy *= (1 - 0.8*dt);
+      p.x += p.vx*dt; p.y += p.vy*dt;
+    }
+  }
+  function drawParticles(){
+    for(const p of particles){
+      const a = 1 - (p.life / p.max);
+      ctx.fillStyle = `hsla(${p.hue},85%,${40 + a*30}%,${0.85*a})`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.sz,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  // Drawing ground & stripes
+  function drawGround(){
+    ctx.fillStyle=SKY; ctx.fillRect(0,0,W,H);
+    const roadTop = H*0.20;
+    const roadW = Math.min(W*0.86, 900*DPR);
+    const cx=W/2;
+    ctx.fillStyle=TURF_DARK; ctx.fillRect(cx-roadW/2, roadTop, roadW, H-roadTop);
+    const stripeW = (roadW/3)*0.94;
+    for(let i=0;i<3;i++){
+      const x = cx-roadW/2 + i*(roadW/3) + (roadW/3 - stripeW)/2;
+      ctx.fillStyle = (i===lane? STRIPE_LIGHT : TURF_LIGHT);
+      ctx.fillRect(x, roadTop, stripeW, H-roadTop);
+    }
+  }
+
+  // Draw items
+  function drawTuft(t){ const x=laneX[t.lane], y=t.y, r=16*DPR;
+    ctx.strokeStyle=GRASS_EDGE; ctx.lineWidth=10*DPR; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle=GRASS; ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill(); }
+  function drawRock(o){ const x=laneX[o.lane], y=o.y; ctx.fillStyle=ROCK;
+    ctx.beginPath(); ctx.moveTo(x-16*DPR,y); ctx.lineTo(x-6*DPR,y-10*DPR); ctx.lineTo(x+12*DPR,y-6*DPR);
+    ctx.lineTo(x+16*DPR,y+8*DPR); ctx.lineTo(x-8*DPR,y+12*DPR); ctx.closePath(); ctx.fill(); }
+  function drawCan(g){ const x=laneX[g.lane], y=g.y; ctx.fillStyle=GAS;
+    ctx.fillRect(x-10*DPR, y-14*DPR, 20*DPR, 24*DPR); ctx.fillStyle='#3a0000'; ctx.fillRect(x-6*DPR, y-6*DPR, 12*DPR, 6*DPR); }
+
+  // Draw mower
+  function drawMower(){
+    const y = H*0.82; const x = laneX[lane]; const w = 90*DPR, h = 46*DPR;
+    ctx.fillStyle='#2c2c2c'; ctx.fillRect(x-w/2, y-h/2, w, h);
+    ctx.fillStyle='#3c3c3c'; ctx.fillRect(x-w/4, y-h/2-8*DPR, w/2, 14*DPR);
+    ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(x-w/3, y+h/2, 12*DPR, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+w/3, y+h/2, 12*DPR, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#777'; ctx.lineWidth=3*DPR; ctx.beginPath(); ctx.moveTo(x+w/3, y-h/2); ctx.lineTo(x+w/3+24*DPR, y-h/2-24*DPR); ctx.stroke();
+    if(mowing && (SANDBOX.checked || fuel>0)){
+      ctx.strokeStyle=BLADE_GLOW; ctx.lineWidth=14*DPR; ctx.beginPath(); ctx.moveTo(x, y-h/2); ctx.lineTo(x, y-80*DPR); ctx.stroke();
+      ctx.strokeStyle='#a7ffb3'; ctx.lineWidth=6*DPR; ctx.beginPath(); ctx.moveTo(x, y-h/2); ctx.lineTo(x, y-80*DPR); ctx.stroke();
+    }
+  }
+
+  // Collisions
+  function circleHit(ax,ay,ar,bx,by,br){ const dx=ax-bx, dy=ay-by; return dx*dx+dy*dy <= (ar+br)*(ar+br); }
+
+  // Loop
+  let last=performance.now();
+  function loop(ts){
+    const dt = Math.min(0.05,(ts-last)/1000); last=ts;
+    computeLanes(); drawGround();
+
+    // Spawns
+    if(running && !gameOver){
+      spawnG += dt; spawnR += dt; spawnC += dt;
+      if(spawnG >= GRASS_SPAWN){ spawnG = 0; if(tufts.length<5) spawnTuft(); }
+      if(!SANDBOX.checked){
+        if(spawnR >= ROCK_SPAWN){ spawnR = 0; rocks.push({lane:(Math.random()*3)|0, y:-30*DPR}); }
+        if(spawnC >= GAS_SPAWN){ spawnC = 0; cans.push({lane:(Math.random()*3)|0, y:-30*DPR}); }
+      } else {
+        if(Math.random() < 0.15) spawnTuft();
+      }
+    }
+
+    // Update falling
+    const fall = FALL*DPR * (SANDBOX.checked ? 0.85 : 1);
+    for(const t of tufts) t.y += fall*dt;
+    for(const o of rocks) o.y += fall*dt;
+    for(const g of cans)  g.y += fall*dt;
+
+    // Cull off-screen
+    for(let i=tufts.length-1;i>=0;i--) if(tufts[i].y > H+60*DPR) tufts.splice(i,1);
+    for(let i=rocks.length-1;i>=0;i--) if(rocks[i].y > H+60*DPR) rocks.splice(i,1);
+    for(let i=cans.length-1;i>=0;i--) if(cans[i].y > H+60*DPR) cans.splice(i,1);
+
+    // Draw items
+    for(const t of tufts) drawTuft(t);
+    if(!SANDBOX.checked){ for(const g of cans) drawCan(g); for(const r of rocks) drawRock(r); }
+
+    // Mower & blade
+    drawMower();
+
+    // Interactions
+    if(running && !gameOver){
+      const mx = laneX[lane], my = H*0.82, mr = 22*DPR;
+
+      // Fuel drain (disabled in sandbox)
+      if(mowing && !SANDBOX.checked && fuel>0){
+        fuel = Math.max(0, fuel - TICK_FUEL*dt);
+        FUEL.style.width = (Math.round((fuel/tankMax)*100)) + '%';
+        if(fuel<=0){ stopHum(); }
+      }
+      if(SANDBOX.checked){ fuel = tankMax; FUEL.style.width = '100%'; }
+
+      // Cut grass
+      if(mowing && (SANDBOX.checked || fuel>0)){
+        const top = my - CUT_ZONE*DPR, bottom = my - 10*DPR;
+        // ensure hum is running while actually cutting
+        if(soundOn && !humOn) startHum();
+        for(let i=tufts.length-1;i>=0;i--){
+          const t = tufts[i];
+          if(t.lane===lane && t.y >= top && t.y <= bottom){
+            t.hp -= BLADE_DPS * dt;
+            if(t.hp <= 0){
+              spawnGrassBurst(mx, t.y);
+              tufts.splice(i,1);
+              score += CUT_PER_TUFT; HUD.textContent=String(score);
+              playRustle();
+            }
+          }
+        }
+      } else {
+        // not mowing or cannot cut
+        stopHum();
+      }
+
+      if(!SANDBOX.checked){
+        // Gas pickup
+        for(let i=cans.length-1;i>=0;i--){
+          const g=cans[i];
+          if(g.lane===lane && circleHit(mx,my,mr, laneX[g.lane], g.y, 18*DPR)){
+            cans.splice(i,1);
+            fuel = Math.min(tankMax, fuel + tankMax*0.6);
+            FUEL.style.width = (Math.round((fuel/tankMax)*100)) + '%';
+            playPickup();
+          }
+        }
+        // Rocks hurt
+        for(let i=rocks.length-1;i>=0;i--){
+          const r=rocks[i];
+          if(r.lane===lane && circleHit(mx,my,mr, laneX[r.lane], r.y+4*DPR, 20*DPR)){
+            rocks.splice(i,1);
+            lives--; LIVES.textContent='♥'.repeat(Math.max(0,lives));
+            playBonk();
+            if(lives<=0){
+              gameOver=true; running=false;
+              best=Math.max(best,score); localStorage.setItem('mow_best', best);
+              MENU.style.display='flex';
+              START.textContent='Tap to Restart';
+              BEST.textContent=`Best: ${best}`;
+              stopHum();
+            }
+          }
+        }
+      }
+    }
+
+    // Particles
+    updateParticles(dt); drawParticles();
+
+    requestAnimationFrame(loop);
+  }
+
+  // Start/init
+  function startGame(){ if(running) return; running=true; MENU.style.display='none'; reset(); unlockAudio(); }
+  MENU.style.display='flex';
+  BEST.textContent = best ? `Best: ${best}` : '';
+  ['pointerup','click'].forEach(ev=>{
+    START.addEventListener(ev, (e)=>{ e.stopPropagation(); e.preventDefault(); startGame(); }, {passive:false});
+  });
+
+  // Belt & suspenders audio unlock
+  ['pointerdown','touchstart','mousedown'].forEach(ev=>{
+    document.addEventListener(ev, unlockAudio, { once:true, passive:true });
+  });
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</html>

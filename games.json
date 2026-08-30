@@ -1,15 +1,312 @@
-[
-  {
-    "id": "hyperhop",
-    "title": "HyperHop",
-    "section": "8BitOps",
-    "vaultSection": "8BitOps — Arcade Bangers",
-    "status": "live",
-    "path": "/games/hyperhop/",
-    "banner": "/games/hyperhop/assets/banner.png",
-    "icon": "/games/hyperhop/assets/icons/icon-192.png",
-    "description": "Hop lanes, chain clean pickups, shield up, and survive an escalating learnable pattern.",
-    "engine": "/engine/v0.2/",
-    "version": "0.2.4"
-  }
-]
+{
+  "schemaVersion": 1,
+  "updated": "2026-08-29",
+  "doctrine": "/docs/ARCADE_TRUE.md",
+  "releaseStandard": "/docs/KGBA_RELEASE_STANDARD.md",
+  "statusDefinitions": {
+    "live": "Publicly deployed and intended to be playable now.",
+    "restore-ready": "Playable build exists; only repair/packaging/smoke-test blocks public release.",
+    "release-candidate": "Substantial/complete playable build exists; requires release-gate validation or limited polish.",
+    "mvp-build": "Prototype or predecessor exists; defined v1 MVP work remains.",
+    "concept": "Designed/discussed but intended game has not yet been implemented.",
+    "experimental": "Playable experiment requiring explicit experimental framing and fallback behavior."
+  },
+  "games": [
+    {
+      "id": "tommy-the-tank",
+      "title": "Tommy the Tank — Asymmetric Mayhem",
+      "vault": "8BitOps",
+      "status": "live",
+      "path": "/games/tommy-the-tank/",
+      "currentBuild": "Battlefield Arena v8 / PWA campaign line",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Tommy the Tank", "Asymmetric Mayhem"],
+      "mergedWork": ["Tommy Bunker / Multi-World vertical slice"],
+      "next": "Canonicalize any leading-space path; release-gate current PWA."
+    },
+    {
+      "id": "starwarp",
+      "title": "StarWarp Arena",
+      "vault": "8BitOps",
+      "status": "live",
+      "path": "/games/starwarp/",
+      "currentBuild": "StarWarp Arena v3.1 / PWA line",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["StarWarp"],
+      "next": "Release-gate current live build; normalize public title to StarWarp Arena when convenient."
+    },
+    {
+      "id": "hyperhop",
+      "title": "HyperHop",
+      "vault": "8BitOps",
+      "status": "live",
+      "path": "/games/hyperhop/",
+      "currentBuild": "Engine cartridge v0.2.4",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Hyper Hop v8"],
+      "next": "Release-gate v0.2.4 and retain older v8 only as historical lineage."
+    },
+    {
+      "id": "arc-defender",
+      "title": "Arc Defender — Rhythm Rings",
+      "vault": "8BitOps",
+      "status": "restore-ready",
+      "path": "/games/arc-defender/",
+      "currentBuild": "arc_defender_v2.html / v2 PWA line",
+      "targetPublicVersion": "1.0.0",
+      "next": "Fix game-page Play link from arc_defender.html to arc_defender_v2.html; smoke-test."
+    },
+    {
+      "id": "jungle-breakout",
+      "title": "Jungle Breakout",
+      "vault": "8BitOps",
+      "status": "release-candidate",
+      "path": "/games/jungle-breakout/",
+      "currentBuild": "v0.11 Readability Graphics Pass",
+      "targetPublicVersion": "1.0.0",
+      "next": "Run Arcade-True/release gate; package canonical play route."
+    },
+    {
+      "id": "riftwake",
+      "title": "Riftwake: Signal Skimmer",
+      "vault": "8BitOps",
+      "status": "release-candidate",
+      "path": "/games/riftwake/",
+      "currentBuild": "Signal Skimmer PWA Final v1",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Signal Skimmer"],
+      "next": "Recover/verify final PWA, release-gate, switch Arsenal On Deck → Live."
+    },
+    {
+      "id": "bayou-breakout",
+      "title": "Bayou Breakout",
+      "vault": "8BitOps",
+      "status": "mvp-build",
+      "path": "/games/bayou-breakout/",
+      "currentBuild": "Playable shared-engine smoke test",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["River Gator Boat Chase"],
+      "next": "Build one complete repeatable escape route with finish/result/restart."
+    },
+    {
+      "id": "relay-runner",
+      "title": "Relay Runner",
+      "vault": "8BitOps",
+      "status": "release-candidate",
+      "path": "/games/relay-runner/",
+      "currentBuild": "Two playable predecessor missions: Dead Drop Ridge + Broken Net Valley",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Pixel Patrol", "Kernel Courier: Dead Drop Ridge", "Kernel Courier: Static War"],
+      "next": "Rebrand/standardize the two existing missions; mission select; ship two-level v1."
+    },
+    {
+      "id": "cluck-cover",
+      "title": "Cluck & Cover",
+      "vault": "8BitOps",
+      "status": "concept",
+      "path": "/games/cluck-cover/",
+      "currentBuild": "Art/spec work only",
+      "targetPublicVersion": "1.0.0",
+      "next": "One farm day: defend chicks with peck/spur/flap, escalating waves, sunset boss."
+    },
+    {
+      "id": "kernel-courier",
+      "title": "Kernel Courier: Fresh Corn Run",
+      "vault": "8BitOps",
+      "status": "concept",
+      "path": "/games/kernel-courier/",
+      "currentBuild": "Farm-delivery design/art planning",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Fresh Corn Run"],
+      "next": "Harvest 12 corn, load, drive one route, preserve cargo, deliver before timer."
+    },
+    {
+      "id": "monster-truck-mayhem",
+      "title": "Monster Truck Mayhem",
+      "vault": "8BitOps",
+      "status": "release-candidate",
+      "path": "/games/monster-truck-mayhem/",
+      "currentBuild": "Standalone free-roam playable prototype",
+      "targetPublicVersion": "1.0.0",
+      "next": "Add KGBA menu/pause/restart/control polish; preserve objective-free mayhem identity."
+    },
+    {
+      "id": "ninja-panda",
+      "title": "Ninja Panda",
+      "vault": "8BitOps",
+      "status": "mvp-build",
+      "path": "/games/ninja-panda/",
+      "currentBuild": "Playable/demo lineage plus sprite/animation work",
+      "targetPublicVersion": "1.0.0",
+      "next": "Finish one beginning-to-end bonus-op level using existing movement/zipline/dodge work."
+    },
+    {
+      "id": "canyon-run",
+      "title": "Canyon Run",
+      "vault": "8BitOps",
+      "status": "mvp-build",
+      "path": "/games/canyon-run/",
+      "currentBuild": "Unnamed fighter/canyon flight prototype",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Canyon flying game", "fighter-jet prototype"],
+      "next": "Assisted arcade flight, auto-centering controls, one readable canyon route with gates/hazards/finish."
+    },
+    {
+      "id": "sector-kgb",
+      "title": "Sector KGB",
+      "vault": "MiniMission",
+      "status": "release-candidate",
+      "path": "/games/sector-kgb/",
+      "currentBuild": "Mission 01: Power Cycle PWA Edition",
+      "targetPublicVersion": "1.0.0",
+      "next": "Ship Power Cycle as Episode/Mission 01; treat future missions as anthology content."
+    },
+    {
+      "id": "asymmantics",
+      "title": "Asymmantics",
+      "vault": "MiniMission",
+      "status": "release-candidate",
+      "path": "/games/asymmantics/",
+      "currentBuild": "Beta 0.4 Full Campaign / 153 authored stages",
+      "targetPublicVersion": "0.9.0-public-beta",
+      "next": "No new content: validate progression/save/readability/stability; public beta then 1.0."
+    },
+    {
+      "id": "command-surface",
+      "title": "Command Surface: Outpost Zero",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/command-surface/",
+      "currentBuild": "Designed control-surface scenario",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Command Surface", "Outpost Zero"],
+      "next": "Use as reference cartridge for shared MiniMission Control Surface engine."
+    },
+    {
+      "id": "signal-ghost",
+      "title": "Signal Ghost",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/signal-ghost/",
+      "currentBuild": "Concept",
+      "targetPublicVersion": "1.0.0",
+      "next": "One hidden-actor hunt using stale pings/logs/outages, confidence meter, final identification."
+    },
+    {
+      "id": "black-box-convoy",
+      "title": "Black Box Convoy",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/black-box-convoy/",
+      "currentBuild": "Concept",
+      "targetPublicVersion": "1.0.0",
+      "next": "One indirect-telemetry convoy scenario on shared Control Surface engine."
+    },
+    {
+      "id": "the-hive",
+      "title": "The Hive",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/the-hive/",
+      "currentBuild": "Concept",
+      "targetPublicVersion": "1.0.0",
+      "next": "One adaptive-swarm containment scenario on shared Control Surface engine."
+    },
+    {
+      "id": "zt-breach-loop",
+      "title": "ZT Breach Loop",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/zt-breach-loop/",
+      "currentBuild": "Concept",
+      "targetPublicVersion": "1.0.0",
+      "next": "Fast allow/block/step-up/isolate/investigate triage loop on shared Control Surface engine."
+    },
+    {
+      "id": "spin-stop",
+      "title": "Spin Stop",
+      "vault": "MiniMission",
+      "status": "release-candidate",
+      "path": "/games/spin-stop/",
+      "currentBuild": "Perfect Combo Edition",
+      "targetPublicVersion": "1.0.0",
+      "next": "Create canonical folder/page; release-gate existing complete timing build."
+    },
+    {
+      "id": "gaze-runner",
+      "title": "EyeOps: Gaze Runner",
+      "vault": "MiniMission",
+      "status": "experimental",
+      "path": "/games/gaze-runner/",
+      "currentBuild": "Playable gaze/camera prototype",
+      "targetPublicVersion": "1.0.0-experimental",
+      "aliases": ["Gaze Runner"],
+      "next": "Calibration, local-camera privacy message, permission failure handling, touch fallback, complete run/restart."
+    },
+    {
+      "id": "cargo-ship-maze",
+      "title": "Cargo Ship Maze",
+      "vault": "MiniMission",
+      "status": "concept",
+      "path": "/games/cargo-ship-maze/",
+      "currentBuild": "GridWalk Hybrid concept",
+      "targetPublicVersion": "1.0.0",
+      "next": "One deck, one vertical transition, enterable containers, three clues/items, one exit puzzle."
+    },
+    {
+      "id": "tanktots-learn",
+      "title": "TankTots Learn",
+      "vault": "TankTots",
+      "status": "live",
+      "path": "/games/tanktots_learn/",
+      "currentBuild": "Production v0.2 Refresh lineage",
+      "targetPublicVersion": "1.0.0",
+      "next": "Release-gate current learning areas; expand domains after v1 rather than blocking v1."
+    },
+    {
+      "id": "kid-jam",
+      "title": "Kid Jam",
+      "vault": "TankTots",
+      "status": "live",
+      "path": "/games/kids_mash/",
+      "canonicalFuturePath": "/games/kid-jam/",
+      "currentBuild": "Kid Jam Beat Party PWA",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Kids Mash", "kids_mash"],
+      "next": "Change display name now; migrate slug later with compatibility redirect."
+    },
+    {
+      "id": "cozy-cat-playground",
+      "title": "Cozy Cat Playground",
+      "vault": "TankTots",
+      "status": "restore-ready",
+      "path": "/games/cozy-cat-playground/",
+      "currentBuild": "Kitty Playground — Jump · Climb · Pounce",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Kitty Playground"],
+      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+    },
+    {
+      "id": "lawn-mower-mania",
+      "title": "Lawn Mower Mania",
+      "vault": "TankTots",
+      "status": "restore-ready",
+      "path": "/games/lawn-mower-mania/",
+      "currentBuild": "Mower Mania v5 — Hum + FX",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Mower Mania"],
+      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+    },
+    {
+      "id": "firetruck-rescue",
+      "title": "Firetruck Rescue",
+      "vault": "TankTots",
+      "status": "restore-ready",
+      "path": "/games/firetruck-rescue/",
+      "currentBuild": "Firetruck Dash — Tap & Spray",
+      "targetPublicVersion": "1.0.0",
+      "aliases": ["Firetruck Dash"],
+      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+    }
+  ]
+}
