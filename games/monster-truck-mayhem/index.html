@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#100b07">
+<title>Monster Truck Mayhem — KGB Arcade</title>
+<meta name="description" content="Monster Truck Mayhem is a free-roam stunt sandbox from KGB Arcade. Big ramps, flips, car crushing, suspension, and absolutely no mission.">
+<style>
+:root{--bg:#080604;--ink:#fff4e6;--orange:#ff7a18;--gold:#ffd159;--red:#ff3e2e;--steel:#c7d0d8;--muted:#d3c1ac;--line:#ffffff18}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 65% 9%,#492113,#170d08 36%,#070503 78%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:inherit;text-decoration:none}.nav{position:sticky;top:0;z-index:5;background:#080503e7;border-bottom:1px solid var(--line);backdrop-filter:blur(9px)}.navin{max-width:1100px;margin:auto;padding:13px 20px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.09em}.back{padding:9px 12px;border:1px solid #ff7a1855;border-radius:10px;font-weight:850}
+.wrap{max-width:1100px;margin:auto;padding:44px 20px 70px}.hero{display:grid;grid-template-columns:1.02fr .98fr;gap:34px;align-items:center}.chip{display:inline-flex;padding:6px 10px;border:1px solid #ff7a1866;border-radius:999px;color:#ffbd82;font:900 12px ui-monospace,monospace;letter-spacing:.11em}
+h1{font-size:clamp(48px,8vw,86px);line-height:.83;margin:15px 0 18px;text-transform:uppercase;font-style:italic;color:#fff0df;text-shadow:0 4px 0 #22130b}h1 span{display:block;color:var(--orange);text-shadow:0 0 28px #ff6a1844}.lead{font-size:clamp(17px,2.3vw,21px);line-height:1.55;color:#ead7c1;max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{padding:14px 21px;border-radius:13px;background:linear-gradient(#ffe27d,#ff861f);color:#251200;font-weight:1000;box-shadow:0 0 30px #ff7a1833}.ghost{padding:14px 20px;border:1px solid #ff7a1844;border-radius:13px;background:#211108;font-weight:900}
+.poster{height:390px;border-radius:27px;border:1px solid #ffffff18;position:relative;overflow:hidden;background:linear-gradient(#6b3420 0 42%,#a85d2f 42% 65%,#4a2d18 65%);box-shadow:0 25px 70px #000a}.sun{position:absolute;right:11%;top:10%;width:78px;height:78px;border-radius:50%;background:#ffd66e;box-shadow:0 0 44px #ffb03d66}.dirt{position:absolute;left:-10%;right:-10%;bottom:-10%;height:44%;background:#6a3d20;transform:rotate(-3deg)}.ramp{position:absolute;right:4%;bottom:20%;width:42%;height:31%;clip-path:polygon(0 100%,100% 18%,100% 100%);background:#2d3132;border-bottom:7px solid #17191a}.truck{position:absolute;left:24%;bottom:26%;width:148px;height:92px;transform:rotate(-8deg)}.truck .body{position:absolute;left:20px;right:12px;top:20px;height:44px;border-radius:10px 12px 5px 5px;background:linear-gradient(#ff8a25,#c64319);border:3px solid #40170b;box-shadow:0 8px 0 #21100b}.truck .cab{position:absolute;left:64px;top:0;width:52px;height:34px;background:#e76620;clip-path:polygon(12% 100%,20% 20%,79% 20%,100% 100%);border-bottom:4px solid #4a1c0e}.wheel{position:absolute;bottom:0;width:50px;height:50px;border-radius:50%;background:#141414;border:6px solid #050505;box-shadow:inset 0 0 0 5px #6f7476}.w1{left:8px}.w2{right:0}.car{position:absolute;left:5%;bottom:14%;width:82px;height:31px;background:#3f79bc;border-radius:10px 18px 4px 4px;border:3px solid #15273c;transform:rotate(2deg)}.car:before,.car:after{content:"";position:absolute;bottom:-10px;width:21px;height:21px;border-radius:50%;background:#171717}.car:before{left:9px}.car:after{right:9px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:42px}.card{padding:20px;border:1px solid var(--line);border-radius:16px;background:#ffffff08}.card h2{margin:0 0 8px;color:#ff9a4a;font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.52}.arcade{margin-top:21px;padding:20px;border-left:3px solid var(--orange);background:#ff7a1808;border-radius:0 14px 14px 0;color:#efd9c1;line-height:1.55}.arcade strong{color:#ffb272}
+@media(max-width:780px){.hero{grid-template-columns:1fr}.poster{height:270px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap">
+<section class="hero">
+<div>
+<span class="chip">8BitOps · Live · v1.0.0</span>
+<h1>Monster Truck <span>Mayhem</span></h1>
+<p class="lead">No points. No timer. No mission. No finish line. One fixed stunt arena, oversized ramps, crushable cars, tuned suspension, flips, boost, and as much dumb monster-truck nonsense as you can manufacture.</p>
+<div class="actions"><a class="play" href="./play/">▶ CAUSE PROBLEMS</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade-True without a score:</strong> the arena never rerolls. Learn every ramp, landing, car stack, and recovery line. Mastery is measured by what you can make the truck do—not by a number we invented.</div>
+</div>
+<div class="poster" aria-hidden="true"><div class="sun"></div><div class="dirt"></div><div class="ramp"></div><div class="car"></div><div class="truck"><div class="cab"></div><div class="body"></div><div class="wheel w1"></div><div class="wheel w2"></div></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>DRIVE IT</h2><p>Throttle, reverse, brake, and boost across a fixed dirt arena. The suspension loads, compresses, rebounds, and transfers weight through landings.</p></div>
+<div class="card"><h2>THROW IT</h2><p>Use pitch control in the air to save landings, finish rotations, or turn a questionable decision into a much worse decision.</p></div>
+<div class="card"><h2>CRUSH IT</h2><p>Parked cars deform under wheel and chassis impacts. Reset the truck whenever you want—or reset the whole arena and do it again cleaner.</p></div>
+</section>
+</main>
+</body>
+</html>

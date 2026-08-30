@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0a0704">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Monster Truck Mayhem v1.0.0</title>
+<style>
+:root{--orange:#ff7a18;--gold:#ffd159;--red:#ff4a35;--cyan:#56d8ff;--ink:#fff1df;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0a0704;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;z-index:5;inset:0;pointer-events:none;text-shadow:0 2px 8px #000}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:flex;justify-content:space-between;gap:8px;align-items:start}.panel{background:#130b06c9;border:1px solid #ff7a1828;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px);box-shadow:0 7px 22px #0008}.k{font:900 9px ui-monospace,monospace;letter-spacing:.13em;color:#ffc28a;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(17px,3.2vw,25px)}.speed{color:#ffd159}.stats{text-align:right;color:#f2ddc5}.stats b{color:#ff9a4a}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #ff7a1855;background:#160c06df;color:#fff0df;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:6px;right:6px;bottom:calc(7px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.cluster{display:flex;gap:6px;pointer-events:auto}.btn{width:60px;height:72px;border-radius:16px;border:2px solid #ffffff27;background:#160c06df;color:#fff;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-shadow:0 8px 22px #0009;-webkit-tap-highlight-color:transparent}.btn b{font-size:24px}.btn small{font-size:9px;letter-spacing:.04em}.btn.orange{border-color:#ff7a1888;color:#ffad67}.btn.gold{border-color:#ffd15988;color:#ffe091}.btn.cyan{border-color:#56d8ff77;color:#8be6ff}.btn.red{border-color:#ff4a3577;color:#ff8b7b}.btn.down,.btn:active{transform:translateY(2px);filter:brightness(1.3)}
+.recover{position:fixed;z-index:10;left:50%;bottom:calc(9px + var(--safe));transform:translateX(-50%);pointer-events:auto;border:1px solid #ffffff24;border-radius:11px;padding:8px 11px;background:#110b07dc;color:#ead9c6;font:900 11px ui-monospace,monospace}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 32%,#4a2419df,#080402f4 70%);text-align:center}.card{width:min(720px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #ff7a1844;background:#130b06ec;box-shadow:0 25px 70px #000c}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#ffc18a}.logo{font-size:clamp(40px,8.5vw,74px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#fff0df;margin:8px 0}.logo span{display:block;color:#ff7a18}.sub{font-size:15px;line-height:1.5;color:#dec9b2;max-width:590px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#ffe179,#ff851d);color:#241200;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#21130b;color:#f5e6d4;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;text-align:left;margin:15px 0}.how div{background:#ffffff07;border:1px solid #ffffff12;border-radius:11px;padding:10px;color:#d7c2aa;font:500 13px/1.42 system-ui}.how b{color:#ffb16e}.hidden{display:none!important}.callout{margin:12px auto;padding:11px;border-left:3px solid #ff7a18;background:#ff7a1808;color:#efd7be;text-align:left;font-size:13px;line-height:1.45}
+@media(max-width:560px){.btn{width:52px;height:68px}.recover{font-size:9px;padding:7px 8px}.how{grid-template-columns:1fr}.card{padding:18px 13px}.stats{font-size:12px}.top .panel:nth-child(2){display:none}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel"><div class="k">Speed</div><div class="big speed"><span id="mph">0</span> MPH</div></div>
+<div class="panel"><div class="k">Monster Truck Mayhem · Free Roam</div><div class="big" id="zone">THE PIT</div></div>
+<div class="panel stats"><div class="k">Session</div><div><b id="crushes">0</b> crushed · <b id="flips">0</b> flips · <b id="airtime">0.0</b>s air</div></div>
+</div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="controls">
+<div class="cluster"><button class="btn orange" id="reverse"><b>◀</b><small>REVERSE</small></button><button class="btn orange" id="gas"><b>▶</b><small>GAS</small></button></div>
+<div class="cluster"><button class="btn cyan" id="noseUp"><b>↶</b><small>NOSE UP</small></button><button class="btn cyan" id="noseDown"><b>↷</b><small>NOSE DOWN</small></button><button class="btn gold" id="boost"><b>⚡</b><small>BOOST</small></button></div>
+</div>
+<button class="recover" id="recover">RECOVER TRUCK · R</button>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · 8BITOPS · v1.0.0</div><div class="logo">Monster Truck <span>Mayhem</span></div>
+<p class="sub">There is no objective. The arena is the toy. Drive it, jump it, flip it, crush cars, recover the truck, and keep screwing around until you're done.</p>
+<div class="how">
+<div><b>Drive</b><br>D / Right = gas. A / Left = reverse. Mobile uses GAS / REVERSE.</div>
+<div><b>Pitch</b><br>W / Up = nose up. S / Down = nose down. Works hardest in the air.</div>
+<div><b>Boost</b><br>Space / Shift or BOOST. Recharges automatically when released.</div>
+<div><b>Recover</b><br>R or the center button puts the truck upright near its current position. Arena damage stays.</div>
+</div>
+<div class="callout"><b>ARCADE-TRUE SANDBOX:</b> the arena layout is fixed every time. The ramps, car stacks, tabletop, mega-ramp, rollers, and landing zones do not move. There is no score to grind; improvement is physical mastery.</div>
+<button class="main" id="start">DROP THE GATE</button>
+<div class="row"><button class="small" id="resetArena">RESET ARENA</button><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">PIT HOLD</div><div class="logo">PAUSED</div><p class="sub">Nobody is timing you. Obviously.</p><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="pauseRecover">RECOVER TRUCK</button><button class="small" id="pauseReset">RESET ARENA</button><button class="small" id="quit">QUIT</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id);
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,soundOn=(localStorage.getItem('mtm_sound')??'1')==='1',AC=null;
+const WORLD=5200,BASE=720,TAU=Math.PI*2;
+let camX=0,camY=0,parts=[],cars=[],airTime=0,flips=0,crushes=0,zone='THE PIT';
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=180,d=.08,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(30,f*slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={crush:()=>tone(92,.18,'square',.09,.55),land:()=>tone(125,.11,'triangle',.055,.7),boost:()=>tone(165,.09,'sawtooth',.035,1.45),flip:()=>tone(720,.1,'triangle',.055,1.3)};
+
+function terrainY(x){
+ x=Math.max(0,Math.min(WORLD,x));
+ let y=BASE;
+ // starter rollers
+ if(x>=300&&x<520)y-=Math.sin((x-300)/220*Math.PI)*32;
+ // launch ramp 1
+ if(x>=720&&x<990)y-=((x-720)/270)*155;
+ // tabletop complex
+ if(x>=1450&&x<1620)y-=((x-1450)/170)*95;
+ else if(x>=1620&&x<1960)y-=95;
+ else if(x>=1960&&x<2140)y-=95*(1-(x-1960)/180);
+ // smaller kicker
+ if(x>=2350&&x<2490)y-=((x-2350)/140)*80;
+ // MEGA RAMP
+ if(x>=2760&&x<3220)y-=((x-2760)/460)*285;
+ // rollers
+ if(x>=3700&&x<4320)y-=Math.sin((x-3700)/155*Math.PI)*55;
+ // final steep launcher
+ if(x>=4520&&x<4790)y-=((x-4520)/270)*190;
+ return y;
+}
+function terrainSlope(x){const e=2;return Math.atan2(terrainY(x+e)-terrainY(x-e),2*e)}
+
+const CAR_LAYOUT=[
+ [520,'blue'],[575,'red'],[630,'yellow'],
+ [1120,'red'],[1182,'blue'],[1244,'green'],[1306,'yellow'],
+ [2180,'blue'],[2240,'red'],
+ [3390,'yellow'],[3450,'red'],[3510,'blue'],[3570,'green'],[3630,'red'],
+ [4370,'blue'],[4430,'yellow']
+];
+const CAR_COL={red:'#c84d38',blue:'#3f75bd',yellow:'#d5a83b',green:'#4c9656'};
+function resetCars(){cars=CAR_LAYOUT.map((a,i)=>({x:a[0],y:terrainY(a[0])-22,w:55,h:25,color:CAR_COL[a[1]],crushed:false,crush:0,tilt:(i%3-1)*.03}))}
+const truck={x:180,y:620,vx:0,vy:0,a:0,av:0,w:118,h:48,wheelBase:78,anchorY:17,rest:38,wheelR:18,boost:100,contactL:false,contactR:false,airborne:true,airRot:0,lastA:0};
+
+function resetTruck(full=false){
+ let x=full?180:Math.max(90,Math.min(WORLD-90,truck.x));
+ truck.x=x;truck.y=terrainY(x)-100;truck.vx=full?0:truck.vx*.15;truck.vy=0;truck.a=terrainSlope(x);truck.av=0;truck.boost=full?100:truck.boost;truck.contactL=truck.contactR=false;truck.airborne=true;truck.airRot=0;truck.lastA=truck.a;
+}
+function resetArena(){resetCars();airTime=0;flips=0;crushes=0;parts=[];resetTruck(true);camX=0;updateHud()}
+resetCars();resetTruck(true);
+
+const key=new Set(),hold={gas:false,reverse:false,up:false,down:false,boost:false};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown',' ','shift','r','escape'].includes(k))e.preventDefault();key.add(k);if(k==='r')resetTruck(false);if(k==='escape'&&running)togglePause()},{passive:false});
+addEventListener('keyup',e=>key.delete(e.key.toLowerCase()));
+function pressed(...ks){return ks.some(k=>key.has(k))}
+function bindHold(id,name){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();audio();hold[name]=true;b.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[name]=false;b.classList.remove('down')},{passive:false}))}
+bindHold('gas','gas');bindHold('reverse','reverse');bindHold('noseUp','up');bindHold('noseDown','down');bindHold('boost','boost');
+
+function localToWorld(lx,ly){const ca=Math.cos(truck.a),sa=Math.sin(truck.a);return{x:truck.x+lx*ca-ly*sa,y:truck.y+lx*sa+ly*ca}}
+function wheelState(sign){
+ const ax=sign*truck.wheelBase/2, ay=truck.anchorY;
+ const anchor=localToWorld(ax,ay),down={x:-Math.sin(truck.a),y:Math.cos(truck.a)};
+ const ideal={x:anchor.x+down.x*truck.rest,y:anchor.y+down.y*truck.rest};
+ const gy=terrainY(ideal.x)-truck.wheelR;
+ const compression=ideal.y-gy;
+ const contact=compression>0 && compression<truck.rest+28;
+ const cy=contact?gy:ideal.y;
+ return{sign,anchor,ideal,x:ideal.x,y:cy,gy,compression:contact?compression:0,contact,down}
+}
+function burst(x,y,col='#d68a43',n=10,power=130){for(let i=0;i<n;i++){const a=((i*137.5)%360)*Math.PI/180,s=power*(.45+(i%5)*.13);parts.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-40,life:.45+(i%4)*.06,max:.7,col})}}
+function crushCheck(wheels,impact){
+ for(const car of cars){
+   if(car.crushed)continue;
+   const top=car.y-car.h*.5;
+   let hit=false;
+   for(const wh of wheels){if(Math.abs(wh.x-car.x)<car.w*.58 && wh.y+truck.wheelR>top-8)hit=true}
+   const bodyBottom=localToWorld(0,truck.h*.42);
+   if(Math.abs(bodyBottom.x-car.x)<car.w*.7&&bodyBottom.y>top-5)hit=true;
+   if(hit && (Math.abs(truck.vx)>55 || impact>80)){
+     car.crushed=true;car.crush=1;crushes++;truck.vy-=Math.min(75,Math.abs(truck.vy)*.12);sfx.crush();burst(car.x,car.y-10,car.color,15,175);updateHud()
+   }
+ }
+}
+
+function physics(dt){
+ const gas=(pressed('d','arrowright')||hold.gas?1:0)-(pressed('a','arrowleft')||hold.reverse?1:0);
+ const pitch=(pressed('s','arrowdown')||hold.down?1:0)-(pressed('w','arrowup')||hold.up?1:0);
+ const boost=(pressed(' ','shift')||hold.boost)&&truck.boost>0&&gas!==0;
+ if(boost){truck.boost=Math.max(0,truck.boost-30*dt);if(Math.floor(performance.now()/120)%3===0)sfx.boost()}else truck.boost=Math.min(100,truck.boost+11*dt);
+
+ // gravity
+ truck.vy+=900*dt;
+ // aero drag
+ truck.vx*=Math.pow(.997,dt*60);truck.av*=Math.pow(.994,dt*60);
+
+ let wl=wheelState(-1),wr=wheelState(1),wheels=[wl,wr],contacts=0,torque=0,totalFy=0,impact=Math.abs(truck.vy);
+ for(const wh of wheels){
+   if(wh.contact){
+     contacts++;
+     // spring/damper: vertical approximation at wheel contact
+     const lx=wh.sign*truck.wheelBase/2;
+     const wheelVy=truck.vy + truck.av*lx*Math.cos(truck.a);
+     const k=2450, damp=165;
+     let force=Math.max(0,Math.min(3400,wh.compression*k/38 - wheelVy*damp));
+     totalFy-=force;
+     torque += wh.sign * force * 0.0095;
+   }
+ }
+ truck.contactL=wl.contact;truck.contactR=wr.contact;
+ if(contacts){
+   truck.vy += totalFy*dt/125;
+   truck.av += torque*dt/92;
+   // traction along ground. Boost intentionally overpowers normal tire grip.
+   const traction=gas*(boost?820:510);
+   truck.vx += traction*dt;
+   // braking/rolling resistance when no input
+   if(gas===0)truck.vx*=Math.pow(.965,dt*60);
+   // nose control still works a little on ground as weight transfer
+   truck.av += pitch*1.25*dt;
+ }else{
+   // air control is strong enough to intentionally finish/save rotations.
+   truck.av += pitch*3.0*dt;
+   airTime+=dt;
+ }
+ if(boost&&contacts)truck.vx+=gas*340*dt;
+
+ // integrate
+ truck.x+=truck.vx*dt;truck.y+=truck.vy*dt;truck.a+=truck.av*dt;
+ // world edges
+ if(truck.x<55){truck.x=55;truck.vx=Math.abs(truck.vx)*.3}
+ if(truck.x>WORLD-55){truck.x=WORLD-55;truck.vx=-Math.abs(truck.vx)*.3}
+
+ // chassis-ground penetration safeguard
+ const p1=localToWorld(-truck.w*.42,truck.h*.42),p2=localToWorld(truck.w*.42,truck.h*.42);
+ let pen=0;
+ for(const p of [p1,p2])pen=Math.max(pen,p.y-(terrainY(p.x)-3));
+ if(pen>0){
+   truck.y-=pen; if(truck.vy>0){if(truck.vy>125)sfx.land();truck.vy*=-.18}truck.av*=.78;
+ }
+ if(truck.y>BASE+300)resetTruck(false);
+
+ // airborne/rotation tracking
+ const nowAir=contacts===0;
+ let da=truck.a-truck.lastA;while(da>Math.PI)da-=TAU;while(da<-Math.PI)da+=TAU;
+ if(nowAir){truck.airRot+=da;if(Math.abs(truck.airRot)>=TAU){const n=Math.floor(Math.abs(truck.airRot)/TAU);flips+=n;truck.airRot-=Math.sign(truck.airRot)*TAU*n;sfx.flip();updateHud()}}
+ else if(truck.airborne){truck.airRot=0}
+ truck.airborne=nowAir;truck.lastA=truck.a;
+
+ crushCheck(wheels,impact);
+
+ // particles
+ for(const p of parts){p.vy+=380*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.985;p.life-=dt}
+ parts=parts.filter(p=>p.life>0);
+
+ // fixed zones
+ if(truck.x<700)zone='THE PIT';
+ else if(truck.x<1400)zone='CAR CRUSH ROW';
+ else if(truck.x<2300)zone='TABLETOP';
+ else if(truck.x<3350)zone='MEGA RAMP';
+ else if(truck.x<4500)zone='ROLLER YARD';
+ else zone='FINAL LAUNCH';
+
+ // camera
+ const targetX=Math.max(0,Math.min(WORLD-W,truck.x-W*.38));
+ camX+=(targetX-camX)*Math.min(1,4.5*dt);
+ camY+=(Math.max(0,truck.y-H*.58)-camY)*Math.min(1,3.5*dt);
+ updateHud()
+}
+
+function updateHud(){ $('mph').textContent=Math.round(Math.abs(truck.vx)*.085);$('crushes').textContent=crushes;$('flips').textContent=flips;$('airtime').textContent=airTime.toFixed(1);$('zone').textContent=zone;$('sound').textContent=soundOn?'🔊':'🔇'}
+
+function worldX(x){return x-camX}
+function drawSky(){
+ const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#552814');g.addColorStop(.42,'#aa5d2e');g.addColorStop(.68,'#e39a4d');g.addColorStop(.69,'#5d3a22');g.addColorStop(1,'#1a1009');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#ffd875';ctx.beginPath();ctx.arc(W*.82,H*.18,45,0,TAU);ctx.fill();
+ // deterministic distant mesas
+ ctx.fillStyle='#703a21';for(let i=0;i<10;i++){const x=((i*411-camX*.18)%(W+500))-180,h=45+(i%4)*18;ctx.fillRect(x,H*.55-h,160+(i%3)*55,h)}
+}
+function drawTerrain(){
+ const top=[];for(let sx=-20;sx<=W+20;sx+=8){let wx=sx+camX;top.push([sx,terrainY(wx)-camY])}
+ ctx.beginPath();ctx.moveTo(-20,H+40);for(const p of top)ctx.lineTo(p[0],p[1]);ctx.lineTo(W+20,H+40);ctx.closePath();ctx.fillStyle='#5a371f';ctx.fill();
+ ctx.strokeStyle='#b57a3f';ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<top.length;i++){const p=top[i];i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1])}ctx.stroke();
+ // ramp deck edge emphasis
+ ctx.strokeStyle='#2d3132';ctx.lineWidth=7;[[720,990],[1450,2140],[2350,2490],[2760,3220],[4520,4790]].forEach(([a,b])=>{ctx.beginPath();for(let x=a;x<=b;x+=8){let sx=worldX(x),y=terrainY(x)-camY;if(x===a)ctx.moveTo(sx,y);else ctx.lineTo(sx,y)}ctx.stroke()});
+}
+function drawCars(){
+ for(const car of cars){const sx=worldX(car.x),sy=car.y-camY;if(sx<-100||sx>W+100)continue;ctx.save();ctx.translate(sx,sy);ctx.rotate(car.tilt);let h=car.crushed?9:car.h;ctx.fillStyle=car.color;ctx.strokeStyle='#1e1713';ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-car.w/2,-h/2,car.w,h,6);ctx.fill();ctx.stroke();ctx.fillStyle='#bcd8e9';if(!car.crushed)ctx.fillRect(-12,-h/2-9,25,10);ctx.fillStyle='#171717';ctx.beginPath();ctx.arc(-17,h/2,8,0,TAU);ctx.arc(17,h/2,8,0,TAU);ctx.fill();if(car.crushed){ctx.strokeStyle='#ffb16e';ctx.beginPath();ctx.moveTo(-25,-7);ctx.lineTo(22,5);ctx.moveTo(-18,6);ctx.lineTo(26,-5);ctx.stroke()}ctx.restore()}
+}
+function drawTruck(){
+ const wl=wheelState(-1),wr=wheelState(1),screen={x:worldX(truck.x),y:truck.y-camY};
+ ctx.save();
+ // suspension struts
+ ctx.strokeStyle='#d4d6d8';ctx.lineWidth=4;
+ for(const wh of [wl,wr]){const a=wh.anchor;ctx.beginPath();ctx.moveTo(worldX(a.x),a.y-camY);ctx.lineTo(worldX(wh.x),wh.y-camY);ctx.stroke()}
+ // wheels
+ for(const wh of [wl,wr]){ctx.save();ctx.translate(worldX(wh.x),wh.y-camY);ctx.fillStyle='#101010';ctx.strokeStyle='#050505';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,truck.wheelR,0,TAU);ctx.fill();ctx.stroke();ctx.strokeStyle='#808589';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,8,0,TAU);ctx.stroke();for(let i=0;i<6;i++){const a=i/6*TAU;ctx.beginPath();ctx.moveTo(Math.cos(a)*10,Math.sin(a)*10);ctx.lineTo(Math.cos(a)*16,Math.sin(a)*16);ctx.stroke()}ctx.restore()}
+ // body
+ ctx.translate(screen.x,screen.y);ctx.rotate(truck.a);ctx.fillStyle='#c44a1b';ctx.strokeStyle='#42170b';ctx.lineWidth=4;ctx.beginPath();ctx.roundRect(-truck.w/2,-truck.h/2,truck.w,truck.h,9);ctx.fill();ctx.stroke();
+ ctx.fillStyle='#f27825';ctx.beginPath();ctx.moveTo(-12,-truck.h/2);ctx.lineTo(0,-48);ctx.lineTo(39,-48);ctx.lineTo(52,-truck.h/2);ctx.closePath();ctx.fill();ctx.stroke();
+ ctx.fillStyle='#9ed4e8';ctx.fillRect(6,-42,27,17);ctx.fillStyle='#fff2d8';ctx.font='1000 17px Impact,system-ui';ctx.textAlign='center';ctx.fillText('MTM',-21,6);
+ // bumper
+ ctx.strokeStyle='#bcc2c6';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(53,9);ctx.lineTo(67,12);ctx.stroke();
+ // boost flame
+ if((pressed(' ','shift')||hold.boost)&&truck.boost>0){ctx.fillStyle='#ffd159';ctx.beginPath();ctx.moveTo(-58,7);ctx.lineTo(-82,-2);ctx.lineTo(-75,11);ctx.lineTo(-84,21);ctx.closePath();ctx.fill()}
+ ctx.restore();
+}
+function drawParts(){for(const p of parts){const a=Math.max(0,p.life/p.max);ctx.globalAlpha=a;ctx.fillStyle=p.col;ctx.fillRect(worldX(p.x)-3,p.y-camY-3,6,6)}ctx.globalAlpha=1}
+function drawArenaSigns(){
+ const signs=[[760,'BIG RAMP'],[1600,'TABLETOP'],[2840,'MEGA RAMP'],[3780,'ROLLER YARD'],[4580,'SEND IT']];
+ ctx.font='1000 13px ui-monospace,monospace';ctx.textAlign='center';
+ for(const [x,t] of signs){const sx=worldX(x);if(sx<-100||sx>W+100)continue;const y=terrainY(x)-camY-75;ctx.fillStyle='#20140c';ctx.strokeStyle='#ff7a18';ctx.lineWidth=2;ctx.fillRect(sx-58,y-19,116,28);ctx.strokeRect(sx-58,y-19,116,28);ctx.fillStyle='#ffc28a';ctx.fillText(t,sx,y)}
+}
+function draw(){drawSky();drawTerrain();drawCars();drawArenaSigns();drawParts();drawTruck(); // boost meter
+ const bw=140,bx=W/2-bw/2,by=H-94;ctx.fillStyle='#0a0604b8';ctx.fillRect(bx-3,by-3,bw+6,15);ctx.fillStyle='#3a2112';ctx.fillRect(bx,by,bw,9);ctx.fillStyle='#ffd159';ctx.fillRect(bx,by,bw*truck.boost/100,9);ctx.fillStyle='#fff0da';ctx.font='900 9px ui-monospace,monospace';ctx.textAlign='center';ctx.fillText('BOOST '+Math.round(truck.boost)+'%',W/2,by-7)}
+function frame(ts){const dt=Math.min(.032,(ts-last)/1000);last=ts;if(running&&!paused)physics(dt);draw();requestAnimationFrame(frame)}
+
+function start(){running=true;paused=false;$('menu').classList.add('hidden');$('pauseOverlay').classList.add('hidden');last=performance.now();audio()}
+function togglePause(force){if(!running)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+$('start').onclick=start;$('resume').onclick=()=>togglePause(false);$('pauseBtn').onclick=()=>togglePause();$('recover').onclick=$('pauseRecover').onclick=()=>{resetTruck(false);$('pauseOverlay').classList.add('hidden');paused=false;last=performance.now()};$('resetArena').onclick=$('pauseReset').onclick=()=>{resetArena();$('menu').classList.add('hidden');$('pauseOverlay').classList.add('hidden');running=true;paused=false;last=performance.now()};$('quit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden')};$('arsenal').onclick=()=>location.href='/#arsenal';
+$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('mtm_sound',soundOn?'1':'0');updateHud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();updateHud();requestAnimationFrame(frame);
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script>
+</body>
+</html>

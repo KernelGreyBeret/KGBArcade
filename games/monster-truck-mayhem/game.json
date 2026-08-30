@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "monster-truck-mayhem",
+  "title": "Monster Truck Mayhem",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/monster-truck-mayhem/",
+  "playPath": "/games/monster-truck-mayhem/play/",
+  "sourceLineage": "July 26, 2026 standalone prototype \u2192 larger-ramp / realistic-suspension iteration \u2192 canonical public v1 rebuild",
+  "designPromise": {
+    "objective": null,
+    "score": null,
+    "timer": null,
+    "failState": null,
+    "purpose": "free-roam monster truck stunt sandbox"
+  },
+  "preservedHistoricalIntent": [
+    "big jumps",
+    "flips",
+    "crushable cars",
+    "boost",
+    "larger launch ramps",
+    "spring/damper suspension behavior",
+    "wheel-ground contact",
+    "chassis weight transfer",
+    "landing compression and rebound",
+    "air control"
+  ],
+  "arcadeTrue": {
+    "fixedArenaLayout": true,
+    "fixedRampGeometry": true,
+    "fixedCarPlacement": true,
+    "gameplayRngAffectsArena": false,
+    "masteryMetric": "player execution rather than score",
+    "instantTruckRecovery": true,
+    "fullArenaReset": true
+  }
+}
