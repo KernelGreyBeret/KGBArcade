@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070a12">
+<title>Spin Stop — KGB Arcade</title>
+<meta name="description" content="Spin Stop is a one-tap precision arcade game from KGB Arcade. Learn the authored timing patterns, chase PERFECT combos, and survive the accelerating ring.">
+<style>
+:root{--bg:#070a12;--fg:#e7f4ff;--cyan:#4bd5ff;--green:#78ffa0;--gold:#ffd76a;--violet:#bd97f7;--line:rgba(255,255,255,.10)}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 50% 10%,#102344 0,#070a12 42%,#04060b 100%);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;min-height:100vh}a{color:inherit;text-decoration:none}.nav{padding:14px 20px;border-bottom:1px solid var(--line);background:#050912dd;backdrop-filter:blur(10px);position:sticky;top:0;z-index:5}.navin{max-width:1050px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:16px}.brand{font-weight:1000;letter-spacing:.08em}.back{padding:9px 12px;border:1px solid #4bd5ff66;border-radius:10px;color:#ccefff;font-weight:800}.wrap{max-width:1050px;margin:auto;padding:42px 20px 60px}.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}.chip{display:inline-flex;padding:6px 10px;border:1px solid #4bd5ff66;border-radius:999px;color:#a8f5ff;font:900 12px ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}.hero h1{font-size:clamp(46px,8vw,82px);line-height:.9;margin:14px 0 16px;letter-spacing:.06em}.hero p{font-size:clamp(17px,2.5vw,21px);line-height:1.55;color:#cfe4f6;max-width:620px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{padding:14px 20px;border-radius:13px;background:linear-gradient(180deg,#effcff,#badff6);color:#07101c;font-weight:1000;box-shadow:0 0 24px #4bd5ff33}.ghost{padding:14px 20px;border-radius:13px;border:1px solid #4bd5ff66;background:#08172a;color:#dff7ff;font-weight:900}.ring{aspect-ratio:1;max-width:380px;width:100%;margin:auto;border-radius:50%;position:relative;background:radial-gradient(circle,#0b1630 0 43%,transparent 44%);border:15px solid #1e314a;box-shadow:0 0 0 14px #3bd4ff22,0 0 42px #4bd5ff26}.ring:before{content:"";position:absolute;inset:-15px;border-radius:50%;border:12px solid transparent;border-top-color:var(--green);border-right-color:var(--green);transform:rotate(28deg)}.ring:after{content:"";position:absolute;left:50%;top:50%;width:47%;height:3px;transform-origin:left center;transform:rotate(-42deg);background:linear-gradient(90deg,#fff,var(--gold));box-shadow:0 0 15px var(--gold)}.hub{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);background:var(--gold);box-shadow:0 0 18px var(--gold)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}.card{padding:20px;border-radius:16px;background:#ffffff08;border:1px solid var(--line)}.card h2{margin:0 0 9px;color:var(--cyan);font-size:19px}.card p{margin:0;color:#b9cfe1;line-height:1.5}.arcade{margin-top:22px;padding:20px;border-left:3px solid var(--gold);background:#ffd76a0b;border-radius:0 14px 14px 0;color:#dfefff}.arcade strong{color:var(--gold)}@media(max-width:760px){.hero{grid-template-columns:1fr}.ring{max-width:280px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap">
+<section class="hero">
+<div>
+<span class="chip">8BitOps · Live · v1.0.0</span>
+<h1>SPIN<br>STOP</h1>
+<p>One tap. One timing window. One more run. Stop the needle in the green, hunt the gold PERFECT zone, and survive as every success reverses the ring and pushes the pace higher.</p>
+<div class="actions"><a class="play" href="./play/">▶ PLAY NOW</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade-True by design.</strong> Target geometry is authored and repeatable, not rerolled every attempt. Failure teaches timing; persistence teaches the machine.</div>
+</div>
+<div class="ring" aria-hidden="true"><div class="hub"></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>THE RULE</h2><p>Tap anywhere. Green scores. Gold scores bigger and builds the PERFECT multiplier. Miss and you lose a life.</p></div>
+<div class="card"><h2>THE TWIST</h2><p>Every successful stop reverses direction and increases speed. You cannot settle into one rhythm forever.</p></div>
+<div class="card"><h2>THE PROMISE</h2><p>Each difficulty replays the same authored target sequence. Natural timing skill wins fast; stubborn pattern learning wins eventually.</p></div>
+</section>
+</main>
+</body>
+</html>

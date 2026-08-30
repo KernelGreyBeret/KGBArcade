@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "spin-stop",
+  "title": "Spin Stop",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/spin-stop/",
+  "playPath": "/games/spin-stop/play/",
+  "sourceLineage": "Spin Stop \u2014 Perfect Combo Edition",
+  "arcadeTrue": {
+    "deterministicTargets": true,
+    "failureKeepsTarget": true,
+    "instantRestart": true,
+    "rngAffectsLoss": false
+  },
+  "controls": {
+    "mobile": "tap anywhere",
+    "desktop": "click / Space / Enter",
+    "pause": "P / Escape or Pause button"
+  }
+}

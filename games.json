@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updated": "2026-08-29",
+  "updated": "2026-08-30",
   "doctrine": "/docs/ARCADE_TRUE.md",
   "releaseStandard": "/docs/KGBA_RELEASE_STANDARD.md",
   "statusDefinitions": {
@@ -14,14 +14,19 @@
   "games": [
     {
       "id": "tommy-the-tank",
-      "title": "Tommy the Tank — Asymmetric Mayhem",
+      "title": "Tommy the Tank \u2014 Asymmetric Mayhem",
       "vault": "8BitOps",
       "status": "live",
       "path": "/games/tommy-the-tank/",
       "currentBuild": "Battlefield Arena v8 / PWA campaign line",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Tommy the Tank", "Asymmetric Mayhem"],
-      "mergedWork": ["Tommy Bunker / Multi-World vertical slice"],
+      "aliases": [
+        "Tommy the Tank",
+        "Asymmetric Mayhem"
+      ],
+      "mergedWork": [
+        "Tommy Bunker / Multi-World vertical slice"
+      ],
       "next": "Canonicalize any leading-space path; release-gate current PWA."
     },
     {
@@ -32,7 +37,9 @@
       "path": "/games/starwarp/",
       "currentBuild": "StarWarp Arena v3.1 / PWA line",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["StarWarp"],
+      "aliases": [
+        "StarWarp"
+      ],
       "next": "Release-gate current live build; normalize public title to StarWarp Arena when convenient."
     },
     {
@@ -43,18 +50,20 @@
       "path": "/games/hyperhop/",
       "currentBuild": "Engine cartridge v0.2.4",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Hyper Hop v8"],
+      "aliases": [
+        "Hyper Hop v8"
+      ],
       "next": "Release-gate v0.2.4 and retain older v8 only as historical lineage."
     },
     {
       "id": "arc-defender",
-      "title": "Arc Defender — Rhythm Rings",
+      "title": "Arc Defender \u2014 Rhythm Rings",
       "vault": "8BitOps",
-      "status": "restore-ready",
+      "status": "live",
       "path": "/games/arc-defender/",
       "currentBuild": "arc_defender_v2.html / v2 PWA line",
       "targetPublicVersion": "1.0.0",
-      "next": "Fix game-page Play link from arc_defender.html to arc_defender_v2.html; smoke-test."
+      "next": "Live; continue canonical packaging migration during normal maintenance."
     },
     {
       "id": "jungle-breakout",
@@ -74,8 +83,10 @@
       "path": "/games/riftwake/",
       "currentBuild": "Signal Skimmer PWA Final v1",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Signal Skimmer"],
-      "next": "Recover/verify final PWA, release-gate, switch Arsenal On Deck → Live."
+      "aliases": [
+        "Signal Skimmer"
+      ],
+      "next": "Recover/verify final PWA, release-gate, switch Arsenal On Deck \u2192 Live."
     },
     {
       "id": "bayou-breakout",
@@ -85,7 +96,9 @@
       "path": "/games/bayou-breakout/",
       "currentBuild": "Playable shared-engine smoke test",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["River Gator Boat Chase"],
+      "aliases": [
+        "River Gator Boat Chase"
+      ],
       "next": "Build one complete repeatable escape route with finish/result/restart."
     },
     {
@@ -96,7 +109,11 @@
       "path": "/games/relay-runner/",
       "currentBuild": "Two playable predecessor missions: Dead Drop Ridge + Broken Net Valley",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Pixel Patrol", "Kernel Courier: Dead Drop Ridge", "Kernel Courier: Static War"],
+      "aliases": [
+        "Pixel Patrol",
+        "Kernel Courier: Dead Drop Ridge",
+        "Kernel Courier: Static War"
+      ],
       "next": "Rebrand/standardize the two existing missions; mission select; ship two-level v1."
     },
     {
@@ -117,7 +134,9 @@
       "path": "/games/kernel-courier/",
       "currentBuild": "Farm-delivery design/art planning",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Fresh Corn Run"],
+      "aliases": [
+        "Fresh Corn Run"
+      ],
       "next": "Harvest 12 corn, load, drive one route, preserve cargo, deliver before timer."
     },
     {
@@ -148,7 +167,10 @@
       "path": "/games/canyon-run/",
       "currentBuild": "Unnamed fighter/canyon flight prototype",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Canyon flying game", "fighter-jet prototype"],
+      "aliases": [
+        "Canyon flying game",
+        "fighter-jet prototype"
+      ],
       "next": "Assisted arcade flight, auto-centering controls, one readable canyon route with gates/hazards/finish."
     },
     {
@@ -179,7 +201,10 @@
       "path": "/games/command-surface/",
       "currentBuild": "Designed control-surface scenario",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Command Surface", "Outpost Zero"],
+      "aliases": [
+        "Command Surface",
+        "Outpost Zero"
+      ],
       "next": "Use as reference cartridge for shared MiniMission Control Surface engine."
     },
     {
@@ -225,12 +250,12 @@
     {
       "id": "spin-stop",
       "title": "Spin Stop",
-      "vault": "MiniMission",
-      "status": "release-candidate",
+      "vault": "8BitOps",
+      "status": "live",
       "path": "/games/spin-stop/",
-      "currentBuild": "Perfect Combo Edition",
+      "currentBuild": "Public v1.0.0 \u2014 deterministic Arcade-True release",
       "targetPublicVersion": "1.0.0",
-      "next": "Create canonical folder/page; release-gate existing complete timing build."
+      "next": "Deployed; validate production smoke test, then move to Riftwake."
     },
     {
       "id": "gaze-runner",
@@ -240,7 +265,9 @@
       "path": "/games/gaze-runner/",
       "currentBuild": "Playable gaze/camera prototype",
       "targetPublicVersion": "1.0.0-experimental",
-      "aliases": ["Gaze Runner"],
+      "aliases": [
+        "Gaze Runner"
+      ],
       "next": "Calibration, local-camera privacy message, permission failure handling, touch fallback, complete run/restart."
     },
     {
@@ -272,41 +299,50 @@
       "canonicalFuturePath": "/games/kid-jam/",
       "currentBuild": "Kid Jam Beat Party PWA",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Kids Mash", "kids_mash"],
+      "aliases": [
+        "Kids Mash",
+        "kids_mash"
+      ],
       "next": "Change display name now; migrate slug later with compatibility redirect."
     },
     {
       "id": "cozy-cat-playground",
       "title": "Cozy Cat Playground",
       "vault": "TankTots",
-      "status": "restore-ready",
+      "status": "live",
       "path": "/games/cozy-cat-playground/",
-      "currentBuild": "Kitty Playground — Jump · Climb · Pounce",
+      "currentBuild": "Kitty Playground \u2014 Jump \u00b7 Climb \u00b7 Pounce",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Kitty Playground"],
-      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+      "aliases": [
+        "Kitty Playground"
+      ],
+      "next": "Live; continue canonical packaging migration during normal maintenance."
     },
     {
       "id": "lawn-mower-mania",
       "title": "Lawn Mower Mania",
       "vault": "TankTots",
-      "status": "restore-ready",
+      "status": "live",
       "path": "/games/lawn-mower-mania/",
-      "currentBuild": "Mower Mania v5 — Hum + FX",
+      "currentBuild": "Mower Mania v5 \u2014 Hum + FX",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Mower Mania"],
-      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+      "aliases": [
+        "Mower Mania"
+      ],
+      "next": "Live; continue canonical packaging migration during normal maintenance."
     },
     {
       "id": "firetruck-rescue",
       "title": "Firetruck Rescue",
       "vault": "TankTots",
-      "status": "restore-ready",
+      "status": "live",
       "path": "/games/firetruck-rescue/",
-      "currentBuild": "Firetruck Dash — Tap & Spray",
+      "currentBuild": "Firetruck Dash \u2014 Tap & Spray",
       "targetPublicVersion": "1.0.0",
-      "aliases": ["Firetruck Dash"],
-      "next": "Restore expected playable HTML from Priority Zero overlay; smoke-test; mark Live."
+      "aliases": [
+        "Firetruck Dash"
+      ],
+      "next": "Live; continue canonical packaging migration during normal maintenance."
     }
   ]
 }
