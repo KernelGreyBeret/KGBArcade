@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#4b6a22">
+<title>Kernel Courier — Fresh Corn Run | KGB Arcade</title>
+<meta name="description" content="Kernel Courier: Fresh Corn Run is a fixed-route farm delivery racer from KGB Arcade. Protect the corn, manage fuel, honk at chickens, and make the barn on time.">
+<style>
+:root{--ink:#fffbed;--corn:#ffd84d;--green:#87c84b;--red:#e75c42;--blue:#75d8f2;--brown:#7b5432;--muted:#d7c9a9;--line:#ffffff19}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 66% 7%,#7faa3f,#35541f 34%,#17270d 79%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:inherit;text-decoration:none}.nav{position:sticky;top:0;z-index:5;background:#1a2b10e8;border-bottom:1px solid var(--line);backdrop-filter:blur(9px)}.navin{max-width:1100px;margin:auto;padding:13px 20px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.09em}.back{padding:9px 12px;border:1px solid #ffd84d66;border-radius:10px;font-weight:850}
+.wrap{max-width:1100px;margin:auto;padding:44px 20px 70px}.hero{display:grid;grid-template-columns:1.03fr .97fr;gap:34px;align-items:center}.chip{display:inline-flex;padding:6px 10px;border:1px solid #ffd84d66;border-radius:999px;color:#ffeb8e;font:900 12px ui-monospace,monospace;letter-spacing:.11em}
+h1{font-size:clamp(48px,8vw,88px);line-height:.82;margin:15px 0 18px;text-transform:uppercase;font-style:italic;color:#fff9e9;text-shadow:0 4px 0 #34230e}h1 span{display:block;color:var(--corn);text-shadow:0 0 28px #ffd84d4a}.lead{font-size:clamp(17px,2.3vw,21px);line-height:1.55;color:#eee3c6;max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{padding:14px 21px;border-radius:13px;background:linear-gradient(#fff5a9,#ffbc47);color:#2d1a06;font-weight:1000;box-shadow:0 0 30px #ffd84d30}.ghost{padding:14px 20px;border:1px solid #ffd84d44;border-radius:13px;background:#31411d;font-weight:900}
+.poster{height:390px;border-radius:27px;border:1px solid #ffffff18;position:relative;overflow:hidden;background:linear-gradient(#85c8ef 0 39%,#9bc65b 39% 100%);box-shadow:0 25px 70px #0009}.sun{position:absolute;right:10%;top:7%;width:78px;height:78px;border-radius:50%;background:#ffe77f;box-shadow:0 0 45px #ffd84d55}.road{position:absolute;left:50%;bottom:-5%;width:55%;height:70%;transform:translateX(-50%);background:#b98a55;clip-path:polygon(39% 0,61% 0,91% 100%,9% 100%);box-shadow:inset 0 0 0 5px #90693f}.cornfield{position:absolute;left:0;right:0;bottom:0;height:45%;background:repeating-linear-gradient(90deg,#8bb342 0 7px,#b7d55b 7px 11px,#708f34 11px 18px);opacity:.72}.barn{position:absolute;right:5%;top:36%;width:125px;height:104px;background:#b94935;border:5px solid #723027}.barn:before{content:"";position:absolute;left:-12px;right:-12px;top:-53px;border-left:75px solid transparent;border-right:75px solid transparent;border-bottom:56px solid #762f29}.truck{position:absolute;left:50%;bottom:17%;width:125px;height:82px;transform:translateX(-50%)}.truck .bed{position:absolute;left:6px;top:23px;width:61px;height:38px;background:#607b31;border:4px solid #36491b}.truck .cab{position:absolute;right:5px;top:16px;width:57px;height:45px;background:#f0a72f;border:4px solid #694014;border-radius:10px 13px 4px 4px}.wheel{position:absolute;bottom:4px;width:31px;height:31px;border-radius:50%;background:#171717;box-shadow:inset 0 0 0 7px #5e6261}.w1{left:18px}.w2{right:17px}.corn{position:absolute;width:13px;height:36px;background:#ffd84d;border-radius:55%;box-shadow:-4px 0 0 #e5b827,4px 0 0 #f0c934}.c1{left:16px;top:2px;transform:rotate(-8deg)}.c2{left:34px;top:0}.c3{left:50px;top:4px;transform:rotate(9deg)}.chicken{position:absolute;left:18%;bottom:22%;width:47px;height:39px;border-radius:50%;background:#f4eee0;border:3px solid #6b553c}.chicken:after{content:"";position:absolute;right:-15px;top:9px;border-left:17px solid #f1af36;border-top:8px solid transparent;border-bottom:8px solid transparent}.hay{position:absolute;right:20%;bottom:15%;width:65px;height:43px;border-radius:9px;background:#d6b44e;border:5px solid #af8d30}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:42px}.card{padding:20px;border:1px solid var(--line);border-radius:16px;background:#ffffff08}.card h2{margin:0 0 8px;color:#ffe47b;font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.52}.arcade{margin-top:21px;padding:20px;border-left:3px solid var(--corn);background:#ffd84d08;border-radius:0 14px 14px 0;color:#ebdfc2;line-height:1.55}.arcade strong{color:#ffeb8e}
+@media(max-width:780px){.hero{grid-template-columns:1fr}.poster{height:270px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style></head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap">
+<section class="hero"><div>
+<span class="chip">8BitOps · Live · v1.0.0</span>
+<h1>Kernel Courier <span>Fresh Corn Run</span></h1>
+<p class="lead">Twelve ears of fresh corn. One tiny farm truck. One fixed country route. Keep the fuel up, keep the cargo in the bed, honk the chickens out of the road, and get all twelve to the barn before the clock makes you tomorrow's problem.</p>
+<div class="actions"><a class="play" href="./play/">▶ MAKE THE DELIVERY</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade-True delivery:</strong> every mud patch, rock, chicken crossing, hay bale, broken fence, fuel can, boost pickup, and extra-corn recovery appears in the same place every run. You learn the route like a delivery driver should.</div>
+</div>
+<div class="poster" aria-hidden="true"><div class="sun"></div><div class="cornfield"></div><div class="road"></div><div class="barn"></div><div class="chicken"></div><div class="hay"></div><div class="truck"><div class="bed"></div><div class="cab"></div><div class="corn c1"></div><div class="corn c2"></div><div class="corn c3"></div><div class="wheel w1"></div><div class="wheel w2"></div></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>PROTECT THE LOAD</h2><p>You start with exactly 12 corn. Hard impacts can knock cargo loose. Extra-corn pickups are your only way to recover a loss before delivery.</p></div>
+<div class="card"><h2>HONK WITH PURPOSE</h2><p>Chicken crossings are predictable. Hit HORN before you reach them and they scatter. Ignore them and the collision costs time, damage, and possibly cargo.</p></div>
+<div class="card"><h2>MANAGE THE RUN</h2><p>Boost saves time but burns more fuel. Fuel cans and boost pickups are fixed. The best route is not always maximum throttle.</p></div>
+</section></main></body></html>

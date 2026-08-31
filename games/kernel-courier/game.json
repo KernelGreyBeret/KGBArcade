@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "id": "kernel-courier",
+  "title": "Kernel Courier",
+  "subtitle": "Fresh Corn Run",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/kernel-courier/",
+  "playPath": "/games/kernel-courier/play/",
+  "sourceLineage": "June 20\u201322, 2026 farm-delivery Kernel Courier / Fresh Corn Run concept \u2192 canonical public v1",
+  "historicalConcept": {
+    "vehicle": "small farm cart / ATV / utility vehicle / tiny truck",
+    "mission": "deliver corn/produce over a scrolling country route",
+    "controls": [
+      "left",
+      "right",
+      "boost",
+      "horn"
+    ],
+    "hud": [
+      "time",
+      "fuel",
+      "cargo damage",
+      "corn delivered",
+      "earnings"
+    ],
+    "hazards": [
+      "mud",
+      "rocks",
+      "chickens",
+      "hay bale",
+      "fence"
+    ],
+    "pickups": [
+      "fuel",
+      "coin",
+      "boost",
+      "extra corn"
+    ],
+    "deliveryRequirement": 12,
+    "loseConditions": [
+      "timeout",
+      "fuel empty",
+      "cargo below delivery requirement at destination",
+      "vehicle damage 100%"
+    ],
+    "historicalRouteTarget": "60\u2013120 seconds"
+  },
+  "publicV1": {
+    "route": "Fresh Corn Run",
+    "lengthMeters": 2400,
+    "timeLimitSeconds": 95,
+    "startingCorn": 12,
+    "requiredCorn": 12,
+    "eventCount": 21,
+    "laneCount": 3
+  },
+  "arcadeTrue": {
+    "fixedRoute": true,
+    "fixedHazardSequence": true,
+    "fixedPickups": true,
+    "fixedChickenCrossings": true,
+    "gameplayRngAffectsOutcome": false,
+    "failureTeachesRoute": true,
+    "instantRetry": true
+  }
+}

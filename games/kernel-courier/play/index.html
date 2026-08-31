@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#4b6a22"><link rel="manifest" href="./manifest.webmanifest">
+<title>Kernel Courier v1.0.0 — Fresh Corn Run</title>
+<style>
+:root{--corn:#ffd84d;--green:#93d75a;--blue:#75d8f2;--red:#ef6549;--ink:#fffbed;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#274019;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 7px #000}.top{position:absolute;left:7px;right:7px;top:max(7px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:7px;align-items:start}.panel{background:#263b18cc;border:1px solid #ffd84d28;border-radius:12px;padding:7px 9px;backdrop-filter:blur(5px)}.left{justify-self:start}.center{text-align:center}.right{justify-self:end;text-align:right}.k{font:900 8px ui-monospace,monospace;letter-spacing:.12em;color:#ffeb90;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(14px,2.8vw,22px)}.corn{color:#ffe273}.timer{color:#86eaff}.damage{color:#ff8a70}.fuel{position:absolute;left:50%;top:76px;transform:translateX(-50%);width:min(78vw,420px);padding:7px 9px}.bar{height:10px;border-radius:99px;background:#2c1c0d;border:1px solid #ffffff20;overflow:hidden;margin-top:4px}.fill{height:100%;width:100%;background:linear-gradient(90deg,#ef6549,#ffd84d,#92d85c)}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #ffd84d55;background:#2a3e1bdf;color:#fff7df;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:7px;right:7px;bottom:calc(8px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.cluster{display:flex;gap:7px;pointer-events:auto}.btn{width:64px;height:72px;border-radius:16px;border:2px solid #ffffff2a;background:#2c3f1cdf;color:#fff;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent}.btn b{font-size:24px}.btn small{font-size:9px}.btn.green{border-color:#93d75a88;color:#c9ffa9}.btn.gold{border-color:#ffd84d88;color:#ffe991}.btn.blue{border-color:#75d8f288;color:#b0efff}.btn.down,.btn:active{transform:translateY(2px);filter:brightness(1.3)}.boostbar{position:fixed;z-index:7;left:50%;bottom:calc(14px + var(--safe));transform:translateX(-50%);width:min(30vw,155px);height:10px;border-radius:99px;background:#28361f;border:1px solid #ffffff21;overflow:hidden}.boostfill{height:100%;width:100%;background:linear-gradient(90deg,#75d8f2,#ffd84d)}.msg{position:fixed;z-index:8;left:50%;bottom:calc(86px + var(--safe));transform:translateX(-50%);max-width:min(88vw,620px);padding:7px 10px;border-radius:10px;background:#263a18dc;border:1px solid #ffd84d2d;color:#fff2c7;text-align:center;font:900 10px ui-monospace,monospace;opacity:0;transition:opacity .12s}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 30%,#719644e8,#17250ff6 70%);text-align:center}.card{width:min(760px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #ffd84d44;background:#263a18ee;box-shadow:0 25px 70px #000b}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#ffeb8e}.logo{font-size:clamp(40px,8.5vw,74px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#fff8e9;margin:8px 0}.logo span{display:block;color:#ffd84d}.sub{font-size:15px;line-height:1.5;color:#e0d4b8;max-width:620px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#fff5a9,#ffbc47);color:#2d1a06;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#354525;color:#f6ecd6;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;text-align:left;margin:15px 0}.how div{background:#ffffff07;border:1px solid #ffffff12;border-radius:11px;padding:10px;color:#dbceb1;font:500 13px/1.42 system-ui}.how b{color:#ffe989}.hidden{display:none!important}.result{font-size:24px;color:#ffd84d;font-weight:1000;margin:8px 0}
+@media(max-width:600px){.center{display:none}.top{grid-template-columns:1fr 1fr}.btn{width:55px;height:66px}.how{grid-template-columns:1fr}.card{padding:17px 12px}.fuel{top:73px}.msg{bottom:calc(78px + var(--safe));font-size:8px}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel left"><div class="k">Cargo</div><div class="big corn"><span id="cargo">12</span> / 12 CORN</div></div>
+<div class="panel center"><div class="k">Kernel Courier</div><div class="big timer"><span id="time">95.0</span>s · <span id="dist">0</span>/2400m</div></div>
+<div class="panel right"><div class="k">Truck</div><div class="big damage"><span id="damage">0</span>% DMG · $<span id="money">0</span></div></div>
+</div>
+<div class="panel fuel"><div class="k">Fuel</div><div class="bar"><div class="fill" id="fuelFill"></div></div></div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="msg" id="msg">FRESH CORN RUN</div>
+<div class="controls"><div class="cluster"><button class="btn green" id="left"><b>←</b><small>LEFT</small></button><button class="btn green" id="right"><b>→</b><small>RIGHT</small></button></div>
+<div class="cluster"><button class="btn blue" id="horn"><b>📣</b><small>HORN</small></button><button class="btn gold" id="boost"><b>⚡</b><small>BOOST</small></button></div></div>
+<div class="boostbar"><div class="boostfill" id="boostFill"></div></div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · 8BITOPS · v1.0.0</div><div class="logo">Kernel Courier <span>Fresh Corn Run</span></div>
+<p class="sub">Twelve ears of corn are loaded. The barn wants twelve ears of corn. Please consider keeping the truck, fuel tank, cargo, and chickens in roughly their intended conditions.</p>
+<div class="how">
+<div><b>Steer</b><br>A/D, arrows, or LEFT/RIGHT. The truck auto-drives down a three-lane farm road.</div>
+<div><b>Boost</b><br>Space / Shift or BOOST. Faster travel, heavier fuel burn. Recharges between uses.</div>
+<div><b>Horn</b><br>H or HORN. Chickens in the next stretch scatter if you honk before you reach them.</div>
+<div><b>Cargo</b><br>Hard hazards cause truck damage and can knock corn loose. Fixed extra-corn pickups can restore your load up to 12.</div>
+</div>
+<div style="padding:11px;border-left:3px solid #ffd84d;background:#ffd84d08;color:#eaddbd;text-align:left;font-size:13px;line-height:1.45"><b>DELIVERY CONTRACT:</b> Reach the barn by 2,400 m with 12 corn, fuel above zero, and damage below 100%. Route and pickup placement are identical every attempt.</div>
+<button class="main" id="start">LOAD OUT</button><div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">ROADSIDE HOLD</div><div class="logo">PAUSED</div><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="restart">RESTART DELIVERY</button><button class="small" id="quit">QUIT</button></div></div></div>
+
+<div class="overlay hidden" id="over"><div class="card"><div class="kicker" id="endK">DELIVERY FAILED</div><div class="logo" id="endTitle">Corn <span>Compromised</span></div><div class="result" id="result"></div><p class="sub" id="endCopy"></p><div id="best" style="color:#caff9f;font-weight:1000"></div><button class="main" id="retry">RUN IT AGAIN</button><div class="row"><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id),TAU=Math.PI*2;
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,ended=false,soundOn=(localStorage.getItem('kc_sound')??'1')==='1',AC=null;
+const ROUTE=2400,TIME=95;
+let best=+(localStorage.getItem('kc_best')||0),bestMoney=+(localStorage.getItem('kc_best_money')||0);
+
+const EVENT=[
+ [120,'mud',1],[235,'chicken',0],[350,'fuel',2],[470,'rock',1],[590,'coin',0],[710,'hay',2],[820,'corn',1],[930,'fence',0],
+ [1050,'boost',2],[1165,'chicken',1],[1280,'mud',0],[1390,'rock',2],[1500,'fuel',1],[1610,'hay',0],[1725,'corn',2],[1840,'chicken',2],
+ [1945,'fence',1],[2045,'coin',0],[2140,'boost',2],[2240,'rock',1],[2315,'corn',0]
+];
+const LANE_X=[-.52,0,.52];
+const G={d:0,time:TIME,lane:1,lanePos:1,speed:25,base:25,fuel:100,boost:100,boosting:false,cargo:12,damage:0,money:0,hit:new Set(),hornUntil:0,horned:new Set(),slow:0,flash:0,shake:0};
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=360,d=.08,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={hit:()=>tone(100,.13,'square',.075,.52),coin:()=>tone(880,.08,'triangle',.055,1.4),fuel:()=>tone(420,.10,'sine',.055,1.35),corn:()=>tone(630,.08,'triangle',.055,1.3),boost:()=>tone(180,.06,'sawtooth',.025,1.45),horn:()=>{tone(330,.11,'square',.06,1);setTimeout(()=>tone(270,.14,'square',.055,1),95)},win:()=>{tone(440,.13,'triangle',.06,1.4);setTimeout(()=>tone(660,.13,'triangle',.06,1.35),120);setTimeout(()=>tone(880,.22,'triangle',.06,1.25),250)}};
+
+function reset(){Object.assign(G,{d:0,time:TIME,lane:1,lanePos:1,speed:25,base:25,fuel:100,boost:100,boosting:false,cargo:12,damage:0,money:0,hit:new Set(),hornUntil:0,horned:new Set(),slow:0,flash:0,shake:0});ended=false;updateHud();show('FRESH CORN RUN · 12 IN THE BED',1.7)}
+function show(txt,d=1.2){$('msg').textContent=txt;$('msg').style.opacity=1;clearTimeout(show.t);show.t=setTimeout(()=>$('msg').style.opacity=0,d*1000)}
+function move(dir){if(!running||paused||ended)return;G.lane=Math.max(0,Math.min(2,G.lane+dir))}
+function horn(){if(!running||paused||ended)return;audio();G.hornUntil=G.d+180;sfx.horn();show('HONK! · CHICKENS AHEAD WILL SCATTER',.9)}
+const key=new Set(),hold={boost:false};
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright',' ','shift','h','escape'].includes(k))e.preventDefault();if(e.repeat)return;key.add(k);if(k==='a'||k==='arrowleft')move(-1);if(k==='d'||k==='arrowright')move(1);if(k==='h')horn();if(k==='escape'&&running)togglePause()},{passive:false});
+addEventListener('keyup',e=>key.delete(e.key.toLowerCase()));
+$('left').addEventListener('pointerdown',e=>{e.preventDefault();move(-1)},{passive:false});$('right').addEventListener('pointerdown',e=>{e.preventDefault();move(1)},{passive:false});$('horn').addEventListener('pointerdown',e=>{e.preventDefault();horn()},{passive:false});
+const bb=$('boost');bb.addEventListener('pointerdown',e=>{e.preventDefault();hold.boost=true;bb.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>bb.addEventListener(ev,e=>{e.preventDefault();hold.boost=false;bb.classList.remove('down')},{passive:false}));
+
+function impact(type){
+ let dmg=0,loss=0,slow=.6;
+ if(type==='rock'){dmg=18;loss=1;slow=1.0}
+ if(type==='hay'){dmg=10;loss=1;slow=.8}
+ if(type==='fence'){dmg=22;loss=2;slow=1.1}
+ if(type==='chicken'){dmg=8;loss=1;slow=.55}
+ if(type==='mud'){dmg=2;loss=0;slow=1.3}
+ G.damage=Math.min(100,G.damage+dmg);G.cargo=Math.max(0,G.cargo-loss);G.slow=slow;G.shake=.45;G.flash=.18;sfx.hit();
+ show(type==='chicken'?'BUK BUK BUK! · SHOULD HAVE HONKED':`${type.toUpperCase()} · CARGO ${loss?'-'+loss:'OK'} · DAMAGE +${dmg}`,1.0)
+}
+function resolve(){
+ for(let i=0;i<EVENT.length;i++){
+   if(G.hit.has(i))continue;const [d,type,lane]=EVENT[i],delta=d-G.d;if(delta>4)continue;if(delta<-10){G.hit.add(i);continue}
+   if(Math.abs(G.lane-lane)>.1)continue;
+   if(type==='chicken'&&G.hornUntil>=d){G.hit.add(i);G.horned.add(i);G.money+=5;show('CHICKENS SCATTERED · +$5 GOODWILL',.8);continue}
+   G.hit.add(i);
+   if(type==='fuel'){G.fuel=Math.min(100,G.fuel+38);sfx.fuel();show('FUEL +38',.8)}
+   else if(type==='boost'){G.boost=Math.min(100,G.boost+45);sfx.fuel();show('BOOST +45',.8)}
+   else if(type==='coin'){G.money+=25;sfx.coin();show('$25 FARM STAND TIP',.8)}
+   else if(type==='corn'){if(G.cargo<12){G.cargo++;sfx.corn();show('EXTRA CORN · CARGO +1',.9)}else{G.money+=10;sfx.coin();show('CARGO FULL · +$10 BONUS',.8)}}
+   else impact(type)
+ }
+}
+function fail(reason){
+ if(ended)return;ended=true;running=false;let copy='';
+ if(reason==='time')copy='You missed the delivery window. The route and pickup sequence are identical on retry.';
+ if(reason==='fuel')copy='The tank ran dry. Save boost or remember where the fixed fuel cans are.';
+ if(reason==='damage')copy='The truck reached 100% damage. The hazards are fixed—choose cleaner lanes.';
+ if(reason==='cargo')copy='The barn requires all 12 corn. You lost cargo and did not recover enough from the fixed extra-corn pickups.';
+ $('endK').textContent='DELIVERY FAILED';$('endTitle').innerHTML='Corn <span>Compromised</span>';$('result').textContent=`${Math.floor(G.d)} m · ${G.cargo}/12 corn · ${Math.round(G.damage)}% damage`;$('endCopy').textContent=copy;$('best').textContent=best?`BEST ${best.toFixed(1)}s · $${bestMoney}`:'NO COMPLETE DELIVERY YET';$('over').classList.remove('hidden')
+}
+function win(){
+ if(ended)return;if(G.cargo<12){fail('cargo');return}ended=true;running=false;sfx.win();let elapsed=TIME-G.time;G.money+=120+Math.round(G.fuel*.35)+Math.round((100-G.damage)*.25);
+ if(!best||elapsed<best)best=elapsed;bestMoney=Math.max(bestMoney,G.money);localStorage.setItem('kc_best',best);localStorage.setItem('kc_best_money',bestMoney);
+ $('endK').textContent='DELIVERY COMPLETE';$('endTitle').innerHTML='Fresh Corn <span>Delivered</span>';$('result').textContent=`${elapsed.toFixed(1)}s · 12/12 corn · $${G.money}`;$('endCopy').textContent='The corn made it. The chickens probably have opinions about your driving.';$('best').textContent=`BEST ${best.toFixed(1)}s · BEST PAY $${bestMoney}`;$('over').classList.remove('hidden')
+}
+function step(dt){
+ G.time-=dt;const want=(key.has(' ')||key.has('shift')||hold.boost)&&G.boost>1;G.boosting=want;
+ if(want){G.boost=Math.max(0,G.boost-28*dt);G.fuel=Math.max(0,G.fuel-1.35*dt);if(Math.floor(performance.now()/130)%4===0)sfx.boost()}else G.boost=Math.min(100,G.boost+7.5*dt);
+ G.fuel=Math.max(0,G.fuel-.36*dt);G.slow=Math.max(0,G.slow-dt);
+ let target=G.base*(G.slow>0?.58:1)*(want?1.48:1);G.speed+=(target-G.speed)*Math.min(1,3.5*dt);G.d+=G.speed*dt;G.lanePos+=(G.lane-G.lanePos)*Math.min(1,10*dt);
+ resolve();if(G.time<=0){fail('time');return}if(G.fuel<=0){fail('fuel');return}if(G.damage>=100){fail('damage');return}if(G.d>=ROUTE){win();return}
+ G.flash=Math.max(0,G.flash-dt);G.shake=Math.max(0,G.shake-dt);updateHud()
+}
+function updateHud(){$('cargo').textContent=G.cargo;$('time').textContent=Math.max(0,G.time).toFixed(1);$('dist').textContent=Math.min(ROUTE,Math.floor(G.d));$('damage').textContent=Math.round(G.damage);$('money').textContent=G.money;$('fuelFill').style.width=G.fuel+'%';$('boostFill').style.width=G.boost+'%';$('sound').textContent=soundOn?'🔊':'🔇'}
+function py(ahead){let n=Math.max(0,Math.min(1,1-ahead/330));return H*.20+n*n*(H*.80-H*.20)}
+function laneX(l,y){let p=(y-H*.2)/(H*.8-H*.2),spread=42+p*Math.min(W*.18,110);return W/2+(l-1)*spread}
+function drawBackground(){let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#82c4ed');g.addColorStop(.35,'#a7cf68');g.addColorStop(1,'#6e9c43');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#ffe47a';ctx.beginPath();ctx.arc(W*.82,H*.12,38,0,TAU);ctx.fill();
+ // farm sides
+ for(let i=0;i<16;i++){let y=H*.35+(i%5)*52,x=i%2?W*.08:W*.92;ctx.fillStyle=i%3?'#76993a':'#c5a34b';ctx.fillRect(x-18,y,36,58)}
+}
+function drawRoad(){const far=H*.20,near=H*.84;ctx.fillStyle='#b88955';ctx.beginPath();ctx.moveTo(W*.44,far);ctx.lineTo(W*.56,far);ctx.lineTo(W*.88,near);ctx.lineTo(W*.12,near);ctx.closePath();ctx.fill();ctx.strokeStyle='#e0b978';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(W*.44,far);ctx.lineTo(W*.12,near);ctx.moveTo(W*.56,far);ctx.lineTo(W*.88,near);ctx.stroke();
+ ctx.setLineDash([14,14]);ctx.strokeStyle='#f0d59a66';ctx.lineWidth=2;for(const l of [0.5,1.5]){ctx.beginPath();ctx.moveTo(laneX(l,far),far);ctx.lineTo(laneX(l,near),near);ctx.stroke()}ctx.setLineDash([])
+}
+function drawEvent(e,i){const [d,type,lane]=e,ahead=d-G.d;if(ahead<-8||ahead>330||G.hit.has(i))return;const y=py(ahead),x=laneX(lane,y),s=.24+(1-ahead/330)*.95;ctx.save();ctx.translate(x,y);ctx.scale(s,s);
+ if(type==='mud'){ctx.fillStyle='#5b3a26';ctx.beginPath();ctx.ellipse(0,0,44,14,0,0,TAU);ctx.fill()}
+ else if(type==='rock'){ctx.fillStyle='#7b7e76';ctx.beginPath();ctx.moveTo(-27,8);ctx.lineTo(-15,-24);ctx.lineTo(9,-30);ctx.lineTo(31,7);ctx.closePath();ctx.fill()}
+ else if(type==='hay'){ctx.fillStyle='#d4b34f';ctx.fillRect(-34,-22,68,44);ctx.strokeStyle='#9f7c2b';ctx.strokeRect(-34,-22,68,44)}
+ else if(type==='fence'){ctx.strokeStyle='#e8cf9b';ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(-45,-20);ctx.lineTo(45,-20);ctx.moveTo(-45,12);ctx.lineTo(45,12);ctx.moveTo(-30,-36);ctx.lineTo(-30,30);ctx.moveTo(30,-36);ctx.lineTo(30,30);ctx.stroke()}
+ else if(type==='chicken'){ctx.fillStyle='#f7f0df';ctx.beginPath();ctx.ellipse(0,0,23,18,0,0,TAU);ctx.fill();ctx.fillStyle='#f3ad36';ctx.beginPath();ctx.moveTo(20,-4);ctx.lineTo(35,2);ctx.lineTo(20,8);ctx.fill();ctx.fillStyle='#e24b40';ctx.beginPath();ctx.arc(-3,-19,6,0,TAU);ctx.fill()}
+ else if(type==='fuel'){ctx.fillStyle='#d84c36';ctx.fillRect(-20,-28,40,56);ctx.fillStyle='#fff2d0';ctx.font='900 16px system-ui';ctx.textAlign='center';ctx.fillText('F',0,6)}
+ else if(type==='boost'){ctx.fillStyle='#75d8f2';ctx.beginPath();ctx.moveTo(-8,-30);ctx.lineTo(15,-6);ctx.lineTo(3,-6);ctx.lineTo(13,30);ctx.lineTo(-18,4);ctx.lineTo(-5,4);ctx.closePath();ctx.fill()}
+ else if(type==='coin'){ctx.fillStyle='#ffd84d';ctx.strokeStyle='#a4771c';ctx.lineWidth=4;ctx.beginPath();ctx.arc(0,0,18,0,TAU);ctx.fill();ctx.stroke();ctx.fillStyle='#8a6217';ctx.font='900 15px system-ui';ctx.textAlign='center';ctx.fillText('$',0,6)}
+ else if(type==='corn'){ctx.fillStyle='#ffd84d';ctx.beginPath();ctx.ellipse(0,0,10,28,0,0,TAU);ctx.fill();ctx.strokeStyle='#67a342';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-6,18);ctx.lineTo(-18,33);ctx.moveTo(6,18);ctx.lineTo(18,33);ctx.stroke()}
+ ctx.restore()
+}
+function drawTruck(){let y=H*.78,x=laneX(G.lanePos,y);if(G.shake>0)x+=Math.sin(performance.now()*.08)*6*G.shake;ctx.save();ctx.translate(x,y);ctx.fillStyle='rgba(0,0,0,.22)';ctx.beginPath();ctx.ellipse(0,24,42,12,0,0,TAU);ctx.fill();ctx.fillStyle='#607b31';ctx.fillRect(-39,-22,46,38);ctx.fillStyle='#efa42e';ctx.beginPath();ctx.roundRect(0,-30,42,46,8);ctx.fill();ctx.fillStyle='#9dddf0';ctx.fillRect(8,-23,26,14);ctx.fillStyle='#171717';ctx.beginPath();ctx.arc(-25,19,11,0,TAU);ctx.arc(28,19,11,0,TAU);ctx.fill();
+ // cargo kernels visible
+ ctx.fillStyle='#ffd84d';for(let i=0;i<Math.min(6,G.cargo);i++){let xx=-32+(i%3)*13,yy=-29-Math.floor(i/3)*11;ctx.beginPath();ctx.ellipse(xx,yy,5,12,0,0,TAU);ctx.fill()}
+ if(G.boosting){ctx.fillStyle='#75d8f2';ctx.beginPath();ctx.moveTo(-42,2);ctx.lineTo(-65,-8);ctx.lineTo(-59,7);ctx.closePath();ctx.fill()}
+ ctx.restore()}
+function draw(){drawBackground();drawRoad();EVENT.forEach(drawEvent);drawTruck();if(G.flash>0){ctx.fillStyle=`rgba(255,190,100,${Math.min(.18,G.flash)})`;ctx.fillRect(0,0,W,H)}}
+function frame(ts){const dt=Math.min(.034,(ts-last)/1000);last=ts;if(running&&!paused&&!ended)step(dt);draw();requestAnimationFrame(frame)}
+function start(){reset();$('menu').classList.add('hidden');$('over').classList.add('hidden');$('pauseOverlay').classList.add('hidden');running=true;paused=false;last=performance.now();audio()}
+function togglePause(force){if(!running||ended)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+$('start').onclick=$('retry').onclick=$('restart').onclick=start;$('pauseBtn').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('quit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden')};$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('kc_sound',soundOn?'1':'0');updateHud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();reset();requestAnimationFrame(frame);if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script></body></html>
