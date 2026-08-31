@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#071117">
+<title>Canyon Run — KGB Arcade</title>
+<meta name="description" content="Canyon Run is an arcade-assisted fighter-jet canyon flyer from KGB Arcade. Move, level out, learn the fixed route, and don't crash.">
+<style>
+:root{--ink:#eefaff;--cyan:#64e4ff;--orange:#ff9b4b;--gold:#ffd55e;--muted:#b9cad3;--line:#ffffff18}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 62% 7%,#163b50,#0a1b26 35%,#04080c 78%);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial}
+a{color:inherit;text-decoration:none}.nav{position:sticky;top:0;z-index:5;background:#050b0fe8;border-bottom:1px solid var(--line);backdrop-filter:blur(9px)}.navin{max-width:1100px;margin:auto;padding:13px 20px;display:flex;justify-content:space-between;align-items:center}.brand{font-weight:1000;letter-spacing:.09em}.back{padding:9px 12px;border:1px solid #64e4ff55;border-radius:10px;font-weight:850}
+.wrap{max-width:1100px;margin:auto;padding:44px 20px 70px}.hero{display:grid;grid-template-columns:1.04fr .96fr;gap:34px;align-items:center}.chip{display:inline-flex;padding:6px 10px;border:1px solid #64e4ff66;border-radius:999px;color:#a1f0ff;font:900 12px ui-monospace,monospace;letter-spacing:.11em}
+h1{font-size:clamp(52px,8vw,91px);line-height:.82;margin:15px 0 18px;text-transform:uppercase;font-style:italic;color:#f2fbff;text-shadow:0 4px 0 #0b1820}h1 span{display:block;color:var(--orange);text-shadow:0 0 31px #ff9b4b3b}.lead{font-size:clamp(17px,2.3vw,21px);line-height:1.55;color:#d3e3e9;max-width:680px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}.play{padding:14px 21px;border-radius:13px;background:linear-gradient(#e5fbff,#79def2);color:#071b22;font-weight:1000;box-shadow:0 0 30px #64e4ff2d}.ghost{padding:14px 20px;border:1px solid #64e4ff44;border-radius:13px;background:#0c1e29;font-weight:900}
+.poster{height:390px;border-radius:27px;border:1px solid #ffffff18;position:relative;overflow:hidden;background:linear-gradient(#173f5b 0 43%,#d28a4d 43% 65%,#6e3f26 65%);box-shadow:0 25px 70px #000a}.sun{position:absolute;right:11%;top:9%;width:78px;height:78px;border-radius:50%;background:#ffe3a0;box-shadow:0 0 42px #ffd36d55}.canyon{position:absolute;inset:0;background:linear-gradient(82deg,#7e492d 0 18%,transparent 18% 82%,#7e492d 82%),linear-gradient(97deg,#a25d35 0 27%,transparent 27% 73%,#a25d35 73%);clip-path:polygon(0 38%,35% 24%,44% 100%,56% 100%,65% 25%,100% 38%,100% 100%,0 100%)}.contour{position:absolute;left:0;right:0;height:2px;background:#ffd38d55;transform:skewY(-4deg)}.l1{top:49%}.l2{top:57%;transform:skewY(3deg)}.l3{top:68%;transform:skewY(-2deg)}.jet{position:absolute;left:50%;bottom:18%;width:124px;height:58px;transform:translateX(-50%);filter:drop-shadow(0 10px 8px #0009)}.jet:before{content:"";position:absolute;left:50%;top:0;width:24px;height:58px;transform:translateX(-50%);clip-path:polygon(50% 0,100% 77%,66% 70%,63% 100%,37% 100%,34% 70%,0 77%);background:linear-gradient(#ecf6fa,#778e99)}.jet:after{content:"";position:absolute;left:8px;right:8px;top:30px;height:12px;clip-path:polygon(0 50%,44% 0,56% 0,100% 50%,56% 100%,44% 100%);background:#bdcbd0}.gate{position:absolute;left:50%;top:30%;width:118px;height:78px;border:6px solid #83ffab;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 25px #83ffab66}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-top:42px}.card{padding:20px;border:1px solid var(--line);border-radius:16px;background:#ffffff08}.card h2{margin:0 0 8px;color:#9feeff;font-size:19px}.card p{margin:0;color:var(--muted);line-height:1.52}.arcade{margin-top:21px;padding:20px;border-left:3px solid var(--cyan);background:#64e4ff08;border-radius:0 14px 14px 0;color:#d8e8ee;line-height:1.55}.arcade strong{color:#9ff0ff}
+@media(max-width:780px){.hero{grid-template-columns:1fr}.poster{height:270px;order:-1}.grid{grid-template-columns:1fr}.wrap{padding-top:26px}}
+</style></head>
+<body>
+<nav class="nav"><div class="navin"><div class="brand">KGB ARCADE</div><a class="back" href="/#arsenal">← Arsenal</a></div></nav>
+<main class="wrap">
+<section class="hero"><div>
+<span class="chip">8BitOps · Live · v1.0.0</span>
+<h1>Canyon <span>Run</span></h1>
+<p class="lead">The jet never stops moving. Push left and you move left. Push right and you move right. Up climbs. Down descends. Release the control and the aircraft levels itself instead of making you undo some invisible flight-control state.</p>
+<div class="actions"><a class="play" href="./play/">▶ ENTER THE CANYON</a><a class="ghost" href="/#arsenal">Game Vault</a></div>
+<div class="arcade"><strong>Arcade flight, not pilot training:</strong> one fixed canyon route, fixed gates and hazards, obvious screen-space movement, automatic pitch/roll centering, and a brake that buys thinking time without stopping forward flight.</div>
+</div>
+<div class="poster" aria-hidden="true"><div class="sun"></div><div class="canyon"></div><div class="contour l1"></div><div class="contour l2"></div><div class="contour l3"></div><div class="gate"></div><div class="jet"></div></div>
+</section>
+<section class="grid">
+<div class="card"><h2>MOVE WHERE YOU MEAN</h2><p>Left/right translate across the canyon while the jet banks visually. Up/down change altitude while the nose pitches. Let go and the attitude returns to neutral.</p></div>
+<div class="card"><h2>LEARN THE ROUTE</h2><p>The canyon bends, squeezes, rises, drops, and places gates and rock hazards at the same distances every run. Failed flights become route knowledge.</p></div>
+<div class="card"><h2>BRAKE, DON'T STOP</h2><p>Brake reduces forward speed enough to read a bad section or line up a gate, but the aircraft always keeps moving. The canyon is still coming.</p></div>
+</section></main></body></html>

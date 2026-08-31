@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#071117"><link rel="manifest" href="./manifest.webmanifest">
+<title>Canyon Run v1.0.0</title>
+<style>
+:root{--cyan:#64e4ff;--orange:#ff9b4b;--gold:#ffd55e;--green:#83ffab;--red:#ff5c62;--ink:#eefaff;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071117;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 8px #000}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}.panel{background:#061722c9;border:1px solid #64e4ff25;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px)}.left{justify-self:start}.center{text-align:center}.right{justify-self:end;text-align:right}.k{font:900 9px ui-monospace,monospace;letter-spacing:.13em;color:#a1f0ff;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(16px,3vw,24px)}.dist{color:#83ffab}.speed{color:#ffd55e}.gates{color:#ffb36d}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #64e4ff55;background:#081923df;color:#e8faff;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:6px;right:6px;bottom:calc(7px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.cluster{display:flex;gap:6px;pointer-events:auto}.btn{width:55px;height:70px;border-radius:15px;border:2px solid #64e4ff66;background:#071923df;color:#c7f5ff;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent}.btn b{font-size:24px}.btn small{font-size:8px;letter-spacing:.03em}.btn.gold{border-color:#ffd55e88;color:#ffe599}.btn.down,.btn:active{transform:translateY(2px);filter:brightness(1.3)}.attitude{position:fixed;z-index:7;left:50%;bottom:calc(88px + var(--safe));transform:translateX(-50%);padding:6px 9px;border-radius:9px;background:#06151ed1;border:1px solid #ffffff1d;color:#cfe8f2;font:900 10px ui-monospace,monospace;pointer-events:none}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 30%,#1d4964e6,#03070af6 70%);text-align:center}.card{width:min(760px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #64e4ff44;background:#071722ee;box-shadow:0 25px 70px #000c}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#a1f0ff}.logo{font-size:clamp(45px,9vw,80px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#f2fbff;margin:8px 0}.logo span{display:block;color:#ff9b4b}.sub{font-size:15px;line-height:1.5;color:#cadde5;max-width:620px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#e5fbff,#79def2);color:#071b22;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#0a1d29;color:#e8f7fc;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;text-align:left;margin:15px 0}.how div{background:#ffffff07;border:1px solid #ffffff12;border-radius:11px;padding:10px;color:#c5d8e0;font:500 13px/1.42 system-ui}.how b{color:#9fefff}.callout{padding:11px;border-left:3px solid #64e4ff;background:#64e4ff08;color:#d4e8ee;text-align:left;font-size:13px;line-height:1.45}.hidden{display:none!important}.result{font-size:24px;color:#ffd55e;font-weight:1000;margin:8px 0}
+@media(max-width:560px){.center{display:none}.top{grid-template-columns:1fr 1fr}.btn{width:48px;height:64px}.how{grid-template-columns:1fr}.card{padding:17px 12px}.attitude{bottom:calc(78px + var(--safe));font-size:8px}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel left"><div class="k">Distance</div><div class="big dist"><span id="dist">0</span> / 4800 m</div></div>
+<div class="panel center"><div class="k">Canyon Run</div><div class="big" id="sector">ENTRY SLOT</div></div>
+<div class="panel right"><div class="k">Flight</div><div class="big"><span class="speed" id="speed">310</span> KT · <span class="gates" id="gates">0</span> GATES</div></div>
+</div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="attitude" id="attitude">BANK 0° · PITCH 0°</div>
+<div class="controls">
+<div class="cluster"><button class="btn" id="left"><b>←</b><small>LEFT</small></button><button class="btn" id="right"><b>→</b><small>RIGHT</small></button></div>
+<div class="cluster"><button class="btn" id="up"><b>↑</b><small>UP</small></button><button class="btn" id="down"><b>↓</b><small>DOWN</small></button><button class="btn gold" id="brake"><b>◉</b><small>BRAKE</small></button></div>
+</div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · 8BITOPS · v1.0.0</div><div class="logo">Canyon <span>Run</span></div>
+<p class="sub">This is an arcade flyer. You are not trimming an aircraft. You are telling a jet where on the screen you want it to go.</p>
+<div class="how">
+<div><b>Left / Right</b><br>A/D or arrows move laterally. The jet banks while held, then automatically levels when released.</div>
+<div><b>Up / Down</b><br>W/S or arrows climb/descend. The nose pitches while held, then automatically levels when released.</div>
+<div><b>Brake</b><br>Space / Shift or BRAKE slows forward motion without stopping it. Use it to buy reaction time.</div>
+<div><b>The Route</b><br>4,800 meters of fixed canyon geometry, gates, arches, rock spires, and squeeze sections. Don't crash.</div>
+</div>
+<div class="callout"><b>ARCADE-TRUE:</b> every bend and obstacle is authored. If you die at 2,300 meters, the answer is to remember 2,300 meters—not hope the canyon rolls something easier next run.</div>
+<button class="main" id="start">LAUNCH</button><div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">FLIGHT HOLD</div><div class="logo">PAUSED</div><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="restart">RESTART RUN</button><button class="small" id="quit">QUIT</button></div></div></div>
+
+<div class="overlay hidden" id="over"><div class="card"><div class="kicker" id="endK">AIRFRAME LOST</div><div class="logo" id="endTitle">Canyon <span>Wins</span></div><div class="result" id="result"></div><p class="sub" id="endCopy"></p><div id="best" style="color:#98ffb4;font-weight:1000"></div><button class="main" id="retry">FLY AGAIN</button><div class="row"><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id),TAU=Math.PI*2;
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,ended=false,soundOn=(localStorage.getItem('cr_sound')??'1')==='1',AC=null;
+const ROUTE=4800;
+let bestDistance=+(localStorage.getItem('cr_best_distance')||0),bestTime=+(localStorage.getItem('cr_best_time')||0);
+
+// authored course keyframes: distance, lateral center, vertical center, half-width, half-height
+const COURSE=[
+ [0,0,0,.76,.70],[300,-.08,.04,.73,.67],[600,-.26,.12,.66,.62],[900,-.10,.20,.62,.56],
+ [1200,.24,.14,.66,.58],[1500,.36,-.02,.60,.55],[1800,.12,-.18,.56,.50],[2100,-.24,-.12,.58,.53],
+ [2400,-.38,.08,.52,.48],[2700,-.12,.24,.50,.44],[3000,.22,.18,.54,.46],[3300,.40,-.06,.49,.43],
+ [3600,.18,-.26,.52,.45],[3900,-.22,-.20,.56,.48],[4200,-.34,.06,.60,.52],[4500,-.08,.18,.65,.58],[4800,0,0,.72,.66]
+];
+// authored event objects: d,type,x,y,size
+const EVENTS=[
+ [360,'gate',-.14,.02,.18],[620,'spire',.42,.05,.16],[820,'gate',-.31,.18,.17],
+ [1040,'arch',.04,.04,.24],[1280,'gate',.33,.16,.16],[1510,'spire',-.18,-.06,.18],
+ [1710,'gate',.15,-.19,.16],[1940,'arch',-.22,-.08,.21],[2180,'gate',-.30,-.08,.15],
+ [2380,'spire',.17,.16,.19],[2570,'gate',-.10,.27,.15],[2790,'arch',.02,.19,.20],
+ [3010,'gate',.25,.18,.15],[3210,'spire',-.12,-.05,.18],[3410,'gate',.37,-.08,.15],
+ [3620,'arch',.14,-.28,.20],[3840,'gate',-.18,-.22,.16],[4050,'spire',.18,.05,.18],
+ [4270,'gate',-.28,.08,.16],[4480,'arch',-.05,.17,.22],[4660,'gate',0,.02,.17]
+];
+const ZONES=[[0,'ENTRY SLOT'],[900,'RED WALL'],[1800,'NEEDLE PASS'],[2700,'HIGH CUT'],[3600,'LOW KNIFE'],[4400,'EXIT RUN']];
+
+const key=new Set(),hold={left:false,right:false,up:false,down:false,brake:false};
+const p={x:0,y:0,vx:0,vy:0,bank:0,pitch:0,d:0,speed:88,baseSpeed:88,gates:0,time:0,hit:new Set(),flash:0,shake:0};
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=300,d=.08,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const t=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),t+d);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(v,t+.006);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.02)}
+const sfx={gate:()=>tone(720,.10,'triangle',.06,1.35),warn:()=>tone(190,.09,'square',.035,.9),crash:()=>tone(80,.42,'sawtooth',.10,.42),win:()=>{tone(440,.13,'triangle',.06,1.4);setTimeout(()=>tone(660,.13,'triangle',.06,1.35),120);setTimeout(()=>tone(880,.22,'triangle',.06,1.25),250)}};
+
+function smooth(t){return t*t*(3-2*t)}
+function courseAt(d){
+ d=Math.max(0,Math.min(ROUTE,d));let a=COURSE[0],b=COURSE[COURSE.length-1];
+ for(let i=0;i<COURSE.length-1;i++)if(d>=COURSE[i][0]&&d<=COURSE[i+1][0]){a=COURSE[i];b=COURSE[i+1];break}
+ let t=(d-a[0])/Math.max(1,b[0]-a[0]),q=smooth(t);
+ return{cx:a[1]+(b[1]-a[1])*q,cy:a[2]+(b[2]-a[2])*q,hw:a[3]+(b[3]-a[3])*q,hh:a[4]+(b[4]-a[4])*q}
+}
+function reset(){Object.assign(p,{x:0,y:0,vx:0,vy:0,bank:0,pitch:0,d:0,speed:88,baseSpeed:88,gates:0,time:0,hit:new Set(),flash:0,shake:0});ended=false;updateHud()}
+function input(){
+ return{
+  x:((key.has('d')||key.has('arrowright')||hold.right)?1:0)-((key.has('a')||key.has('arrowleft')||hold.left)?1:0),
+  y:((key.has('w')||key.has('arrowup')||hold.up)?1:0)-((key.has('s')||key.has('arrowdown')||hold.down)?1:0),
+  brake:key.has(' ')||key.has('shift')||hold.brake
+ }
+}
+function bindHold(id,n){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();audio();hold[n]=true;b.classList.add('down')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[n]=false;b.classList.remove('down')},{passive:false}))}
+['left','right','up','down','brake'].forEach(n=>bindHold(n,n));
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowleft','arrowright','arrowup','arrowdown',' ','shift','escape'].includes(k))e.preventDefault();key.add(k);if(k==='escape'&&running)togglePause()},{passive:false});
+addEventListener('keyup',e=>key.delete(e.key.toLowerCase()));
+
+function fail(reason){
+ if(ended)return;ended=true;running=false;sfx.crash();bestDistance=Math.max(bestDistance,Math.floor(p.d));localStorage.setItem('cr_best_distance',bestDistance);
+ $('endK').textContent='AIRFRAME LOST';$('endTitle').innerHTML='Canyon <span>Wins</span>';$('result').textContent=Math.floor(p.d)+' m · '+p.gates+' gates';
+ $('endCopy').textContent=reason==='wall'?'You hit the canyon boundary. That squeeze and bend are identical next run.':'You clipped a fixed obstacle. Its distance and position do not change.';
+ $('best').textContent=(bestTime?`BEST CLEAR ${bestTime.toFixed(1)}s · `:'')+'FARTHEST '+bestDistance+' m';$('over').classList.remove('hidden')
+}
+function win(){
+ if(ended)return;ended=true;running=false;sfx.win();if(!bestTime||p.time<bestTime){bestTime=p.time;localStorage.setItem('cr_best_time',bestTime)}bestDistance=ROUTE;localStorage.setItem('cr_best_distance',ROUTE);
+ $('endK').textContent='CANYON CLEARED';$('endTitle').innerHTML='Run <span>Complete</span>';$('result').textContent=p.time.toFixed(1)+' sec · '+p.gates+' gates';$('endCopy').textContent='The route did not get easier. You got better at flying it.';$('best').textContent='BEST CLEAR '+bestTime.toFixed(1)+'s';$('over').classList.remove('hidden')
+}
+function step(dt){
+ const i=input();p.time+=dt;
+ // Direct arcade movement with damped velocity.
+ const targetVx=i.x*.74,targetVy=i.y*.72;
+ p.vx+=(targetVx-p.vx)*Math.min(1,5.8*dt);
+ p.vy+=(targetVy-p.vy)*Math.min(1,5.8*dt);
+ // Release = velocity naturally decays toward zero. No persistent bank/pitch state.
+ if(!i.x)p.vx*=Math.pow(.88,dt*60);
+ if(!i.y)p.vy*=Math.pow(.88,dt*60);
+ p.x+=p.vx*dt;p.y+=p.vy*dt;
+ p.x=Math.max(-1.05,Math.min(1.05,p.x));p.y=Math.max(-1.02,Math.min(1.02,p.y));
+ // Visual attitude always auto-centers on release.
+ const bankTarget=-i.x*.58,pitchTarget=i.y*.34;
+ p.bank+=(bankTarget-p.bank)*Math.min(1,(i.x?7:5.2)*dt);
+ p.pitch+=(pitchTarget-p.pitch)*Math.min(1,(i.y?7:5.2)*dt);
+ // Brake buys time but cannot stop forward flight.
+ const targetSpeed=i.brake?56:p.baseSpeed;
+ p.speed+=(targetSpeed-p.speed)*Math.min(1,2.8*dt);
+ p.d+=p.speed*dt;
+
+ const q=courseAt(p.d);
+ // Hard canyon boundary, with a tiny forgiveness margin.
+ if(Math.abs(p.x-q.cx)>q.hw*.94 || Math.abs(p.y-q.cy)>q.hh*.94){fail('wall');return}
+
+ for(let e=0;e<EVENTS.length;e++){
+   if(p.hit.has(e))continue;const [d,type,x,y,size]=EVENTS[e],delta=d-p.d;
+   if(delta<-10){p.hit.add(e);continue}
+   if(Math.abs(delta)<6){
+      const dx=p.x-x,dy=p.y-y,r=Math.hypot(dx,dy);
+      if(type==='gate'){
+        if(r<size){p.gates++;p.hit.add(e);sfx.gate();p.flash=.13}
+        else if(delta<0)p.hit.add(e)
+      }else if(type==='spire'){
+        if(r<size){fail('obstacle');return}
+        if(delta<0)p.hit.add(e)
+      }else if(type==='arch'){
+        // Arch is safe only through the center opening.
+        if(r>size*.78){fail('obstacle');return}
+        if(delta<0)p.hit.add(e)
+      }
+   }
+ }
+ if(p.d>=ROUTE){win();return}
+ p.flash=Math.max(0,p.flash-dt);p.shake=Math.max(0,p.shake-dt);
+ updateHud()
+}
+function updateHud(){
+ $('dist').textContent=Math.min(ROUTE,Math.floor(p.d));$('speed').textContent=Math.round(p.speed*3.52);$('gates').textContent=p.gates;
+ let z=ZONES[0][1];for(const a of ZONES)if(p.d>=a[0])z=a[1];$('sector').textContent=z;
+ $('attitude').textContent=`BANK ${(p.bank*50).toFixed(0)}° · PITCH ${(p.pitch*40).toFixed(0)}°`;$('sound').textContent=soundOn?'🔊':'🔇'
+}
+function project(d,x,y){
+ const ahead=d-p.d;if(ahead<=2)return null;const depth=Math.max(.001,Math.min(1,ahead/900)),pers=1-depth;
+ const q=courseAt(d);const scale=.18+pers*1.05;
+ return{x:W/2+(x-q.cx)*W*.48*scale,y:H*.45-(y-q.cy)*H*.40*scale+pers*H*.20,scale,pers,ahead,q}
+}
+function drawSky(){
+ let g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#153b57');g.addColorStop(.42,'#6f6d64');g.addColorStop(.62,'#d2894c');g.addColorStop(1,'#3c2519');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='#ffe5a0';ctx.beginPath();ctx.arc(W*.82,H*.14,35,0,TAU);ctx.fill()
+}
+function drawCanyon(){
+ // Layer far-to-near corridor frames to create a readable topographic tunnel.
+ const samples=[];for(let a=900;a>=45;a-=45){let d=p.d+a,q=courseAt(d),pers=1-a/900,scale=.20+pers*.90,cx=W/2+(q.cx-p.x*.15)*W*.20*scale,cy=H*.43-(q.cy-p.y*.12)*H*.14*scale+pers*H*.21,hw=q.hw*W*.48*scale,hh=q.hh*H*.42*scale;samples.push({d,cx,cy,hw,hh,pers})}
+ // walls between frames
+ for(let i=0;i<samples.length-1;i++){const a=samples[i],b=samples[i+1],alpha=.10+a.pers*.16;ctx.fillStyle=`rgba(105,58,34,${alpha})`;
+   ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(a.cx-a.hw,a.cy-a.hh);ctx.lineTo(b.cx-b.hw,b.cy-b.hh);ctx.lineTo(0,H);ctx.closePath();ctx.fill();
+   ctx.beginPath();ctx.moveTo(W,0);ctx.lineTo(a.cx+a.hw,a.cy-a.hh);ctx.lineTo(b.cx+b.hw,b.cy-b.hh);ctx.lineTo(W,H);ctx.closePath();ctx.fill();
+ }
+ // contour frames
+ for(const s of samples){ctx.strokeStyle=`rgba(255,195,118,${.07+s.pers*.24})`;ctx.lineWidth=1+s.pers*1.4;ctx.beginPath();ctx.rect(s.cx-s.hw,s.cy-s.hh,s.hw*2,s.hh*2);ctx.stroke()}
+ // canyon center guide only faintly at long range
+ ctx.strokeStyle='rgba(100,228,255,.15)';ctx.lineWidth=2;ctx.beginPath();let first=true;for(const s of samples){if(first){ctx.moveTo(s.cx,s.cy);first=false}else ctx.lineTo(s.cx,s.cy)}ctx.stroke()
+}
+function drawEvents(){
+ const visible=EVENTS.filter(e=>e[0]>p.d+5&&e[0]<p.d+900).sort((a,b)=>b[0]-a[0]);
+ for(const [d,type,x,y,size] of visible){const pr=project(d,x,y);if(!pr)continue;const r=Math.max(5,size*W*.28*pr.scale);
+   if(type==='gate'){ctx.strokeStyle='#83ffab';ctx.lineWidth=Math.max(2,5*pr.scale);ctx.shadowColor='#83ffab';ctx.shadowBlur=12*pr.scale;ctx.beginPath();ctx.ellipse(pr.x,pr.y,r,r*.72,0,0,TAU);ctx.stroke();ctx.shadowBlur=0}
+   else if(type==='spire'){ctx.fillStyle='#6e3f27';ctx.strokeStyle='#c37a47';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(pr.x,pr.y-r*1.3);ctx.lineTo(pr.x+r*.8,pr.y+r);ctx.lineTo(pr.x-r*.8,pr.y+r);ctx.closePath();ctx.fill();ctx.stroke()}
+   else{ctx.strokeStyle='#ffb061';ctx.lineWidth=Math.max(3,10*pr.scale);ctx.beginPath();ctx.arc(pr.x,pr.y,r,Math.PI,0);ctx.stroke();ctx.beginPath();ctx.moveTo(pr.x-r,pr.y);ctx.lineTo(pr.x-r,pr.y+r*.85);ctx.moveTo(pr.x+r,pr.y);ctx.lineTo(pr.x+r,pr.y+r*.85);ctx.stroke()}
+ }
+}
+function drawJet(){
+ // Jet remains near lower center; position reflects x/y input directly in screen space.
+ const sx=W/2+p.x*W*.28,sy=H*.72-p.y*H*.25;
+ ctx.save();ctx.translate(sx,sy);ctx.rotate(p.bank);ctx.scale(1,1+p.pitch*.12);
+ ctx.shadowColor='#64e4ff';ctx.shadowBlur=10;ctx.fillStyle='#dce9ee';ctx.beginPath();ctx.moveTo(0,-34);ctx.lineTo(13,9);ctx.lineTo(52,28);ctx.lineTo(12,22);ctx.lineTo(7,42);ctx.lineTo(0,34);ctx.lineTo(-7,42);ctx.lineTo(-12,22);ctx.lineTo(-52,28);ctx.lineTo(-13,9);ctx.closePath();ctx.fill();ctx.shadowBlur=0;
+ ctx.fillStyle='#4a6673';ctx.beginPath();ctx.ellipse(0,-5,7,17,0,0,TAU);ctx.fill();
+ // engine glow
+ ctx.fillStyle='#64e4ff';ctx.beginPath();ctx.ellipse(-7,28,5,12,0,0,TAU);ctx.ellipse(7,28,5,12,0,0,TAU);ctx.fill();ctx.restore()
+}
+function drawWarnings(){
+ const q=courseAt(p.d),nx=Math.abs(p.x-q.cx)/(q.hw*.94),ny=Math.abs(p.y-q.cy)/(q.hh*.94),danger=Math.max(nx,ny);
+ if(danger>.72){ctx.strokeStyle=`rgba(255,92,98,${(danger-.72)/.28*.8})`;ctx.lineWidth=7;ctx.strokeRect(4,4,W-8,H-8)}
+}
+function draw(){drawSky();drawCanyon();drawEvents();drawJet();drawWarnings();if(p.flash>0){ctx.fillStyle=`rgba(131,255,171,${p.flash})`;ctx.fillRect(0,0,W,H)}}
+function frame(ts){const dt=Math.min(.034,(ts-last)/1000);last=ts;if(running&&!paused&&!ended)step(dt);draw();requestAnimationFrame(frame)}
+function start(){reset();$('menu').classList.add('hidden');$('over').classList.add('hidden');$('pauseOverlay').classList.add('hidden');running=true;paused=false;last=performance.now();audio()}
+function togglePause(force){if(!running||ended)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+$('start').onclick=$('retry').onclick=$('restart').onclick=start;$('pauseBtn').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('quit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden')};$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('cr_sound',soundOn?'1':'0');updateHud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();reset();requestAnimationFrame(frame);if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script></body></html>

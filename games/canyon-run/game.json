@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "canyon-run",
+  "title": "Canyon Run",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/canyon-run/",
+  "playPath": "/games/canyon-run/play/",
+  "sourceLineage": "August 1, 2026 fighter-jet canyon prototype \u2192 arcade-assist control redesign \u2192 canonical Canyon Run v1 rebuild",
+  "settledControlRequirements": [
+    "aircraft always moves forward",
+    "left/right produce obvious screen-space lateral movement",
+    "up/down produce obvious climb/descent",
+    "bank and pitch automatically center when controls are released",
+    "brake slows forward motion but never stops aircraft"
+  ],
+  "course": {
+    "lengthMeters": 4800,
+    "authoredCourseKeyframes": 17,
+    "authoredEvents": 21,
+    "eventTypes": [
+      "gate",
+      "spire",
+      "arch"
+    ]
+  },
+  "arcadeTrue": {
+    "fixedCanyonGeometry": true,
+    "fixedHazards": true,
+    "fixedGates": true,
+    "gameplayRngAffectsOutcome": false,
+    "controlsAutoCenter": true,
+    "failureTeachesRoute": true,
+    "instantRetry": true
+  },
+  "designBoundary": "Arcade flight game, not a flight simulator."
+}
