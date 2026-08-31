@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "ninja-panda",
+  "title": "Ninja Panda",
+  "subtitle": "Dojo Hunt",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/ninja-panda/",
+  "playPath": "/games/ninja-panda/play/",
+  "sourceLineage": "2025 Ninja Panda Easter Egg / v3 behavior prototype \u2192 2026 Ninja Panda Animation Lab / Action Rig Forge character work \u2192 canonical Dojo Hunt v1",
+  "verifiedHistoricalBehavior": [
+    "autonomous on-screen Panda; player does not directly control him",
+    "Panda never leaves the screen",
+    "low/mid/rooftop runs",
+    "diagonal ziplines",
+    "peeking",
+    "running",
+    "jumping",
+    "flipping",
+    "sliding",
+    "box/platform interactions",
+    "cursor-proximity hops",
+    "two-click capture combat",
+    "first click triggers fightback/screen shake",
+    "second click captures Panda",
+    "missed click yields shuriken",
+    "escape yields smoke bomb"
+  ],
+  "publicV1Loop": {
+    "encounter": "Dojo Hunt",
+    "timeLimitSeconds": 60,
+    "captureHits": 2,
+    "missPenaltySeconds": 2,
+    "route": "fixed authored loop",
+    "cursorReaction": "bounded proximity hop"
+  },
+  "arcadeTrue": {
+    "fixedMovementScript": true,
+    "fixedDojoLayout": true,
+    "pandaNeverLeavesScreen": true,
+    "gameplayRngAffectsOutcome": false,
+    "failureTeachesTiming": true,
+    "immediateRetry": true
+  }
+}
