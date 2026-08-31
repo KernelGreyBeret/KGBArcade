@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "id": "cluck-and-cover",
+  "title": "Cluck & Cover",
+  "vault": "MiniMission",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "releaseDate": "2026-08-30",
+  "path": "/games/cluck-and-cover/",
+  "playPath": "/games/cluck-and-cover/play/",
+  "sourceLineage": "June 20, 2026 Cluck & Cover concept \u2192 canonical fixed-day MiniMission v1",
+  "originalConcept": {
+    "player": "rooster protecting yard chicks/animals",
+    "predators": [
+      "swooping birds",
+      "snakes",
+      "raccoons"
+    ],
+    "actions": [
+      "peck",
+      "spur",
+      "flap"
+    ],
+    "tone": "super cartoony; fun for older kids and adults",
+    "vault": "MiniMission"
+  },
+  "publicV1": {
+    "encounter": "One Farm Day",
+    "startingChicks": 5,
+    "waves": [
+      "Morning \u2014 Snakes",
+      "Noon \u2014 Raccoons + Snakes",
+      "Afternoon \u2014 Hawks + mixed predators",
+      "Sunset \u2014 Big Hawk boss"
+    ],
+    "attacks": {
+      "peck": {
+        "damage": 8,
+        "role": "fast short-range"
+      },
+      "spur": {
+        "damage": 18,
+        "role": "heavy forward ground attack"
+      },
+      "flap": {
+        "groundDamage": 10,
+        "airDamage": 22,
+        "role": "wide knockback / anti-air"
+      }
+    }
+  },
+  "arcadeTrue": {
+    "fixedPredatorSchedule": true,
+    "fixedEntranceSides": true,
+    "fixedTargetAssignments": true,
+    "deterministicChickWander": true,
+    "fixedBossPattern": true,
+    "gameplayRngAffectsOutcome": false,
+    "failureTeachesWaveTiming": true,
+    "instantRetry": true
+  }
+}

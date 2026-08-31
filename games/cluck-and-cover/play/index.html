@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#17280d"><link rel="manifest" href="./manifest.webmanifest">
+<title>Cluck & Cover v1.0.0</title>
+<style>
+:root{--yellow:#ffd84d;--red:#ef5745;--green:#98d94d;--blue:#75d8f2;--ink:#fffbed;--safe:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#13220d;color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;touch-action:none;overscroll-behavior:none;user-select:none}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.hud{position:fixed;inset:0;z-index:5;pointer-events:none;text-shadow:0 2px 7px #000}.top{position:absolute;left:8px;right:8px;top:max(8px,env(safe-area-inset-top));display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:start}.panel{background:#18250ec9;border:1px solid #ffd84d28;border-radius:12px;padding:7px 10px;backdrop-filter:blur(5px)}.left{justify-self:start}.center{text-align:center}.right{justify-self:end;text-align:right}.k{font:900 9px ui-monospace,monospace;letter-spacing:.13em;color:#ffe986;text-transform:uppercase}.big{font-weight:1000;font-size:clamp(16px,3vw,24px)}.chicks{color:#ffe071}.wave{color:#8ff3ff}.score{color:#a9ff84}.sound,.pause{position:fixed;z-index:12;top:max(61px,calc(env(safe-area-inset-top) + 55px));width:42px;height:42px;border-radius:11px;border:1px solid #ffd84d55;background:#1c2b12df;color:#fff7de;font-weight:1000}.pause{right:8px}.sound{right:58px}
+.controls{position:fixed;left:6px;right:6px;bottom:calc(7px + var(--safe));z-index:10;display:flex;justify-content:space-between;align-items:flex-end;pointer-events:none}.dpad,.attacks{display:flex;gap:6px;pointer-events:auto}.dpad{width:150px;height:130px;position:relative}.mv{position:absolute;width:50px;height:50px;border-radius:14px;border:2px solid #ffffff35;background:#172711df;color:#fff;font-size:22px;font-weight:1000}.mv.up{left:50px;top:0}.mv.down{left:50px;bottom:0}.mv.left{left:0;top:40px}.mv.right{right:0;top:40px}.atk{width:62px;height:72px;border-radius:16px;border:2px solid #ffffff28;background:#201c10df;color:#fff;font-weight:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;-webkit-tap-highlight-color:transparent}.atk b{font-size:20px}.atk small{font-size:8px;letter-spacing:.03em}.atk.peck{border-color:#ffd84d88;color:#ffe989}.atk.spur{border-color:#ef574588;color:#ff9a8e}.atk.flap{border-color:#75d8f288;color:#a6ebff}.atk.down,.mv.downx,.atk:active,.mv:active{transform:translateY(2px);filter:brightness(1.3)}
+.callout{position:fixed;z-index:7;left:50%;bottom:calc(88px + var(--safe));transform:translateX(-50%);max-width:min(86vw,620px);padding:7px 10px;border-radius:10px;background:#17250fd9;border:1px solid #ffd84d2a;color:#fff1c3;text-align:center;font:900 10px ui-monospace,monospace;opacity:0;transition:opacity .12s}
+.overlay{position:fixed;inset:0;z-index:20;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(circle at 50% 30%,#547f28e8,#111c0bf6 70%);text-align:center}.card{width:min(760px,96vw);max-height:94vh;overflow:auto;padding:22px;border-radius:20px;border:1px solid #ffd84d44;background:#1a2811ee;box-shadow:0 25px 70px #000b}.kicker{font:900 11px ui-monospace,monospace;letter-spacing:.14em;color:#ffe987}.logo{font-size:clamp(44px,9vw,80px);line-height:.82;font-style:italic;text-transform:uppercase;font-weight:1000;color:#fff8e8;margin:8px 0}.logo span{display:block;color:#ffd84d}.sub{font-size:15px;line-height:1.5;color:#dfd4ba;max-width:620px;margin:10px auto 18px}.main,.small{border-radius:12px;border:0;padding:14px 21px;background:linear-gradient(#fff5a9,#ffbb47);color:#2a1806;font-weight:1000;font-size:16px}.small{border:1px solid #ffffff20;background:#2a351a;color:#f5ebd5;padding:10px 13px;font-size:13px}.row{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}.how{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;text-align:left;margin:15px 0}.how div{background:#ffffff07;border:1px solid #ffffff12;border-radius:11px;padding:10px;color:#d9cdb2;font:500 13px/1.42 system-ui}.how b{color:#ffe987}.hidden{display:none!important}.result{font-size:24px;color:#ffd84d;font-weight:1000;margin:8px 0}
+@media(max-width:600px){.center{display:none}.top{grid-template-columns:1fr 1fr}.dpad{width:126px;height:112px}.mv{width:44px;height:44px}.mv.up{left:41px}.mv.down{left:41px}.mv.left,.mv.right{top:34px}.atk{width:53px;height:65px}.how{grid-template-columns:1fr}.card{padding:17px 12px}.callout{bottom:calc(80px + var(--safe));font-size:8px}}
+</style></head>
+<body>
+<canvas id="c"></canvas>
+<div class="hud"><div class="top">
+<div class="panel left"><div class="k">Flock</div><div class="big chicks"><span id="chicks">5</span> / 5 CHICKS</div></div>
+<div class="panel center"><div class="k">Cluck & Cover</div><div class="big wave" id="wave">MORNING</div></div>
+<div class="panel right"><div class="k">Yard</div><div class="big score"><span id="saved">0</span> PREDATORS BONKED</div></div>
+</div></div>
+<button class="sound" id="sound">🔊</button><button class="pause" id="pauseBtn">Ⅱ</button>
+<div class="callout" id="callout">MORNING · SNAKES IN THE GRASS</div>
+<div class="controls">
+<div class="dpad"><button class="mv up" id="up">↑</button><button class="mv down" id="down">↓</button><button class="mv left" id="left">←</button><button class="mv right" id="right">→</button></div>
+<div class="attacks"><button class="atk peck" id="peck"><b>PECK!</b><small>FAST</small></button><button class="atk spur" id="spur"><b>SPUR!</b><small>HEAVY</small></button><button class="atk flap" id="flap"><b>FLAP!</b><small>WIDE / AIR</small></button></div>
+</div>
+
+<div class="overlay" id="menu"><div class="card">
+<div class="kicker">KGB ARCADE · MINIMISSION · v1.0.0</div><div class="logo">Cluck & <span>Cover</span></div>
+<p class="sub">Five chicks. One farm day. Snakes in the morning, raccoons by noon, hawks in the afternoon, and one enormous jerk in the sky at sunset.</p>
+<div class="how">
+<div><b>Move</b><br>WASD / arrows or the on-screen D-pad. Stay between the predators and the chicks.</div>
+<div><b>Peck</b><br>J / PECK. Fast, short reach, 8 damage. Best for snakes and quick finishes.</div>
+<div><b>Spur</b><br>K / SPUR. Slower forward kick, 18 damage. Excellent against raccoons.</div>
+<div><b>Flap</b><br>L / FLAP. Wide knockback, 10 ground damage / 22 anti-air damage. Your hawk answer.</div>
+</div>
+<div style="padding:11px;border-left:3px solid #ffd84d;background:#ffd84d08;color:#eadfbd;text-align:left;font-size:13px;line-height:1.45"><b>ONE FIXED DAY:</b> predator schedule, entrance side, target chick, and boss pattern are authored. The chicks wander on repeatable loops. Learn where the pressure comes from.</div>
+<button class="main" id="start">OPEN THE COOP</button><div class="row"><button class="small" id="arsenal">← ARSENAL</button></div>
+</div></div>
+
+<div class="overlay hidden" id="pauseOverlay"><div class="card"><div class="kicker">YARD HOLD</div><div class="logo">PAUSED</div><p class="sub">The predators have agreed to a temporary ceasefire for UI purposes.</p><button class="main" id="resume">RESUME</button><div class="row"><button class="small" id="restart">RESTART DAY</button><button class="small" id="quit">QUIT</button></div></div></div>
+
+<div class="overlay hidden" id="over"><div class="card"><div class="kicker" id="endK">FLOCK LOST</div><div class="logo" id="endTitle">Farm <span>Overrun</span></div><div class="result" id="result"></div><p class="sub" id="endCopy"></p><div id="best" style="color:#bfff93;font-weight:1000"></div><button class="main" id="retry">DEFEND AGAIN</button><div class="row"><button class="small" id="arsenal2">← ARSENAL</button></div></div></div>
+
+<script>
+(()=>{'use strict';
+const c=document.getElementById('c'),ctx=c.getContext('2d'),$=id=>document.getElementById(id),TAU=Math.PI*2;
+const LW=1280,LH=720;
+let W=0,H=0,DPR=1,last=performance.now(),running=false,paused=false,ended=false,soundOn=(localStorage.getItem('cc_sound')??'1')==='1',AC=null;
+let bestChicks=+(localStorage.getItem('cc_best_chicks')||0),bestBonks=+(localStorage.getItem('cc_best_bonks')||0);
+const R={x:640,y:440,vx:0,vy:0,dir:1,hp:3,attack:'',atkT:0,cool:0,inv:0};
+let t=0,preds=[],bonks=0,eventIndex=0,bossSpawned=false,bossDead=false,particles=[],messageT=0;
+const chicks=[
+ {bx:545,by:405,phase:0,alive:true,hp:1},{bx:610,by:365,phase:1.3,alive:true,hp:1},
+ {bx:680,by:390,phase:2.4,alive:true,hp:1},{bx:575,by:470,phase:3.7,alive:true,hp:1},{bx:710,by:465,phase:5.0,alive:true,hp:1}
+];
+
+// Fixed authored predator schedule: time,type,side,target
+const SCHEDULE=[
+ [4,'snake','left',0],[8,'snake','right',3],[12,'snake','top',1],[16,'snake','left',4],
+ [22,'raccoon','right',2],[26,'snake','bottom',0],[30,'raccoon','left',4],[34,'snake','right',1],
+ [39,'raccoon','top',3],[44,'hawk','top',2],[48,'snake','bottom',1],[52,'hawk','left',4],
+ [56,'raccoon','right',0],[60,'hawk','right',3],[64,'raccoon','bottom',2],[68,'hawk','top',1]
+];
+const BOSS_PATTERN=[
+ {d:1.0,x:.18,y:.18},{d:1.0,x:.78,y:.25},{d:1.0,x:.36,y:.16},{d:1.0,x:.68,y:.50},
+ {d:1.0,x:.22,y:.46},{d:1.0,x:.82,y:.20}
+];
+
+function resize(){DPR=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;c.width=Math.floor(W*DPR);c.height=Math.floor(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0)}addEventListener('resize',resize,{passive:true});
+function S(){return Math.min(W/LW,H/LH)}function OX(){return (W-LW*S())/2}function OY(){return (H-LH*S())/2}
+function audio(){if(!soundOn)return null;if(!AC)AC=new (AudioContext||webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function tone(f=360,d=.08,type='sine',v=.05,slide=1){const a=audio();if(!a)return;const tt=a.currentTime,o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,tt);o.frequency.exponentialRampToValueAtTime(Math.max(35,f*slide),tt+d);g.gain.setValueAtTime(.0001,tt);g.gain.exponentialRampToValueAtTime(v,tt+.006);g.gain.exponentialRampToValueAtTime(.0001,tt+d);o.connect(g);g.connect(a.destination);o.start(tt);o.stop(tt+d+.02)}
+const sfx={peck:()=>tone(620,.055,'square',.045,1.3),spur:()=>tone(180,.09,'triangle',.06,.65),flap:()=>tone(260,.13,'sawtooth',.045,1.5),bonk:()=>tone(115,.10,'square',.07,.55),chick:()=>tone(880,.10,'triangle',.06,.75),boss:()=>tone(92,.22,'sawtooth',.075,.72),win:()=>{tone(440,.13,'triangle',.06,1.4);setTimeout(()=>tone(660,.13,'triangle',.06,1.35),120);setTimeout(()=>tone(880,.22,'triangle',.06,1.25),250)}};
+
+const key=new Set(),hold={up:false,down:false,left:false,right:false};
+function bindHold(id,n){const b=$(id);b.addEventListener('pointerdown',e=>{e.preventDefault();audio();hold[n]=true;b.classList.add('downx')},{passive:false});['pointerup','pointercancel','pointerleave'].forEach(ev=>b.addEventListener(ev,e=>{e.preventDefault();hold[n]=false;b.classList.remove('downx')},{passive:false}))}
+['up','down','left','right'].forEach(n=>bindHold(n,n));
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' ','j','k','l','escape'].includes(k))e.preventDefault();if(e.repeat)return;key.add(k);if(k==='j')attack('peck');if(k==='k')attack('spur');if(k==='l'||k===' ')attack('flap');if(k==='escape'&&running)togglePause()},{passive:false});
+addEventListener('keyup',e=>key.delete(e.key.toLowerCase()));
+$('peck').addEventListener('pointerdown',e=>{e.preventDefault();attack('peck')},{passive:false});$('spur').addEventListener('pointerdown',e=>{e.preventDefault();attack('spur')},{passive:false});$('flap').addEventListener('pointerdown',e=>{e.preventDefault();attack('flap')},{passive:false});
+
+function chickPos(ch){
+ const ampX=18,ampY=13;
+ return{x:ch.bx+Math.sin(t*.72+ch.phase)*ampX,y:ch.by+Math.cos(t*.63+ch.phase*1.4)*ampY}
+}
+function reset(){
+ Object.assign(R,{x:640,y:440,vx:0,vy:0,dir:1,hp:3,attack:'',atkT:0,cool:0,inv:0});
+ t=0;preds=[];bonks=0;eventIndex=0;bossSpawned=false;bossDead=false;particles=[];messageT=0;ended=false;
+ chicks.forEach(ch=>{ch.alive=true;ch.hp=1});updateHud();show('MORNING · SNAKES IN THE GRASS',2)
+}
+function input(){
+ return{x:((key.has('d')||key.has('arrowright')||hold.right)?1:0)-((key.has('a')||key.has('arrowleft')||hold.left)?1:0),
+ y:((key.has('s')||key.has('arrowdown')||hold.down)?1:0)-((key.has('w')||key.has('arrowup')||hold.up)?1:0)}
+}
+function show(txt,d=1.4){$('callout').textContent=txt;$('callout').style.opacity=1;messageT=d}
+function attack(kind){
+ if(!running||paused||ended||R.cool>0)return;audio();R.attack=kind;
+ if(kind==='peck'){R.atkT=.14;R.cool=.19;sfx.peck();hitAttack(72,8,0,false)}
+ if(kind==='spur'){R.atkT=.24;R.cool=.42;sfx.spur();hitAttack(95,18,16,false)}
+ if(kind==='flap'){R.atkT=.30;R.cool=.48;sfx.flap();hitAttack(128,10,44,true)}
+}
+function hitAttack(radius,damage,knock,antiAir){
+ for(const p of preds){if(p.dead)continue;let dx=p.x-R.x,dy=p.y-R.y,d=Math.hypot(dx,dy);let inFront=R.attack==='flap'||(dx*R.dir>-28);if(d<radius&&inFront){
+   let dmg=damage;if(antiAir&&p.air)dmg=22;p.hp-=dmg;if(knock){let m=d||1;p.vx+=dx/m*knock;p.vy+=dy/m*knock}burst(p.x,p.y,p.air?'#75d8f2':'#ffd84d',7);if(p.hp<=0)bonk(p)
+ }}
+}
+function bonk(p){if(p.dead)return;p.dead=true;bonks++;burst(p.x,p.y,'#ffffff',13);sfx.bonk();if(p.boss){bossDead=true;setTimeout(()=>finish(true),450)}updateHud()}
+function spawn(type,side,target,boss=false){
+ let x,y;
+ if(side==='left'){x=55;y=170+(target*83)%420}
+ else if(side==='right'){x=1225;y=190+(target*79)%390}
+ else if(side==='top'){x=250+(target*173)%780;y=75}
+ else{x=290+(target*149)%700;y=650}
+ let hp=type==='snake'?12:type==='raccoon'?34:type==='hawk'?22:100;
+ let speed=type==='snake'?72:type==='raccoon'?54:type==='hawk'?86:72;
+ preds.push({type,x,y,vx:0,vy:0,hp,max:hp,speed,target,air:type==='hawk'||type==='boss',dead:false,boss,phase:0,pattern:0,patternT:0})
+}
+function spawnBoss(){bossSpawned=true;spawn('boss','top',2,true);show('SUNSET · BIG HAWK · FLAP HIM OUT OF THE SKY',2.5);sfx.boss()}
+function loseChick(index){
+ const ch=chicks[index];if(!ch||!ch.alive)return;ch.alive=false;sfx.chick();burst(ch.bx,ch.by,'#ffe071',18);show('CHICK LOST!',1.1);updateHud();if(chicks.every(c=>!c.alive))finish(false)
+}
+function finish(ok){
+ if(ended)return;ended=true;running=false;const alive=chicks.filter(c=>c.alive).length;
+ bestChicks=Math.max(bestChicks,alive);bestBonks=Math.max(bestBonks,bonks);localStorage.setItem('cc_best_chicks',bestChicks);localStorage.setItem('cc_best_bonks',bestBonks);
+ if(ok){sfx.win();$('endK').textContent='SUNSET SECURED';$('endTitle').innerHTML='Yard <span>Defended</span>';$('result').textContent=`${alive}/5 chicks safe · ${bonks} predators bonked`;$('endCopy').textContent=alive===5?'Perfect defense. Not one chick lost. The rooster is unbearable now.':'The flock made it to sunset. Run the same day again and save more of them.'}
+ else{$('endK').textContent='FLOCK LOST';$('endTitle').innerHTML='Farm <span>Overrun</span>';$('result').textContent=`${bonks} predators bonked`;$('endCopy').textContent='The day is authored. The next attempt starts with knowledge of exactly when and where the pressure arrives.'}
+ $('best').textContent=`BEST ${bestChicks}/5 SAFE · ${bestBonks} BONKED`;$('over').classList.remove('hidden')
+}
+function step(dt){
+ t+=dt;R.cool=Math.max(0,R.cool-dt);R.atkT=Math.max(0,R.atkT-dt);R.inv=Math.max(0,R.inv-dt);
+ const i=input(),m=Math.hypot(i.x,i.y)||1,tx=i.x/m*230,ty=i.y/m*230;R.vx+=(tx-R.vx)*Math.min(1,8*dt);R.vy+=(ty-R.vy)*Math.min(1,8*dt);if(i.x)R.dir=Math.sign(i.x);R.x+=R.vx*dt;R.y+=R.vy*dt;R.x=Math.max(80,Math.min(1200,R.x));R.y=Math.max(130,Math.min(600,R.y));
+ while(eventIndex<SCHEDULE.length&&t>=SCHEDULE[eventIndex][0]){const e=SCHEDULE[eventIndex++];spawn(e[1],e[2],e[3]);if(e[0]===22)show('NOON · RACCOONS AT THE FENCE',1.8);if(e[0]===44)show('AFTERNOON · HAWKS INBOUND · USE FLAP',2)}
+ if(t>=72&&!bossSpawned)spawnBoss();
+
+ for(const p of preds){
+   if(p.dead)continue;const ch=chicks[p.target];
+   let tx2,ty2;
+   if(p.boss){
+      p.patternT+=dt;if(p.patternT>=BOSS_PATTERN[p.pattern%BOSS_PATTERN.length].d){p.pattern=(p.pattern+1)%BOSS_PATTERN.length;p.patternT=0}
+      const pat=BOSS_PATTERN[p.pattern];tx2=pat.x*LW;ty2=pat.y*LH;
+      if(p.pattern===3){const live=chicks.findIndex(c=>c.alive);if(live>=0){const cp=chickPos(chicks[live]);tx2=cp.x;ty2=cp.y}}
+   }else if(ch&&ch.alive){const cp=chickPos(ch);tx2=cp.x;ty2=cp.y}
+   else{const live=chicks.findIndex(c=>c.alive);if(live>=0){p.target=live;const cp=chickPos(chicks[live]);tx2=cp.x;ty2=cp.y}else continue}
+   let dx=tx2-p.x,dy=ty2-p.y,d=Math.hypot(dx,dy)||1;p.vx+=(dx/d*p.speed-p.vx)*Math.min(1,2.8*dt);p.vy+=(dy/d*p.speed-p.vy)*Math.min(1,2.8*dt);p.x+=p.vx*dt;p.y+=p.vy*dt;
+   // Rooster body-blocking / bump
+   if(Math.hypot(p.x-R.x,p.y-R.y)<43&&!p.boss){let nx=(p.x-R.x)||1,ny=p.y-R.y,mm=Math.hypot(nx,ny)||1;p.x+=nx/mm*8;p.y+=ny/mm*8}
+   // Predator reaches target chick
+   if(!p.boss&&chicks[p.target]?.alive){const cp=chickPos(chicks[p.target]);if(Math.hypot(p.x-cp.x,p.y-cp.y)<24){loseChick(p.target);p.dead=true}}
+   if(p.boss){const live=chicks.findIndex(c=>c.alive);if(live>=0){const cp=chickPos(chicks[live]);if(Math.hypot(p.x-cp.x,p.y-cp.y)<30){loseChick(live);p.pattern=(p.pattern+1)%BOSS_PATTERN.length;p.patternT=0;p.x=640;p.y=95}}}
+ }
+ preds=preds.filter(p=>!p.dead||p.boss&&p.hp<=0?false:true);
+ for(const q of particles){q.x+=q.vx*dt;q.y+=q.vy*dt;q.vy+=90*dt;q.life-=dt}particles=particles.filter(q=>q.life>0);
+ if(messageT>0){messageT-=dt;if(messageT<=0)$('callout').style.opacity=0}
+ updateHud()
+}
+function burst(x,y,col,n=8){for(let i=0;i<n;i++){const a=i/n*TAU,s=45+(i%4)*22;particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s-25,life:.55,max:.55,col})}}
+function waveName(){if(t<22)return'MORNING';if(t<44)return'NOON';if(t<72)return'AFTERNOON';return'SUNSET BOSS'}
+function updateHud(){$('chicks').textContent=chicks.filter(c=>c.alive).length;$('saved').textContent=bonks;$('wave').textContent=waveName();$('sound').textContent=soundOn?'🔊':'🔇'}
+function drawFarm(){
+ const s=S();ctx.fillStyle='#6ca146';ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(OX(),OY());ctx.scale(s,s);
+ // sky strip / grass
+ ctx.fillStyle='#8ac6ed';ctx.fillRect(0,0,LW,125);ctx.fillStyle='#83b954';ctx.fillRect(0,125,LW,LH-125);
+ // dirt yard
+ ctx.fillStyle='#c8995d';ctx.beginPath();ctx.ellipse(640,430,420,235,0,0,TAU);ctx.fill();
+ // barn
+ ctx.fillStyle='#b74d3c';ctx.fillRect(920,155,245,180);ctx.fillStyle='#77312d';ctx.beginPath();ctx.moveTo(890,155);ctx.lineTo(1042,65);ctx.lineTo(1190,155);ctx.closePath();ctx.fill();ctx.fillStyle='#663325';ctx.fillRect(1005,230,72,105);
+ // coop
+ ctx.fillStyle='#d7b46d';ctx.fillRect(85,390,195,150);ctx.fillStyle='#885b33';ctx.beginPath();ctx.moveTo(65,390);ctx.lineTo(180,320);ctx.lineTo(300,390);ctx.closePath();ctx.fill();ctx.fillStyle='#382619';ctx.fillRect(155,455,55,85);
+ // fence
+ ctx.strokeStyle='#ead09a';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(0,585);ctx.lineTo(LW,585);ctx.stroke();for(let x=25;x<LW;x+=80){ctx.beginPath();ctx.moveTo(x,545);ctx.lineTo(x,625);ctx.stroke()}
+ // flowers and hay
+ for(let i=0;i<12;i++){let x=120+(i*97)%1030,y=165+(i%3)*36;ctx.fillStyle=i%2?'#f7da5a':'#f06b7c';ctx.beginPath();ctx.arc(x,y,5,0,TAU);ctx.fill()}
+ ctx.fillStyle='#dfbd55';ctx.beginPath();ctx.ellipse(1080,510,80,40,0,0,TAU);ctx.fill();
+ ctx.restore()
+}
+function drawChicks(){
+ const s=S();ctx.save();ctx.translate(OX(),OY());ctx.scale(s,s);
+ for(const ch of chicks){if(!ch.alive)continue;const p=chickPos(ch);ctx.fillStyle='#ffe06b';ctx.strokeStyle='#9d7b27';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(p.x,p.y,17,14,0,0,TAU);ctx.fill();ctx.stroke();ctx.fillStyle='#eaa039';ctx.beginPath();ctx.moveTo(p.x+15,p.y-1);ctx.lineTo(p.x+24,p.y+3);ctx.lineTo(p.x+15,p.y+7);ctx.fill();ctx.fillStyle='#222';ctx.beginPath();ctx.arc(p.x+6,p.y-4,2.5,0,TAU);ctx.fill()}
+ ctx.restore()
+}
+function drawPreds(){
+ const s=S();ctx.save();ctx.translate(OX(),OY());ctx.scale(s,s);
+ for(const p of preds){if(p.dead)continue;ctx.save();ctx.translate(p.x,p.y);
+   if(p.type==='snake'){ctx.strokeStyle='#527d39';ctx.lineWidth=13;ctx.beginPath();ctx.moveTo(-27,7);ctx.bezierCurveTo(-10,-10,8,15,24,0);ctx.stroke();ctx.fillStyle='#6ca348';ctx.beginPath();ctx.arc(25,-1,9,0,TAU);ctx.fill();ctx.fillStyle='#e84b42';ctx.fillRect(31,1,11,2)}
+   else if(p.type==='raccoon'){ctx.fillStyle='#6e6f69';ctx.beginPath();ctx.ellipse(0,0,27,18,0,0,TAU);ctx.fill();ctx.beginPath();ctx.arc(23,-10,14,0,TAU);ctx.fill();ctx.fillStyle='#333';ctx.beginPath();ctx.ellipse(18,-13,10,7,-.3,0,TAU);ctx.ellipse(29,-13,10,7,.3,0,TAU);ctx.fill();ctx.strokeStyle='#555';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(-25,3);ctx.quadraticCurveTo(-44,-10,-50,8);ctx.stroke()}
+   else{let boss=p.boss,sc=boss?1.55:1;ctx.scale(sc,sc);ctx.fillStyle=boss?'#7d3c2f':'#865e38';ctx.beginPath();ctx.ellipse(0,0,18,26,0,0,TAU);ctx.fill();ctx.fillStyle=boss?'#9f4937':'#9b7043';ctx.beginPath();ctx.moveTo(-3,-3);ctx.lineTo(-58,-22);ctx.lineTo(-29,10);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(3,-3);ctx.lineTo(58,-22);ctx.lineTo(29,10);ctx.closePath();ctx.fill();ctx.fillStyle='#f2cb4f';ctx.beginPath();ctx.moveTo(0,-25);ctx.lineTo(10,-15);ctx.lineTo(0,-12);ctx.fill()}
+   // health bar for tough predators
+   if(p.max>20){ctx.fillStyle='#3b1b18';ctx.fillRect(-30,-38,60,6);ctx.fillStyle=p.boss?'#ef5745':'#ffd84d';ctx.fillRect(-30,-38,60*Math.max(0,p.hp)/p.max,6)}
+ ctx.restore()}ctx.restore()
+}
+function drawRooster(){
+ const s=S();ctx.save();ctx.translate(OX(),OY());ctx.scale(s,s);ctx.translate(R.x,R.y);ctx.scale(R.dir,1);
+ // attack juice
+ if(R.attack==='peck'&&R.atkT>0){ctx.strokeStyle='#ffd84d';ctx.lineWidth=6;ctx.beginPath();ctx.moveTo(22,-20);ctx.lineTo(70,-25);ctx.stroke()}
+ if(R.attack==='spur'&&R.atkT>0){ctx.strokeStyle='#ef5745';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(8,22);ctx.lineTo(76,35);ctx.stroke()}
+ if(R.attack==='flap'&&R.atkT>0){ctx.strokeStyle='#75d8f2';ctx.lineWidth=5;ctx.beginPath();ctx.arc(0,0,78,-.9,.9);ctx.stroke();ctx.beginPath();ctx.arc(0,0,78,Math.PI-.9,Math.PI+.9);ctx.stroke()}
+ // tail
+ ctx.fillStyle='#267965';ctx.beginPath();ctx.ellipse(-27,-8,22,45,-.5,0,TAU);ctx.fill();ctx.fillStyle='#315e9a';ctx.beginPath();ctx.ellipse(-37,-4,17,41,-.75,0,TAU);ctx.fill();
+ // body/head
+ ctx.fillStyle='#f7efdb';ctx.strokeStyle='#3b2a21';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(0,5,32,38,0,0,TAU);ctx.fill();ctx.stroke();ctx.beginPath();ctx.arc(27,-35,22,0,TAU);ctx.fill();ctx.stroke();
+ // comb
+ ctx.fillStyle='#e64840';ctx.beginPath();ctx.arc(17,-57,8,0,TAU);ctx.arc(28,-61,8,0,TAU);ctx.arc(39,-56,8,0,TAU);ctx.fill();
+ // beak
+ ctx.fillStyle='#f4b43d';ctx.beginPath();ctx.moveTo(46,-38);ctx.lineTo(66,-31);ctx.lineTo(46,-24);ctx.closePath();ctx.fill();
+ // eye
+ ctx.fillStyle='#222';ctx.beginPath();ctx.arc(33,-41,3,0,TAU);ctx.fill();
+ // legs
+ ctx.strokeStyle='#d2a735';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-10,36);ctx.lineTo(-12,59);ctx.moveTo(11,36);ctx.lineTo(12,59);ctx.stroke();
+ ctx.restore()
+}
+function drawParticles(){const s=S();ctx.save();ctx.translate(OX(),OY());ctx.scale(s,s);for(const q of particles){ctx.globalAlpha=Math.max(0,q.life/q.max);ctx.fillStyle=q.col;ctx.beginPath();ctx.ellipse(q.x,q.y,5,2,Math.atan2(q.vy,q.vx),0,TAU);ctx.fill()}ctx.globalAlpha=1;ctx.restore()}
+function draw(){drawFarm();drawChicks();drawPreds();drawRooster();drawParticles()}
+function frame(ts){const dt=Math.min(.034,(ts-last)/1000);last=ts;if(running&&!paused&&!ended)step(dt);draw();requestAnimationFrame(frame)}
+function start(){reset();$('menu').classList.add('hidden');$('over').classList.add('hidden');$('pauseOverlay').classList.add('hidden');running=true;paused=false;last=performance.now();audio()}
+function togglePause(force){if(!running||ended)return;paused=force===undefined?!paused:force;$('pauseOverlay').classList.toggle('hidden',!paused);if(!paused)last=performance.now()}
+$('start').onclick=$('retry').onclick=$('restart').onclick=start;$('pauseBtn').onclick=()=>togglePause();$('resume').onclick=()=>togglePause(false);$('quit').onclick=()=>{running=false;paused=false;$('pauseOverlay').classList.add('hidden');$('menu').classList.remove('hidden')};$('arsenal').onclick=$('arsenal2').onclick=()=>location.href='/#arsenal';$('sound').onclick=()=>{soundOn=!soundOn;localStorage.setItem('cc_sound',soundOn?'1':'0');updateHud();audio()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&running&&!paused)togglePause(true)});
+resize();reset();requestAnimationFrame(frame);if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+})();
+</script></body></html>
