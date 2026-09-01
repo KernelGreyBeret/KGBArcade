@@ -36,7 +36,7 @@
   .pause h2{font-size:clamp(32px,8vw,56px);margin:0 0 12px}
   @media(max-width:520px){.legend{grid-template-columns:1fr}.panel{padding:20px 16px}.title{letter-spacing:.07em}}
 </style>
-</head>
+<link rel="manifest" href="./manifest.webmanifest">\n</head>
 <body>
 <div class="hud" id="score">0</div>
 <div class="lives" id="lives">♥♥♥</div>
@@ -69,7 +69,7 @@
       </select>
     </div>
     <div class="best" id="best"></div>
-    <div class="doctrine">Arcade-True: Learn it. Read it. Beat it.</div>
+    <div class="doctrine">Arcade-True: each difficulty uses the same authored target sequence every run. The machine does not roll new geometry when you retry. Learn it. Read it. Beat it.</div>
   </div>
 </div>
 
@@ -175,5 +175,5 @@ function loop(ts){const dt=Math.min(.04,(ts-last)/1000);last=ts;ctx.fillStyle='#
 setHud();buildTarget();requestAnimationFrame(loop);
 })();
 </script>
-</body>
+<script>if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));</script>\n</body>
 </html>

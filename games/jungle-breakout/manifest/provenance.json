@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "jungle-breakout",
+  "title": "Jungle Breakout",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "v0.1 \u2192 v0.11 Readability Graphics Pass",
+  "provenanceNotes": "The Jungle Breakout v0.11 design and authored Mudline Run course data were recovered from File Library content, but exact source bytes were not mounted for archival during the P0 release. Public v1 is a canonical rebuild around that recovered design/data.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

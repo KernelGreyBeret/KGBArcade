@@ -1,0 +1,16 @@
+Spin Stop
+
+© 2026 Tommy Burke. All rights reserved.
+
+Creator: Tommy Burke / Kernel Grey Beret
+Publisher: KGB Arcade
+Website: https://kgbarcade.com
+Contact: team@kgbarcade.com
+
+This game, its source code, original visual design, software implementation, release packaging, and included original assets are proprietary KGB Arcade material unless a specific file or attribution record states otherwise.
+
+No permission is granted to copy, republish, redistribute, sell, sublicense, or create derivative distributions of this package except with prior written permission from the rights holder or as otherwise required by applicable law.
+
+Third-party components, if any, remain subject to their own licenses and are identified in attribution.txt.
+
+Normal access to and play of the publicly hosted game at KGB Arcade is permitted.

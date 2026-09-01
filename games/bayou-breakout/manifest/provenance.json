@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "bayou-breakout",
+  "title": "Bayou Breakout",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "River Gator Boat Chase concept \u2192 Bayou Breakout / 8BitOps \u2192 Warm-Up Run smoke test on KGB Arcade Engine v0.1/v0.1.1 \u2192 canonical public v1 rebuild",
+  "provenanceNotes": "The Bayou Breakout / River Gator Boat Chase Warm-Up Run requirements were recovered from project history. Exact historical source bytes were not recoverable.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

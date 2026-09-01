@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope",
+  "releaseEnvelopeVersion": "1.0",
+  "retrofitId": "P0.GB",
+  "retrofitDate": "2026-08-31",
+  "game": {
+    "id": "riftwake",
+    "title": "Riftwake: Signal Skimmer",
+    "subtitle": "",
+    "vault": "8BitOps",
+    "publicVersion": "1.0.0",
+    "status": "live",
+    "landingPath": "/games/riftwake/",
+    "playPath": "/games/riftwake/play/",
+    "smokeTestPath": "/games/riftwake/smoke-test.html"
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com",
+    "license": "All rights reserved; see manifest/license.txt"
+  },
+  "provenance": {
+    "sourceStatus": "canonical-rebuild",
+    "sourceLineage": "Signal Skimmer v1\u2192v6 \u2192 Signal Skimmer Final v1 \u2192 PWA Final v1",
+    "record": "manifest/provenance.json"
+  },
+  "pwa": {
+    "enabled": true,
+    "manifest": "play/manifest.webmanifest",
+    "serviceWorker": "play/sw.js",
+    "cacheIdentity": "kgba-riftwake-v1.0.0-gb1",
+    "icons": [
+      "play/icon-192.png",
+      "play/icon-512.png",
+      "play/icon-maskable-512.png"
+    ],
+    "screenshots": [
+      "play/screenshots/screenshot-wide.png",
+      "play/screenshots/screenshot-narrow.png"
+    ],
+    "screenshotsAreGameplayCaptures": false
+  },
+  "validation": {
+    "browserSmokeTest": "smoke-test.html",
+    "manualGate": "Start \u2192 play \u2192 fail/loss \u2192 retry \u2192 finish/result \u2192 desktop \u2192 phone \u2192 persistence \u2192 Arcade-True"
+  },
+  "inventory": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 1037,
+      "sha256": "7d11e96121eb0bb0e4d3196644bf3a11d7630a8d4ea56acc4210039bc9b55a8f",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "game.json",
+      "bytes": 948,
+      "sha256": "a0c2c29ceacb3ba1f739ff842c2ddf9ff082309fbab0082623e9455ff4b1e297",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5155,
+      "sha256": "97b4175030bb8e3bb69f769edc53ce5c146a65622f777f5cb8ee9645bf0e795d",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "manifest/attribution.txt",
+      "bytes": 956,
+      "sha256": "26f49f9502e7c32e25c41faad220e0d4561a18504f24dd55511c00d235d86cab",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/license.txt",
+      "bytes": 841,
+      "sha256": "c8076da7f15766879001f4d95da1205338b8a88458ea58bed579631d4d702d48",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/production-readme.txt",
+      "bytes": 849,
+      "sha256": "2e3b010230b09f24125dc902cfcf462b7989487c2308632d223dad7916af775f",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/provenance.json",
+      "bytes": 664,
+      "sha256": "03586be59a3c13cdc38e2d4b095d53aa4ab6f5b33c16a226a5387035b2c8f450",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/release-notes.txt",
+      "bytes": 821,
+      "sha256": "7952afb781930739eeced0cec316668408036851b9054d2ab451cddce693299a",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-192.png",
+      "bytes": 5901,
+      "sha256": "1af5c636a89f1aece5d6254c27ee6d7b474f6dfbe99da22e9ac4acbb44be9c36",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-512.png",
+      "bytes": 16053,
+      "sha256": "9367fd50eb328105aea0cdc634e3d5942e07b7918338fcd023b1320e1e893dde",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-maskable-512.png",
+      "bytes": 100082,
+      "sha256": "6a86fcbdc7d357f4e47c4b7c4b131084aab8b5537e3686b9c39f83f257e3b826",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/index.html",
+      "bytes": 25290,
+      "sha256": "9f0e305a991739e53aa9a56116d66e995f67ba45a5b4ac346aaa1a8ca728b6bb",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/manifest.webmanifest",
+      "bytes": 1167,
+      "sha256": "a9c86fb71170e0563e05a40671a1185f9257daf84ce47a1674871f7028075c0f",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-narrow.png",
+      "bytes": 36312,
+      "sha256": "cf1b03d60a1e8a8e8b67883066131f900fb300bbe81f7bbcc8e81bff2d8cb145",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-wide.png",
+      "bytes": 95595,
+      "sha256": "8103119b391aeecf3c3f751a373a64c9f85d8b1c9ec3b07b18e7d8faea62dbfe",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/sw.js",
+      "bytes": 707,
+      "sha256": "e13537089de6bb5a889a5c668f6ce1cada18d46eb38148cd1360f6299bbf2517",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "smoke-test.html",
+      "bytes": 3833,
+      "sha256": "20bacf25ff152a7959763e14563d01b4881241987df62dd14728d027cc86190f",
+      "source": "Good Business retrofit"
+    }
+  ],
+  "inventoryNote": "Hashes cover the Priority Zero release package and Good Business retrofit. Pre-existing repository assets that were not present in the P0 overlay (for example some banners) are not inventoried."
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "spin-stop",
+  "title": "Spin Stop",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "recovered-and-modified",
+  "sourceLineage": "Spin Stop \u2014 Perfect Combo Edition",
+  "provenanceNotes": "Historical complete `SPIN STOP \u2014 Perfect Combo Edition` source was retained locally and used as the direct basis for the public v1 Arcade-True pass.",
+  "archivedHistoricalSource": "archive/historical_spin_stop_perfect_combo.html",
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

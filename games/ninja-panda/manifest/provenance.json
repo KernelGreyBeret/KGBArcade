@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "ninja-panda",
+  "title": "Ninja Panda",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "2025 Ninja Panda Easter Egg / v3 behavior prototype \u2192 2026 Ninja Panda Animation Lab / Action Rig Forge character work \u2192 canonical Dojo Hunt v1",
+  "provenanceNotes": "Verified Ninja Panda autonomous dojo behavior and two-click capture mechanics were recovered from project history. Exact final game source bytes were not recoverable.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

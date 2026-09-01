@@ -1,0 +1,168 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope",
+  "releaseEnvelopeVersion": "1.0",
+  "retrofitId": "P0.GB",
+  "retrofitDate": "2026-08-31",
+  "game": {
+    "id": "spin-stop",
+    "title": "Spin Stop",
+    "subtitle": "",
+    "vault": "8BitOps",
+    "publicVersion": "1.0.0",
+    "status": "live",
+    "landingPath": "/games/spin-stop/",
+    "playPath": "/games/spin-stop/play/",
+    "smokeTestPath": "/games/spin-stop/smoke-test.html"
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com",
+    "license": "All rights reserved; see manifest/license.txt"
+  },
+  "provenance": {
+    "sourceStatus": "recovered-and-modified",
+    "sourceLineage": "Spin Stop \u2014 Perfect Combo Edition",
+    "record": "manifest/provenance.json"
+  },
+  "pwa": {
+    "enabled": true,
+    "manifest": "play/manifest.webmanifest",
+    "serviceWorker": "play/sw.js",
+    "cacheIdentity": "kgba-spin-stop-v1.0.0-gb1",
+    "icons": [
+      "play/icon-192.png",
+      "play/icon-512.png",
+      "play/icon-maskable-512.png"
+    ],
+    "screenshots": [
+      "play/screenshots/screenshot-wide.png",
+      "play/screenshots/screenshot-narrow.png"
+    ],
+    "screenshotsAreGameplayCaptures": false
+  },
+  "validation": {
+    "browserSmokeTest": "smoke-test.html",
+    "manualGate": "Start \u2192 play \u2192 fail/loss \u2192 retry \u2192 finish/result \u2192 desktop \u2192 phone \u2192 persistence \u2192 Arcade-True"
+  },
+  "inventory": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 904,
+      "sha256": "11568af3c8a486e4b582d935fd342a9f995f3d27371dfe7b9cdcfdb0eca22d7f",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "archive/README.md",
+      "bytes": 188,
+      "sha256": "129759bd4de51de8a17f4cbad80d0287871ea520246dfaacb860380fb6367bf1",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "archive/historical_spin_stop_perfect_combo.html",
+      "bytes": 11336,
+      "sha256": "3392de2834e22ee91e6b8c00c24e4b71319eb0c7159a85bcb9118cfd81b15cdd",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "game.json",
+      "bytes": 581,
+      "sha256": "dd9f11def9f87bf771c5bd34aaaf887303345a1d445d38ebba247ba325be88d1",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "index.html",
+      "bytes": 4828,
+      "sha256": "884c7875151113fc9e3b40352f9f8f9af31cb1f66f7ceda0de30b89a78c9ae57",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "manifest/attribution.txt",
+      "bytes": 941,
+      "sha256": "80eee41130c164af438dc0c28a440731c4822212ea6d67de7da013c26de7a565",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/license.txt",
+      "bytes": 826,
+      "sha256": "f80437e67f4bda7e261b844c08562f0cf808aacb8c22c00ebfd500c4886c80b4",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/production-readme.txt",
+      "bytes": 843,
+      "sha256": "d64d77a223c89b91fb085dabca21b916e2c880dd83f66f6f528f5a86b663de3e",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/provenance.json",
+      "bytes": 651,
+      "sha256": "aecba9ba7a07a678fa08fdfdec60f7014f57a44f3fbd0cc74f073cc9e8314647",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/release-notes.txt",
+      "bytes": 797,
+      "sha256": "c5413cdb8465cfece7edc30e7c3ca4fc3df11a08dfd11e47755de0c61d5ab477",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-192.png",
+      "bytes": 1310,
+      "sha256": "b11624245ed579cbc7fbd4fc86113af46d11d402bab851ee8eeffaa35116f61e",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-512.png",
+      "bytes": 3145,
+      "sha256": "3b47d4c9a246a14b674bd1a7ca4e4f23959ffbe28bc345df027b726ef4c9b18c",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-maskable-512.png",
+      "bytes": 19823,
+      "sha256": "a005ef4346f3545a5fa2281360781bd2e2a22189304b680b26faf27ed2a7722e",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/index.html",
+      "bytes": 15011,
+      "sha256": "89e9494f1a71e75de25bc24c256c14dc4155f3b8505e2aa2efb1453512518578",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/manifest.webmanifest",
+      "bytes": 1108,
+      "sha256": "f7605fee6b45827f292853d5dec4bac14be643d9284f235dc4f34155659ad24c",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-narrow.png",
+      "bytes": 19941,
+      "sha256": "cc78ce0c988bb0d54d0d41247bcc91d406237fd59cfa550d2034a2f0f0c34804",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-wide.png",
+      "bytes": 37121,
+      "sha256": "5ac31e182d00fae4e8b0d220b770dc522ea981c93d41a3e8d5117c4ba593a162",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/sw.js",
+      "bytes": 708,
+      "sha256": "48b500b1e5ba7de6405e26d82d3dfcd9d1427c91a9ead6f621fdb5e9004786fc",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "smoke-test.html",
+      "bytes": 3805,
+      "sha256": "5a57b5636bff013e2a37f697565f6327372a65d28ac26dc84ca079acfd9d7986",
+      "source": "Good Business retrofit"
+    }
+  ],
+  "inventoryNote": "Hashes cover the Priority Zero release package and Good Business retrofit. Pre-existing repository assets that were not present in the P0 overlay (for example some banners) are not inventoried."
+}

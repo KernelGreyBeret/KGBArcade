@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "sector-kgb",
+  "title": "Sector KGB",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "KGBA Engine Baseline v0.4.2 + Mission Runner v0.1.3 + Mission Composer Power Cycle template",
+  "provenanceNotes": "Power Cycle's four-scene Mission Composer structure and KGBA Engine/Mission Runner baseline were recovered, but exact original runtime bytes were not available. Public v1 is a canonical rebuild preserving the verified mission structure.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

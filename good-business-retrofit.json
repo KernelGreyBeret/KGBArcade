@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "id": "P0.GB",
+  "date": "2026-08-31",
+  "releaseEnvelope": "KGBA Good Business Release Envelope v1.0",
+  "gameCount": 11,
+  "gameplayChanges": false,
+  "homepageChanges": false,
+  "registryChanges": false,
+  "games": [
+    {
+      "id": "spin-stop",
+      "title": "Spin Stop",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "recovered-and-modified",
+      "archivedSource": "archive/historical_spin_stop_perfect_combo.html"
+    },
+    {
+      "id": "riftwake",
+      "title": "Riftwake: Signal Skimmer",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "jungle-breakout",
+      "title": "Jungle Breakout",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "sector-kgb",
+      "title": "Sector KGB",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "monster-truck-mayhem",
+      "title": "Monster Truck Mayhem",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "bayou-breakout",
+      "title": "Bayou Breakout",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "relay-runner",
+      "title": "Relay Runner",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "ninja-panda",
+      "title": "Ninja Panda",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "canyon-run",
+      "title": "Canyon Run",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "canonical-rebuild",
+      "archivedSource": null
+    },
+    {
+      "id": "cluck-and-cover",
+      "title": "Cluck & Cover",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "new-production-build",
+      "archivedSource": null
+    },
+    {
+      "id": "kernel-courier",
+      "title": "Kernel Courier",
+      "publicVersion": "1.0.0",
+      "sourceStatus": "new-production-build",
+      "archivedSource": null
+    }
+  ]
+}

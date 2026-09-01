@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "canyon-run",
+  "title": "Canyon Run",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "August 1, 2026 fighter-jet canyon prototype \u2192 arcade-assist control redesign \u2192 canonical Canyon Run v1 rebuild",
+  "provenanceNotes": "Public v1 was rebuilt from the settled August 1 arcade-assist design decisions after the original prototype source was not recoverable.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

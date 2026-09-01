@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<title>SPIN STOP — Perfect Combo Edition</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:#060913;overscroll-behavior:none;touch-action:manipulation}
+  body{-webkit-user-select:none;user-select:none}
+  canvas{display:block;position:fixed;inset:0;touch-action:none;
+         background:radial-gradient(1200px 1200px at 50% 50%, #0b1630 0%, #060913 60%, #04060c 100%)}
+  .hud{position:fixed;left:0;right:0;top:8px;z-index:10;text-align:center;
+       font:800 clamp(22px,3.8vw,34px) system-ui,Segoe UI,Roboto,Arial;color:#fff;pointer-events:none;
+       text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .lives{position:fixed;left:10px;top:10px;z-index:10;font:800 clamp(18px,3vw,26px) system-ui;color:#ff9a9a;pointer-events:none}
+  .combo{position:fixed;right:10px;top:10px;z-index:10;font:800 clamp(16px,3vw,22px) system-ui;color:#ffd76a;pointer-events:none;
+         text-shadow:0 2px 10px rgba(0,0,0,.6)}
+  .menu{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+        z-index:20;color:#dff4ff;text-align:center;text-shadow:0 3px 12px rgba(0,0,0,.6)}
+  .title{font:900 clamp(28px,8vw,56px) system-ui}
+  .sub{font:600 clamp(16px,3.2vw,20px) system-ui;opacity:.9;max-width:min(720px,92vw)}
+  .btn{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:16px;padding:14px 22px;
+       font:800 clamp(16px,2.8vw,18px) system-ui}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+  select{background:#0d1f3b;color:#fff;border:2px solid #3bd4ff;border-radius:14px;padding:12px 14px;font:700 16px system-ui}
+</style>
+
+<div class="hud" id="score">0</div>
+<div class="lives" id="lives">♥♥♥</div>
+<div class="combo" id="combo">Combo ×1</div>
+<canvas id="c"></canvas>
+
+<!-- Menu -->
+<div class="menu" id="menu">
+  <div class="title">S P I N  S T O P</div>
+  <div class="sub">
+    A needle spins around a ring. <b>Tap anywhere</b> to stop it.<br>
+    Land in <span style="color:#78ffa0">green</span> for +1, or hit the <span style="color:#ffd76a">gold</span> center for <b>PERFECT</b> (+2 × combo).<br>
+    Every hit <b>reverses</b> direction and speeds up a bit.
+  </div>
+  <div class="row">
+    <button class="btn" id="start">Tap to Start</button>
+    <select id="difficulty" aria-label="Difficulty">
+      <option value="super">Super Simple</option>
+      <option value="easy" selected>Easy</option>
+      <option value="normal">Normal</option>
+      <option value="hard">Hard</option>
+      <option value="insane">Insane</option>
+    </select>
+  </div>
+  <div id="best" style="opacity:.85;font:700 16px system-ui"></div>
+</div>
+
+<script>
+(() => {
+  const cnv = document.getElementById('c');
+  const ctx = cnv.getContext('2d');
+  const HUD = document.getElementById('score');
+  const LIVES = document.getElementById('lives');
+  const COMBOHUD = document.getElementById('combo');
+  const MENU = document.getElementById('menu');
+  const START = document.getElementById('start');
+  const DIFFSEL = document.getElementById('difficulty');
+  const BEST = document.getElementById('best');
+
+  let W=0,H=0,DPR=Math.min(2, window.devicePixelRatio||1);
+  function resize(){
+    W=Math.floor(innerWidth*DPR); H=Math.floor(innerHeight*DPR);
+    cnv.width=W; cnv.height=H; cnv.style.width=innerWidth+'px'; cnv.style.height=innerHeight+'px';
+  }
+  addEventListener('resize', resize, {passive:true}); resize();
+
+  const GREEN='#78ffa0', CYAN='#8cc8ff', RIM='#1e314a', GLOW='rgba(59,212,255,.35)';
+  const GOLD='#ffd76a';                 // bonus arc color
+  const BONUS_RATIO = 0.38;             // % of green-arc width for gold
+  const TAU = Math.PI*2;
+
+  // Difficulty presets
+  const DIFFS = {
+    super:  { LIVES:7, SPEED:1.0, SPEED_STEP:0.08, SAFE_ARC:60,   SAFE_ARCS:1, MISS_PEN:0.75 },
+    easy:   { LIVES:5, SPEED:1.4, SPEED_STEP:0.10, SAFE_ARC:50,   SAFE_ARCS:1, MISS_PEN:0.8  },
+    normal: { LIVES:3, SPEED:2.0, SPEED_STEP:0.12, SAFE_ARC:42,   SAFE_ARCS:1, MISS_PEN:1.0  },
+    hard:   { LIVES:3, SPEED:2.6, SPEED_STEP:0.16, SAFE_ARC:36,   SAFE_ARCS:2, MISS_PEN:1.1  },
+    insane: { LIVES:2, SPEED:3.4, SPEED_STEP:0.20, SAFE_ARC:28,   SAFE_ARCS:2, MISS_PEN:1.2  },
+  };
+  let diffKey = localStorage.getItem('spinstop_diff') || 'easy';
+  DIFFSEL.value = diffKey;
+  DIFFSEL.addEventListener('change', (e)=>{ e.stopPropagation(); e.preventDefault();
+    diffKey = DIFFSEL.value; localStorage.setItem('spinstop_diff', diffKey);
+  });
+
+  // Game state
+  let score=0, best=+localStorage.getItem('spinstop_best')||0;
+  let lives=3, angle=0, speed=2.0; // radians/sec (sign = direction)
+  let targetArcs=[]; // [{start, end, bStart, bEnd}]
+  let running=false, gameOver=false, flash=0, bonusFlash=0;
+  let radius=0;
+
+  // Combo state
+  let combo=0;                 // increments on PERFECT only
+  const MAX_MULT = 5;          // cap the multiplier
+  function comboMult(){ return Math.min(MAX_MULT, 1 + Math.floor(combo/2)); }
+
+  // Angle helpers
+  function norm(ang){ ang%=TAU; return ang<0 ? ang+TAU : ang; }
+  function angleInArc(ang, start, end){
+    ang = norm(ang); start = norm(start); end = norm(end);
+    if (start <= end) return ang >= start && ang <= end;
+    return (ang >= start) || (ang <= end); // wrapped arc
+  }
+  function inAnyArc(ang){
+    ang = norm(ang);
+    for(const a of targetArcs) if(angleInArc(ang, a.start, a.end)) return true;
+    return false;
+  }
+  function inAnyBonusArc(ang){
+    ang = norm(ang);
+    for(const a of targetArcs) if(angleInArc(ang, a.bStart, a.bEnd)) return true;
+    return false;
+  }
+
+  function reset(){
+    const d=DIFFS[diffKey] || DIFFS.easy;
+    lives=d.LIVES; speed=d.SPEED; score=0; angle=0; flash=0; bonusFlash=0; gameOver=false; combo=0;
+    HUD.textContent='0'; LIVES.textContent='♥'.repeat(lives); COMBOHUD.textContent='Combo ×1';
+    BEST.textContent = best ? `Best: ${best}` : '';
+    newRound(true);
+  }
+
+  function newRound(first=false){
+    const d=DIFFS[diffKey] || DIFFS.easy;
+    radius = Math.min(W,H)*0.28;
+    const n = first ? 1 : d.SAFE_ARCS;
+    targetArcs = [];
+    for(let i=0;i<n;i++){
+      const center = Math.random()*TAU;
+      const half = ((d.SAFE_ARC + (i?0:8)) * Math.PI/180) / 2;
+      const start = center - half, end = center + half;
+      const bHalf = half * BONUS_RATIO;
+      const bStart = center - bHalf, bEnd = center + bHalf;
+      targetArcs.push({ start, end, bStart, bEnd });
+    }
+    if(!first) speed = Math.sign(speed) * (Math.abs(speed) * (1 + d.SPEED_STEP));
+  }
+
+  // Tap to judge (single event to avoid double-firing on Android)
+  function handleTap(ev){
+    if(MENU.style.display!=='none') return;
+    if(!running || gameOver) return;
+    ev.preventDefault();
+
+    const hitBonus = inAnyBonusArc(angle);
+    const hit = hitBonus || inAnyArc(angle);
+
+    if(hit){
+      let gained;
+      if(hitBonus){
+        combo += 1;
+        const mult = comboMult();
+        gained = 2 * mult;
+        bonusFlash = 0.9; // show "PERFECT!" HUD
+      } else {
+        combo = 0; // normal hit breaks perfect streak
+        gained = 1;
+      }
+      score += gained;
+      HUD.textContent=String(score);
+      COMBOHUD.textContent = 'Combo ×' + comboMult();
+      flash = 0.18; // white flash
+
+      // Reverse direction & tiny speed bump
+      const d=DIFFS[diffKey] || DIFFS.easy;
+      const mag = Math.abs(speed) * (1 + d.SPEED_STEP);
+      speed = -Math.sign(speed || 1) * mag;
+
+      newRound(false);
+    } else {
+      const d=DIFFS[diffKey] || DIFFS.easy;
+      lives -= 1; LIVES.textContent='♥'.repeat(Math.max(0,lives));
+      flash = 0.3; // red flash
+      combo = 0; COMBOHUD.textContent='Combo ×1';
+      // tiny slow after a miss
+      speed = Math.sign(speed || 1) * Math.max(0.8, Math.abs(speed) * (1 - 0.05*d.MISS_PEN));
+      if(lives<=0){
+        gameOver=true; running=false;
+        best=Math.max(best,score); localStorage.setItem('spinstop_best',best);
+        MENU.style.display='flex';
+        START.textContent='Tap to Restart';
+        BEST.textContent=`Best: ${best}`;
+      } else {
+        newRound(false);
+      }
+    }
+  }
+
+  // Start button (robust on Android)
+  function startGame(){
+    if(running) return;
+    running=true;
+    MENU.style.display='none';
+    reset();
+  }
+  ['pointerup','click'].forEach(ev=>{
+    START.addEventListener(ev, (e)=>{ e.stopPropagation(); e.preventDefault(); startGame(); }, {passive:false});
+  });
+  document.body.addEventListener('pointerdown', handleTap, {passive:false});
+
+  // Drawing helpers
+  function drawRing(cx,cy,r){
+    ctx.strokeStyle=GLOW; ctx.lineWidth=16*DPR;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,TAU); ctx.stroke();
+    ctx.strokeStyle=RIM; ctx.lineWidth=4*DPR;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,TAU); ctx.stroke();
+  }
+  function drawArcs(cx,cy,r){
+    ctx.lineCap='round';
+    // green safe arcs
+    for(const a of targetArcs){
+      ctx.strokeStyle=GREEN; ctx.lineWidth=10*DPR;
+      ctx.beginPath(); ctx.arc(cx,cy,r, a.start, a.end); ctx.stroke();
+    }
+    // gold bonus arcs
+    for(const a of targetArcs){
+      ctx.strokeStyle=GOLD; ctx.lineWidth=6*DPR;
+      ctx.beginPath(); ctx.arc(cx,cy,r, a.bStart, a.bEnd); ctx.stroke();
+    }
+  }
+  function drawNeedle(cx,cy,r,ang,good){
+    const len = r + 18*DPR;
+    const x2 = cx + Math.cos(ang)*len;
+    const y2 = cy + Math.sin(ang)*len;
+    // trail: green-ish if aligned with any green, blue otherwise
+    ctx.strokeStyle = good ? 'rgba(120,255,160,.35)' : 'rgba(140,180,255,.25)';
+    ctx.lineWidth = 10*DPR; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x2,y2); ctx.stroke();
+    // main needle
+    ctx.strokeStyle = good ? GREEN : CYAN;
+    ctx.lineWidth = 3*DPR; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(x2,y2); ctx.stroke();
+    // hub
+    ctx.fillStyle = good ? GREEN : CYAN;
+    ctx.beginPath(); ctx.arc(cx,cy,5*DPR,0,TAU); ctx.fill();
+  }
+
+  let last=performance.now();
+  function loop(ts){
+    const dt = Math.min(0.05,(ts-last)/1000); last=ts;
+
+    // background
+    ctx.fillStyle = '#060913'; ctx.fillRect(0,0,W,H);
+
+    const cx=W/2, cy=H/2;
+    drawRing(cx,cy,radius);
+    drawArcs(cx,cy,radius);
+
+    if(running && !gameOver){
+      angle = norm(angle + speed * dt);
+    }
+    const good = inAnyArc(angle);
+    drawNeedle(cx,cy,radius,angle,good);
+
+    // White flash overlay
+    if(flash>0){
+      const a = Math.min(1, flash*3);
+      ctx.fillStyle = `rgba(255,255,255,${a})`;
+      ctx.fillRect(0,0,W,H);
+      flash -= dt;
+    }
+
+    // PERFECT popup with combo multiplier
+    if (bonusFlash > 0){
+      const alpha = Math.min(1, bonusFlash * 1.8); // fade out
+      const mult = comboMult();
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = GOLD;
+      ctx.font = `${Math.max(22, Math.floor(34*DPR))}px system-ui`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.shadowColor = GOLD;
+      ctx.shadowBlur = 18;
+      ctx.fillText(`PERFECT ×${mult}! +${2*mult}`, W/2, H*0.18);
+      ctx.restore();
+      bonusFlash -= dt;
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  MENU.style.display='flex';
+  BEST.textContent = best ? `Best: ${best}` : '';
+  COMBOHUD.textContent='Combo ×1';
+  requestAnimationFrame(loop);
+})();
+</script>
+</html>

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope",
+  "releaseEnvelopeVersion": "1.0",
+  "retrofitId": "P0.GB",
+  "retrofitDate": "2026-08-31",
+  "game": {
+    "id": "kernel-courier",
+    "title": "Kernel Courier",
+    "subtitle": "Fresh Corn Run",
+    "vault": "8BitOps",
+    "publicVersion": "1.0.0",
+    "status": "live",
+    "landingPath": "/games/kernel-courier/",
+    "playPath": "/games/kernel-courier/play/",
+    "smokeTestPath": "/games/kernel-courier/smoke-test.html"
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com",
+    "license": "All rights reserved; see manifest/license.txt"
+  },
+  "provenance": {
+    "sourceStatus": "new-production-build",
+    "sourceLineage": "June 20\u201322, 2026 farm-delivery Kernel Courier / Fresh Corn Run concept \u2192 canonical public v1",
+    "record": "manifest/provenance.json"
+  },
+  "pwa": {
+    "enabled": true,
+    "manifest": "play/manifest.webmanifest",
+    "serviceWorker": "play/sw.js",
+    "cacheIdentity": "kgba-kernel-courier-v1.0.0-gb1",
+    "icons": [
+      "play/icon-192.png",
+      "play/icon-512.png",
+      "play/icon-maskable-512.png"
+    ],
+    "screenshots": [
+      "play/screenshots/screenshot-wide.png",
+      "play/screenshots/screenshot-narrow.png"
+    ],
+    "screenshotsAreGameplayCaptures": false
+  },
+  "validation": {
+    "browserSmokeTest": "smoke-test.html",
+    "manualGate": "Start \u2192 play \u2192 fail/loss \u2192 retry \u2192 finish/result \u2192 desktop \u2192 phone \u2192 persistence \u2192 Arcade-True"
+  },
+  "inventory": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 2336,
+      "sha256": "80a033d811e0cabfbd22899eae780df3cce2c0e477f07e14fde08463f9becc2e",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "game.json",
+      "bytes": 1639,
+      "sha256": "e0c60206b74020c59e2e7d26c5eb48913bd5c367241fe9f94255d64f3b9bc355",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6867,
+      "sha256": "4054659ac289617b5ec038fd361acd7e1ff1b50bfdfcf5523e5c19b603765be3",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "manifest/attribution.txt",
+      "bytes": 946,
+      "sha256": "936e63ace7db39a5c86274a2f883da8bc72f9c259581c9d78bf76e020512aee8",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/license.txt",
+      "bytes": 831,
+      "sha256": "7e7410f4b46b9ac2bbaeaec30dbed7a38a00d88917edf8f14c2fa2c09d63fdb1",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/production-readme.txt",
+      "bytes": 866,
+      "sha256": "497489e7238080599316c78bb22f5f0bff0480534127f7eed4fce817d609fc28",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/provenance.json",
+      "bytes": 685,
+      "sha256": "0d64a9bea6763ebf43fad182e565ba8bd37ffc3214ed12a3d87b1a0f0d5cf819",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/release-notes.txt",
+      "bytes": 810,
+      "sha256": "3f0da655e21db7a0890d85a0c62a28569b38e4402779ce0f0e3f69063983d566",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-192.png",
+      "bytes": 1856,
+      "sha256": "43853751765d08cb317a783f1661d02e5819095b7b0e6eef59ea6e662db9e5ca",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-512.png",
+      "bytes": 4817,
+      "sha256": "5c3de335044a227ecf245d604f59574660ede94c69551472ae96d388fd15b865",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-maskable-512.png",
+      "bytes": 16316,
+      "sha256": "8bfb91d57b9f52b59577552daf7ed3a4537627ee39982aad2f19aeca5076cf3d",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/index.html",
+      "bytes": 21808,
+      "sha256": "c824f93905ae9ab8f0521244fddf02ea393f4fc4d415a1027f1d2c79ade14869",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/manifest.webmanifest",
+      "bytes": 1177,
+      "sha256": "00cbf3b71ccb411e15e0932db8dd4a1eb8c3131ad6b73cb94bea0236ce0f510b",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-narrow.png",
+      "bytes": 21576,
+      "sha256": "f78901f6c18403e34d18c79d463234fd6b446d1b8b1a1f0f5ef5734074d8afda",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-wide.png",
+      "bytes": 37902,
+      "sha256": "05573559a28f98609a33906ff0bd3947161af783284071e0e9fd5baff8f0a8c6",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/sw.js",
+      "bytes": 713,
+      "sha256": "5ade1ab8bff0d14c932a913a5adac1b46e4641a96dcdec96b9950e1a5414cd7c",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "smoke-test.html",
+      "bytes": 3825,
+      "sha256": "b3df008e16d1cb133dcc77db768b7276ef24b20fcf4a46f9e059ec74f3d16cf9",
+      "source": "Good Business retrofit"
+    }
+  ],
+  "inventoryNote": "Hashes cover the Priority Zero release package and Good Business retrofit. Pre-existing repository assets that were not present in the P0 overlay (for example some banners) are not inventoried."
+}

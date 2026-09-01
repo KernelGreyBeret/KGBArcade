@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "riftwake",
+  "title": "Riftwake: Signal Skimmer",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "canonical-rebuild",
+  "sourceLineage": "Signal Skimmer v1\u2192v6 \u2192 Signal Skimmer Final v1 \u2192 PWA Final v1",
+  "provenanceNotes": "Exact historical Riftwake source bytes were not recoverable. Public v1 was rebuilt from verified Signal Skimmer lineage and preserved control/gameplay requirements.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

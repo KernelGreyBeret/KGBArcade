@@ -1,0 +1,26 @@
+Sector KGB
+KGB Arcade Public v1.0.0
+Good Business Retrofit: 2026-08-31
+
+This retrofit does not change gameplay.
+
+ADDED / STANDARDIZED
+- dedicated maskable PWA icon
+- wide and narrow representative PWA screenshots
+- enriched web app manifest
+- version-specific service-worker cache identity
+- license
+- attribution
+- provenance
+- production-release manifest
+- production README
+- browser smoke-test
+
+SOURCE STATUS
+canonical-rebuild
+
+PROVENANCE NOTE
+Power Cycle's four-scene Mission Composer structure and KGBA Engine/Mission Runner baseline were recovered, but exact original runtime bytes were not available. Public v1 is a canonical rebuild preserving the verified mission structure.
+
+SCREENSHOT NOTE
+Added screenshots are representative KGBA launch/branding screenshots generated from the release's own title/icon/theme metadata. They are not represented as gameplay captures.

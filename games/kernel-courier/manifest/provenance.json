@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "kernel-courier",
+  "title": "Kernel Courier",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "new-production-build",
+  "sourceLineage": "June 20\u201322, 2026 farm-delivery Kernel Courier / Fresh Corn Run concept \u2192 canonical public v1",
+  "provenanceNotes": "Public v1 was created from the established June farm-delivery Kernel Courier / Fresh Corn Run design notes; there was no prior complete final source to archive.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

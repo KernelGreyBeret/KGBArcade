@@ -1,0 +1,26 @@
+Canyon Run
+KGB Arcade Public v1.0.0
+Good Business Retrofit: 2026-08-31
+
+This retrofit does not change gameplay.
+
+ADDED / STANDARDIZED
+- dedicated maskable PWA icon
+- wide and narrow representative PWA screenshots
+- enriched web app manifest
+- version-specific service-worker cache identity
+- license
+- attribution
+- provenance
+- production-release manifest
+- production README
+- browser smoke-test
+
+SOURCE STATUS
+canonical-rebuild
+
+PROVENANCE NOTE
+Public v1 was rebuilt from the settled August 1 arcade-assist design decisions after the original prototype source was not recoverable.
+
+SCREENSHOT NOTE
+Added screenshots are representative KGBA launch/branding screenshots generated from the release's own title/icon/theme metadata. They are not represented as gameplay captures.

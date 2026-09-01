@@ -1,0 +1,31 @@
+Jungle Breakout
+KGB Arcade Public v1.0.0
+
+CREATOR
+Tommy Burke / Kernel Grey Beret
+
+PUBLISHER
+KGB Arcade
+https://kgbarcade.com
+team@kgbarcade.com
+
+COPYRIGHT
+© 2026 Tommy Burke. All rights reserved.
+
+RUNTIME / LIBRARIES
+No third-party JavaScript runtime libraries are declared in this public release package.
+
+FONTS
+System/browser fonts only. No font files are redistributed.
+
+AUDIO
+Game audio is synthesized at runtime with browser audio APIs where applicable. No third-party audio recording is declared in this release package.
+
+ART / UI
+Public v1 presentation and procedural/CSS/canvas art in this release package are original production assets unless separately noted in the repository.
+
+EXTERNAL ATTRIBUTION STATUS
+No third-party runtime assets requiring attribution are declared for this public v1 package.
+
+PROVENANCE
+See provenance.json for whether this release is based on recovered source, a canonical rebuild, or a new production build.

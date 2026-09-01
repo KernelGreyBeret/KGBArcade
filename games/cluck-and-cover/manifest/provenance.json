@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "gameId": "cluck-and-cover",
+  "title": "Cluck & Cover",
+  "publicVersion": "1.0.0",
+  "publisher": "KGB Arcade",
+  "rightsHolder": "Tommy Burke",
+  "retrofitDate": "2026-08-31",
+  "sourceStatus": "new-production-build",
+  "sourceLineage": "June 20, 2026 Cluck & Cover concept \u2192 canonical fixed-day MiniMission v1",
+  "provenanceNotes": "Public v1 was created directly from the established June 20 Cluck & Cover concept; there was no prior complete public game source to archive.",
+  "archivedHistoricalSource": null,
+  "accuracyRule": "A canonical rebuild is never represented as recovered original source."
+}

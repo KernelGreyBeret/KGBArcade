@@ -1,0 +1,29 @@
+<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jungle Breakout — KGBA Release Smoke Test</title>
+<style>
+body{margin:0;background:#0b0d10;color:#eef3f7;font:15px system-ui,Segoe UI,Arial;padding:24px}main{max-width:900px;margin:auto}
+h1{margin:.2em 0}.meta{color:#9bb0be}.row{padding:10px 12px;margin:7px 0;border-radius:9px;background:#151a20;border:1px solid #ffffff12}
+.pass{border-left:5px solid #6ee787}.fail{border-left:5px solid #ff6b6b}code{color:#b8e7ff}
+button,a.btn{display:inline-block;margin:8px 8px 8px 0;padding:10px 13px;border:1px solid #ffffff22;border-radius:9px;background:#202833;color:white;text-decoration:none;font-weight:800}
+.manual{padding:16px;background:#12171d;border-radius:12px;margin-top:20px;line-height:1.7}li{margin:5px 0}
+</style>
+<main><div class="meta">KGB Arcade · Good Business Release Envelope v1.0</div><h1>Jungle Breakout</h1>
+<div class="meta">Expected slug: <code>jungle-breakout</code> · public version: <code>1.0.0</code></div>
+<p><a class="btn" href="./play/">Open Game</a><button onclick="run()">Run Automatic Checks</button></p><div id="results"></div>
+<div class="manual"><strong>Manual release gate</strong><ol>
+<li>Start the game from its normal public entry point.</li><li>Play a representative session.</li><li>Trigger a failure/loss where applicable.</li>
+<li>Retry and confirm the authored rules/course/objectives remain learnable.</li><li>Reach the finish/win/result state where applicable.</li>
+<li>Confirm pause/background pause.</li><li>Test desktop.</li><li>Test phone/touch.</li><li>Reload and confirm intended persistence.</li><li>Confirm Arcade-True behavior.</li>
+</ol></div></main>
+<script>
+const E={"slug": "jungle-breakout", "version": "1.0.0"}, R=document.getElementById('results');
+const C=[['./game.json','json'],['./play/index.html','text'],['./play/manifest.webmanifest','json'],['./play/sw.js','text'],['./play/icon-192.png','blob'],['./play/icon-512.png','blob'],['./play/icon-maskable-512.png','blob'],['./play/screenshots/screenshot-wide.png','blob'],['./play/screenshots/screenshot-narrow.png','blob'],['./manifest/license.txt','text'],['./manifest/attribution.txt','text'],['./manifest/provenance.json','json'],['./manifest/kgb-production-release.json','json'],['./manifest/release-notes.txt','text'],['./manifest/production-readme.txt','text']];
+function row(n,s,d=''){let e=document.createElement('div');e.className='row '+s;e.textContent=(s==='pass'?'PASS · ':'FAIL · ')+n+(d?' — '+d:'');R.append(e)}
+async function run(){R.innerHTML='';let ok=true,got={};
+for(const [p,t] of C){try{let r=await fetch(p,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);got[p]=t==='json'?await r.json():t==='blob'?await r.blob():await r.text();row(p,'pass')}catch(e){ok=false;row(p,'fail',e.message)}}
+try{let g=got['./game.json'];if(g.id!==E.slug||g.publicVersion!==E.version)throw Error('identity/version mismatch');row('game.json identity/version','pass')}catch(e){ok=false;row('game.json identity/version','fail',e.message)}
+try{let m=got['./play/manifest.webmanifest'];let mask=(m.icons||[]).some(x=>String(x.purpose||'').includes('maskable')),wide=(m.screenshots||[]).some(x=>x.form_factor==='wide'),narrow=(m.screenshots||[]).some(x=>!x.form_factor||x.form_factor==='narrow');if(!mask||!wide||!narrow)throw Error('install metadata incomplete');row('PWA install metadata','pass')}catch(e){ok=false;row('PWA install metadata','fail',e.message)}
+try{let p=got['./manifest/provenance.json'];if(!p?.sourceStatus)throw Error('sourceStatus missing');row('provenance','pass',p.sourceStatus)}catch(e){ok=false;row('provenance','fail',e.message)}
+row('AUTOMATIC RELEASE ENVELOPE',ok?'pass':'fail',ok?'all machine-checkable requirements passed':'fix failures above')}
+run();
+</script>

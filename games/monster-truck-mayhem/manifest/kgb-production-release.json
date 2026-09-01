@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope",
+  "releaseEnvelopeVersion": "1.0",
+  "retrofitId": "P0.GB",
+  "retrofitDate": "2026-08-31",
+  "game": {
+    "id": "monster-truck-mayhem",
+    "title": "Monster Truck Mayhem",
+    "subtitle": "",
+    "vault": "8BitOps",
+    "publicVersion": "1.0.0",
+    "status": "live",
+    "landingPath": "/games/monster-truck-mayhem/",
+    "playPath": "/games/monster-truck-mayhem/play/",
+    "smokeTestPath": "/games/monster-truck-mayhem/smoke-test.html"
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com",
+    "license": "All rights reserved; see manifest/license.txt"
+  },
+  "provenance": {
+    "sourceStatus": "canonical-rebuild",
+    "sourceLineage": "July 26, 2026 standalone prototype \u2192 larger-ramp / realistic-suspension iteration \u2192 canonical public v1 rebuild",
+    "record": "manifest/provenance.json"
+  },
+  "pwa": {
+    "enabled": true,
+    "manifest": "play/manifest.webmanifest",
+    "serviceWorker": "play/sw.js",
+    "cacheIdentity": "kgba-monster-truck-mayhem-v1.0.0-gb1",
+    "icons": [
+      "play/icon-192.png",
+      "play/icon-512.png",
+      "play/icon-maskable-512.png"
+    ],
+    "screenshots": [
+      "play/screenshots/screenshot-wide.png",
+      "play/screenshots/screenshot-narrow.png"
+    ],
+    "screenshotsAreGameplayCaptures": false
+  },
+  "validation": {
+    "browserSmokeTest": "smoke-test.html",
+    "manualGate": "Start \u2192 play \u2192 fail/loss \u2192 retry \u2192 finish/result \u2192 desktop \u2192 phone \u2192 persistence \u2192 Arcade-True"
+  },
+  "inventory": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 1567,
+      "sha256": "70827da7a9cc5c7ea079ec6467083803e8e86539de84efd80965bb764a5a14c9",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "game.json",
+      "bytes": 1154,
+      "sha256": "d0aeed48628bd8beeb7cad5123c4579e6cae53ea2dfc8c5821155dd4fa41d233",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6032,
+      "sha256": "06cb05b997e7d1adef6417dd1abba3c3c7e020f42d46c25cc54168fbbcbe0689",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "manifest/attribution.txt",
+      "bytes": 952,
+      "sha256": "f4e2bf17e2d64870bd590b73ef42ffec96419f5831c72a5940bf1bbcbb2086c3",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/license.txt",
+      "bytes": 837,
+      "sha256": "44b1e6d31f1396a4c288c8a31cd2c2549e9b88cc66bb8ad94768c6fc8fbedd6b",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/production-readme.txt",
+      "bytes": 893,
+      "sha256": "d83c33e3fea4532807dde6d81be86a17e73b92d46f2d0c85b4392ec419a7357a",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/provenance.json",
+      "bytes": 729,
+      "sha256": "08185d52da8cf6279628e714f9a64d1dd4eada50f25d714f9de2860765769eec",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/release-notes.txt",
+      "bytes": 829,
+      "sha256": "6c61abd9ad229d42dcdb053954d4794b95e2e7275c4951edef2b9de4eb93081c",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-192.png",
+      "bytes": 1853,
+      "sha256": "881a52dde2fef3a5ce6e013b366d43b0965eb49e36344ecfa1180228bd3bdfa3",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-512.png",
+      "bytes": 5149,
+      "sha256": "3f5f30015399301d024c643725462100658f56ec643ff841876bc27e00ab08e0",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-maskable-512.png",
+      "bytes": 18557,
+      "sha256": "a17e72b05e4c2a9fb787e8c6deb86144e5741ae19e093c4eb18aad6d7373bb49",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/index.html",
+      "bytes": 22493,
+      "sha256": "3d2eff13e3acc35b594b9f1cce97f874d60bb352c9ed45f8dc16202476b9a60a",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/manifest.webmanifest",
+      "bytes": 1155,
+      "sha256": "99bf3ab1ca07299d27a1efde48fb8a99119c83b4cdc3d0df01bf7a0b216be84b",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-narrow.png",
+      "bytes": 20726,
+      "sha256": "5a589c76d20cbe6b5f933e94c89be06f7af8db2a4d2b0420b809b6a3b1615c44",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-wide.png",
+      "bytes": 37777,
+      "sha256": "20bc59be7bc1a6ec58a6084e4d942f2360258cd9795af810567463de988a8780",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/sw.js",
+      "bytes": 719,
+      "sha256": "f6616adda00b7673f53acd12c08a51a371fce13c00ffa6a33cec90beecdd604b",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "smoke-test.html",
+      "bytes": 3849,
+      "sha256": "379cea2c80e50362228b16c1bc699c49c3be2d4d1d3bc4442b333637b5e61bab",
+      "source": "Good Business retrofit"
+    }
+  ],
+  "inventoryNote": "Hashes cover the Priority Zero release package and Good Business retrofit. Pre-existing repository assets that were not present in the P0 overlay (for example some banners) are not inventoried."
+}

@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope",
+  "releaseEnvelopeVersion": "1.0",
+  "retrofitId": "P0.GB",
+  "retrofitDate": "2026-08-31",
+  "game": {
+    "id": "bayou-breakout",
+    "title": "Bayou Breakout",
+    "subtitle": "Warm-Up Run",
+    "vault": "8BitOps",
+    "publicVersion": "1.0.0",
+    "status": "live",
+    "landingPath": "/games/bayou-breakout/",
+    "playPath": "/games/bayou-breakout/play/",
+    "smokeTestPath": "/games/bayou-breakout/smoke-test.html"
+  },
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com",
+    "license": "All rights reserved; see manifest/license.txt"
+  },
+  "provenance": {
+    "sourceStatus": "canonical-rebuild",
+    "sourceLineage": "River Gator Boat Chase concept \u2192 Bayou Breakout / 8BitOps \u2192 Warm-Up Run smoke test on KGB Arcade Engine v0.1/v0.1.1 \u2192 canonical public v1 rebuild",
+    "record": "manifest/provenance.json"
+  },
+  "pwa": {
+    "enabled": true,
+    "manifest": "play/manifest.webmanifest",
+    "serviceWorker": "play/sw.js",
+    "cacheIdentity": "kgba-bayou-breakout-v1.0.0-gb1",
+    "icons": [
+      "play/icon-192.png",
+      "play/icon-512.png",
+      "play/icon-maskable-512.png"
+    ],
+    "screenshots": [
+      "play/screenshots/screenshot-wide.png",
+      "play/screenshots/screenshot-narrow.png"
+    ],
+    "screenshotsAreGameplayCaptures": false
+  },
+  "validation": {
+    "browserSmokeTest": "smoke-test.html",
+    "manualGate": "Start \u2192 play \u2192 fail/loss \u2192 retry \u2192 finish/result \u2192 desktop \u2192 phone \u2192 persistence \u2192 Arcade-True"
+  },
+  "inventory": [
+    {
+      "path": "CHANGELOG.md",
+      "bytes": 1756,
+      "sha256": "9c065158466050b453397e72349ae6c1d7a78a69b1a590e377b679472875edfb",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "game.json",
+      "bytes": 1345,
+      "sha256": "aa397abd9075ec4c3309af123f0eee74a54db0ef4f770587934c9f7e9bf4a1f8",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6178,
+      "sha256": "45a4eba6df7cba3fd3e2dbebc0c959cb2b3d482cc3888653d2b41ecc020d06a7",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "manifest/attribution.txt",
+      "bytes": 946,
+      "sha256": "167c18bb4a619a69f1d3814f835cd30f43d73a4e217631f89537adf352687839",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/license.txt",
+      "bytes": 831,
+      "sha256": "4581fd7ad6a8fd6687118ca761c21f9807ff8afbacdc4f9a218ebc632c056b61",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/production-readme.txt",
+      "bytes": 863,
+      "sha256": "22dc75979f1ff9d29cac5db03a61f18a1df75a3eafed398789e4106728498c97",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/provenance.json",
+      "bytes": 737,
+      "sha256": "a89d4346220a216e2425437d1ce73ea414d4cb0dd86497dd72b7f97e8e940a38",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "manifest/release-notes.txt",
+      "bytes": 804,
+      "sha256": "018d6e117ddf83f2a66654b78f91d692fe7f7eeb2c488ba729357999b3c5818a",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/icon-192.png",
+      "bytes": 1578,
+      "sha256": "c264f62fb5d15b63f52132994888be036af897e96d7afff1622b91820ff13a16",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-512.png",
+      "bytes": 4713,
+      "sha256": "4c237b36a79c93a149ce2b02f0d7f75c8a51f2b91cdaf6fca2e339cf37d6e957",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/icon-maskable-512.png",
+      "bytes": 13360,
+      "sha256": "5fc8b973b24f6d1387d03832ef60a6369f2b252ba2db38906f6b72f77b53cf4d",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/index.html",
+      "bytes": 21193,
+      "sha256": "58e34b3ce59312a4b0fcb4d53f40f596853ce0593a12afe4d7433a466a6b17e3",
+      "source": "P0 public release package"
+    },
+    {
+      "path": "play/manifest.webmanifest",
+      "bytes": 1171,
+      "sha256": "8f4e7e3d755e3af696168b244475cf99d2dc4e3aaa9eb95c9854362f1749569a",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-narrow.png",
+      "bytes": 20763,
+      "sha256": "02af16a5b6f8be7e0462dac0a153b5dc2ef5cd29ae3d256bc4150322315b3102",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/screenshots/screenshot-wide.png",
+      "bytes": 37060,
+      "sha256": "1e7f955d3928f33be3c1c58041497a66f870a9a32089acf2423b5286f92f87d6",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "play/sw.js",
+      "bytes": 713,
+      "sha256": "e9275e066b69633b1ff618176bac285f61e3029f7b7ad711b66b9b8a2c058fad",
+      "source": "Good Business retrofit"
+    },
+    {
+      "path": "smoke-test.html",
+      "bytes": 3825,
+      "sha256": "f7f868c8e7d83dcf99eae8acc60769b05dac87e42aa5376b31a40cb3519c7846",
+      "source": "Good Business retrofit"
+    }
+  ],
+  "inventoryNote": "Hashes cover the Priority Zero release package and Good Business retrofit. Pre-existing repository assets that were not present in the P0 overlay (for example some banners) are not inventoried."
+}
