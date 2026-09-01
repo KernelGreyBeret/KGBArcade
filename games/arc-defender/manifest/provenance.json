@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "gameId": "arc-defender",
+  "publicVersion": "1.0.0",
+  "sourceStatus": "existing-live-runtime",
+  "sourceBuild": "arc_defender_v2.html",
+  "runtimeModifiedByCleanup": false,
+  "notes": "This pass standardizes the existing live package without replacing its gameplay runtime. A newer owner-selected build may supersede it."
+}

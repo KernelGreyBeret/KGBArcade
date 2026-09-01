@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "kid-jam",
+  "title": "Kid Jam",
+  "subtitle": "Beat Party",
+  "vault": "TankTots",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "Kid Jam Beat Party / existing repo PWA",
+  "path": "/games/kids_mash/",
+  "canonicalSlug": "kid-jam",
+  "legacyCompatiblePath": "/games/kids_mash/",
+  "pwa": true,
+  "features": [
+    "one-tap beat styles",
+    "horn keyboard",
+    "game/square keyboard",
+    "funny SFX pads",
+    "recording",
+    "WAV save",
+    "offline support"
+  ],
+  "releaseNote": "Runtime gameplay remains the existing Kid Jam Beat Party app; P0.14 standardizes identity and release packaging."
+}

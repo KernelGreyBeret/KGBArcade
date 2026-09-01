@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "gameId": "kid-jam",
+  "publicVersion": "1.0.0",
+  "sourceStatus": "recovered-original",
+  "sourceOfRecord": "Existing live repository runtime at /games/kids_mash/index.html",
+  "runtimeModifiedByP014": false,
+  "packagingModifiedByP014": true,
+  "notes": "The current live Kid Jam Beat Party runtime already existed as a PWA-era package. P0.14 does not replace index.html; it standardizes public identity and release/business metadata."
+}

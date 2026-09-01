@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "gameId": "tanktots-learn",
+  "publicVersion": "1.0.0",
+  "sourceStatus": "existing-live-runtime",
+  "sourceBuild": "v0.2.1 Fun Layer / current live learning-deck package",
+  "runtimeModifiedByCleanup": false,
+  "notes": "This pass standardizes the existing live package without replacing its gameplay runtime. A newer owner-selected build may supersede it."
+}

@@ -1,7 +1,8 @@
 {
+  "id": "./",
   "name": "Kid Jam Beat Party",
   "short_name": "Kid Jam",
-  "description": "A kid-friendly offline music button masher with one-tap EDM beats, horn keys, game keys, and funny sound effects.",
+  "description": "A kid-friendly offline music button masher with one-tap EDM beats, horn keys, game keys, funny sound effects, recording, and WAV save.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "fullscreen",
@@ -14,22 +15,40 @@
     "kids",
     "entertainment"
   ],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./icons/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "./icons/maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshots/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Kid Jam Beat Party launch artwork"
+    },
+    {
+      "src": "./screenshots/screenshot-narrow.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "label": "Kid Jam Beat Party mobile launch artwork"
     }
   ]
 }

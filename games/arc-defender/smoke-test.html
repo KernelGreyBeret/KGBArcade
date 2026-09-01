@@ -1,0 +1,22 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Arc Defender — Rhythm Rings — KGBA Smoke Test</title>
+<style>
+body{margin:0;background:#0b0f14;color:#eef5fa;font:15px system-ui;padding:24px}
+main{max-width:900px;margin:auto} .row{padding:10px 12px;margin:7px 0;background:#151c24;border-radius:9px;border:1px solid #ffffff12}
+.pass{border-left:5px solid #6ee787} .fail{border-left:5px solid #ff6b6b} .warn{border-left:5px solid #ffd866;background:#241f11;padding:12px;margin:14px 0;border-radius:8px}
+button,a{display:inline-block;padding:10px 13px;margin:5px;border-radius:8px;border:1px solid #ffffff22;background:#202b37;color:#fff;text-decoration:none;font-weight:800}
+.manual{margin-top:18px;background:#121820;padding:15px;border-radius:10px;line-height:1.7}
+</style>
+<main><div style="color:#9bb0be">KGB Arcade · Existing-Live Cleanup</div><h1>Arc Defender — Rhythm Rings</h1>
+<p><button onclick="run()">Run automatic checks</button><a href="./">Open live game</a></p><div id="r"></div>
+<div class="manual"><strong>Manual gate</strong><ol>
+<li>Open the current live game and confirm it still starts.</li><li>Run a representative session.</li><li>Confirm mobile and desktop behavior.</li>
+<li>Confirm any install/offline behavior that the current package claims.</li><li>Do not treat this cleanup as gameplay approval for a replacement build.</li>
+</ol></div></main>
+<script>
+const C=["./index.html", "./arc_defender_v2.html", "./pwa/index.html", "./pwa/manifest.webmanifest", "./pwa/service-worker.js", "./game.json", "./manifest/provenance.json"],R=document.getElementById('r');
+function row(p,s,d=''){const e=document.createElement('div');e.className='row '+s;e.textContent=(s==='pass'?'PASS · ':'FAIL · ')+p+(d?' — '+d:'');R.append(e)}
+async function run(){R.innerHTML='';for(const c of C){try{const x=await fetch(c,{cache:'no-store'});if(!x.ok)throw Error('HTTP '+x.status);row(c,'pass')}catch(e){row(c,'fail',e.message)}}}
+run();
+</script>

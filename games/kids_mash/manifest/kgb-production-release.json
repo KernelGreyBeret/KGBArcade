@@ -1,86 +1,33 @@
 {
-  "manifestType": "kgb-existing-game-release",
-  "manifestVersion": "0.1.0",
-  "generatedAt": "2026-07-07T02:04:32.588Z",
-  "wrapper": {
-    "studio": "KGB Studio",
-    "studioVersion": "1.0.11",
-    "mode": "existing-game-release-wrapper",
-    "note": "This wraps an already-existing playable game. It does not claim the game was authored through the KGB Studio actor/scene pipeline."
-  },
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope v1.0",
   "game": {
-    "title": "Kid Jam Button Masher",
-    "version": "2.0",
-    "originalUpload": "kids_mash.zip",
-    "hasIndex": true,
-    "hasExistingKgbConfig": false
+    "id": "kid-jam",
+    "title": "Kid Jam",
+    "publicVersion": "1.0.0",
+    "path": "/games/kids_mash/",
+    "vault": "TankTots"
   },
   "ownership": {
     "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
     "publisher": "KGB Arcade",
-    "copyright": "© 2026 Tommy Burke. All rights reserved.",
-    "license": "All rights reserved unless otherwise stated in this package.",
     "website": "https://kgbarcade.com",
     "contact": "team@kgbarcade.com"
   },
-  "package": {
-    "fileCount": 6,
-    "totalBytes": 5702068,
-    "byExtension": {
-      "png": 3,
-      "html": 1,
-      "webmanifest": 1,
-      "js": 1
-    },
-    "byTopFolder": {
-      "icons": 3,
-      "root": 3
-    },
-    "rootIndex": "index.html",
-    "detectedEntryPath": "index.html",
-    "generatedRootLauncher": false,
-    "smokeTest": "smoke-test.html",
-    "pwa": {
-      "enabled": false,
-      "iconSource": "none",
-      "themeColor": "#7dff00",
-      "backgroundColor": "#02080a",
-      "generatedFiles": []
-    }
+  "provenance": "manifest/provenance.json",
+  "pwa": {
+    "manifest": "manifest.webmanifest",
+    "serviceWorker": "service-worker.js",
+    "icons": [
+      "icons/icon-192.png",
+      "icons/icon-512.png",
+      "icons/maskable-512.png"
+    ],
+    "screenshots": [
+      "screenshots/screenshot-wide.png",
+      "screenshots/screenshot-narrow.png"
+    ]
   },
-  "files": [
-    {
-      "path": "icons/icon-192.png",
-      "size": 1825912,
-      "mime": "image/png"
-    },
-    {
-      "path": "icons/icon-512.png",
-      "size": 1994673,
-      "mime": "image/png"
-    },
-    {
-      "path": "icons/maskable-512.png",
-      "size": 1843735,
-      "mime": "image/png"
-    },
-    {
-      "path": "index.html",
-      "size": 35885,
-      "mime": "text/html"
-    },
-    {
-      "path": "manifest.webmanifest",
-      "size": 783,
-      "mime": "application/manifest+json"
-    },
-    {
-      "path": "service-worker.js",
-      "size": 1080,
-      "mime": "text/javascript"
-    }
-  ],
-  "notes": [
-    "Wrapped by KGB Studio Existing Game Release Wrapper."
-  ]
+  "gameplayChanged": false
 }

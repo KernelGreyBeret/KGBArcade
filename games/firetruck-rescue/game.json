@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "firetruck-rescue",
+  "title": "Firetruck Rescue",
+  "vault": "TankTots",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "existing live index.html",
+  "path": "/games/firetruck-rescue/",
+  "cleanupDate": "2026-08-31",
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "pending-replacement-build",
+  "replacementBuildReady": "owner indicates a better/newer version may replace this runtime soon"
+}

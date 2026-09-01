@@ -1,15 +1,22 @@
-Kid Jam Button Masher — Attribution
+Kid Jam
+KGB Arcade public release wrapper
 
-Creator: Tommy Burke / Kernel Grey Beret
-Publisher: KGB Arcade
-Copyright: © 2026 Tommy Burke. All rights reserved.
-Website: https://kgbarcade.com
+CREATOR
+Tommy Burke / Kernel Grey Beret
 
-Original packaged files:
+PUBLISHER
+KGB Arcade
+https://kgbarcade.com
+team@kgbarcade.com
 
-1. icons/icon-192.png (1783.1 KB)
-2. icons/icon-512.png (1947.9 KB)
-3. icons/maskable-512.png (1800.5 KB)
-4. index.html (35 KB)
-5. manifest.webmanifest (0.8 KB)
-6. service-worker.js (1.1 KB)
+COPYRIGHT
+© 2026 Tommy Burke. All rights reserved.
+
+DEPENDENCY / ASSET CHECK
+No third-party runtime library, redistributed font file, third-party audio recording, or third-party art asset requiring attribution is declared by this cleanup wrapper.
+
+IMPORTANT
+This attribution statement covers the release wrapper and current declared package state. If a replacement game file introduces external assets or libraries, update this record at the same time as the replacement.
+
+PROVENANCE
+See provenance.json.

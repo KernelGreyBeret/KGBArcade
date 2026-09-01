@@ -1,33 +1,15 @@
-Kid Jam Button Masher — Existing Game Release
+Kid Jam v1.0.0
+Release wrapper date: 2026-08-31
 
-Version: 2.0
-Generated: 2026-07-07T02:04:32.589Z
-Wrapped by: KGB Studio v1.0.11 Existing Game Release Wrapper
+The current Kid Jam Beat Party runtime is retained as-is.
+This release wrapper standardizes:
+- canonical product identity,
+- public version,
+- PWA screenshot metadata,
+- service-worker cache identity,
+- license / attribution,
+- provenance,
+- production manifest,
+- smoke test.
 
-Summary
--------
-This is an official KGB Studio release wrapper around an already-existing playable game package.
-The original game files are preserved and packaged with KGB release metadata, license, attribution, README, and optional smoke test.
-PWA conversion is DISABLED for this wrapped package.
-
-Package
--------
-Files: 6
-Total size: 5568.4 KB
-Root index.html: yes
-Detected entry path: index.html
-Generated root launcher: no
-Existing game.config.json: no
-
-Ownership
----------
-Creator: Tommy Burke / Kernel Grey Beret
-Publisher: KGB Arcade
-Copyright: © 2026 Tommy Burke. All rights reserved.
-License: All rights reserved unless otherwise stated in this package.
-Website: https://kgbarcade.com
-Contact: team@kgbarcade.com
-
-Notes
------
-Wrapped by KGB Studio Existing Game Release Wrapper.
+No gameplay changes are included.

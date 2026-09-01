@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "P0.14",
+  "date": "2026-08-31",
+  "kidJam": {
+    "canonicalId": "kid-jam",
+    "route": "/games/kids_mash/",
+    "publicVersion": "1.0.0",
+    "runtimeChanged": false
+  },
+  "existingLiveCleanup": [
+    "hyperhop",
+    "starwarp",
+    "arc-defender",
+    "tanktots-learn",
+    "cozy-cat-playground",
+    "lawn-mower-mania",
+    "firetruck-rescue"
+  ],
+  "tommy": {
+    "status": "path-migration-hold",
+    "currentFolder": "games/ tommy-the-tank/",
+    "replacementBuildRecommended": true
+  },
+  "homepageChanged": false,
+  "rootRegistryChanged": false,
+  "gameplayChanged": false
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "starwarp",
+  "title": "StarWarp",
+  "vault": "MiniMission",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "starwarp_arena_v3-1.html",
+  "path": "/games/starwarp/",
+  "cleanupDate": "2026-08-31",
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "existing-pwa-subfolder",
+  "replacementBuildReady": "owner indicates a better/newer version may replace this runtime soon"
+}

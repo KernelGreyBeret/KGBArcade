@@ -1,0 +1,22 @@
+Arc Defender — Rhythm Rings
+KGB Arcade public release wrapper
+
+CREATOR
+Tommy Burke / Kernel Grey Beret
+
+PUBLISHER
+KGB Arcade
+https://kgbarcade.com
+team@kgbarcade.com
+
+COPYRIGHT
+© 2026 Tommy Burke. All rights reserved.
+
+DEPENDENCY / ASSET CHECK
+No third-party runtime library, redistributed font file, third-party audio recording, or third-party art asset requiring attribution is declared by this cleanup wrapper.
+
+IMPORTANT
+This attribution statement covers the release wrapper and current declared package state. If a replacement game file introduces external assets or libraries, update this record at the same time as the replacement.
+
+PROVENANCE
+See provenance.json.

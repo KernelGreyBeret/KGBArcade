@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "tanktots-learn",
+  "title": "TankTots Learn",
+  "vault": "TankTots",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "v0.2.1 Fun Layer / current live learning-deck package",
+  "path": "/games/tanktots_learn/",
+  "cleanupDate": "2026-08-31",
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "existing-root-pwa",
+  "replacementBuildReady": "owner indicates a better/newer version may replace this runtime soon"
+}

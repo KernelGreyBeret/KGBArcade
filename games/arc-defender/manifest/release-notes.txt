@@ -1,0 +1,7 @@
+Arc Defender — Rhythm Rings
+Existing-Live Cleanup — 2026-08-31
+
+No gameplay changes.
+Public wrapper version normalized to 1.0.0.
+PWA status: existing-pwa-subfolder-gold-standard.
+A better/newer owner-selected game build may replace the runtime later.

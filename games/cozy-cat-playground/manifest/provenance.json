@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "gameId": "cozy-cat-playground",
+  "publicVersion": "1.0.0",
+  "sourceStatus": "existing-live-runtime",
+  "sourceBuild": "existing live index.html",
+  "runtimeModifiedByCleanup": false,
+  "notes": "This pass standardizes the existing live package without replacing its gameplay runtime. A newer owner-selected build may supersede it."
+}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "arc-defender",
+  "title": "Arc Defender \u2014 Rhythm Rings",
+  "vault": "MiniMission",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "arc_defender_v2.html",
+  "path": "/games/arc-defender/",
+  "cleanupDate": "2026-08-31",
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "existing-pwa-subfolder-gold-standard",
+  "replacementBuildReady": "owner indicates a better/newer version may replace this runtime soon"
+}

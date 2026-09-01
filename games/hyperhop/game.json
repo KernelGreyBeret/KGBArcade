@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "id": "hyperhop",
+  "title": "HyperHop",
+  "vault": "8BitOps",
+  "status": "live",
+  "publicVersion": "1.0.0",
+  "sourceBuild": "existing live HyperHop engine/cartridge package",
+  "path": "/games/hyperhop/",
+  "cleanupDate": "2026-08-31",
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "existing-root-pwa",
+  "replacementBuildReady": "owner indicates a better/newer version may replace this runtime soon"
+}

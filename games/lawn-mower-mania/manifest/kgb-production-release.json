@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "releaseEnvelope": "KGBA Good Business Release Envelope v1.0",
+  "game": {
+    "id": "lawn-mower-mania",
+    "title": "Lawn Mower Mania",
+    "publicVersion": "1.0.0",
+    "path": "/games/lawn-mower-mania/",
+    "vault": "TankTots"
+  },
+  "runtimeChangedByCleanup": false,
+  "pwaStatus": "pending-replacement-build",
+  "ownership": {
+    "creator": "Tommy Burke / Kernel Grey Beret",
+    "rightsHolder": "Tommy Burke",
+    "publisher": "KGB Arcade",
+    "website": "https://kgbarcade.com",
+    "contact": "team@kgbarcade.com"
+  },
+  "provenance": "manifest/provenance.json"
+}
