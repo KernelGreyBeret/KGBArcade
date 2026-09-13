@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06080d">
+<title>KGB Dedupe — Exact Duplicate File Cleaner</title>
+<style>
+  :root{
+    color-scheme:dark;
+    --bg:#06080d;--panel:#0d121b;--panel2:#111826;--line:#263247;
+    --text:#eef5ff;--muted:#8fa1bb;--cyan:#39e7ff;--green:#72ff9d;
+    --amber:#ffc65a;--red:#ff6178;--shadow:0 14px 40px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:
+    radial-gradient(900px 500px at 10% -10%,rgba(57,231,255,.10),transparent 55%),
+    radial-gradient(700px 500px at 100% 0,rgba(114,255,157,.06),transparent 50%),var(--bg);
+    color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  body{min-height:100vh;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  button,input,select{font:inherit}
+  button{touch-action:manipulation}
+  .app{width:min(1060px,100%);margin:0 auto;padding:18px 14px 48px}
+  .top{display:flex;gap:14px;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+  .eyebrow{font:700 11px/1.2 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;color:var(--cyan);text-transform:uppercase}
+  h1{font-size:clamp(29px,8vw,52px);line-height:.95;margin:7px 0 10px;letter-spacing:-.045em}
+  .sub{max-width:730px;color:var(--muted);font-size:14px;line-height:1.55;margin:0}
+  .badge{white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:8px 10px;font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;background:#0b1018;color:var(--muted)}
+  .badge.ok{border-color:rgba(114,255,157,.4);color:var(--green);background:rgba(114,255,157,.07)}
+  .badge.warn{border-color:rgba(255,198,90,.4);color:var(--amber);background:rgba(255,198,90,.07)}
+  .panel{background:linear-gradient(180deg,rgba(17,24,38,.94),rgba(11,16,24,.94));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;margin:12px 0}
+  .panelHead{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:13px 14px;border-bottom:1px solid var(--line)}
+  .panelTitle{font-size:13px;font-weight:850;letter-spacing:.02em}
+  .panelBody{padding:14px}
+  .heroAction{display:grid;grid-template-columns:1fr auto;gap:10px}
+  .btn{border:1px solid var(--line);background:#121a28;color:var(--text);border-radius:12px;padding:12px 14px;font-weight:800;cursor:pointer;min-height:46px}
+  .btn:active{transform:translateY(1px)}
+  .btn.primary{background:linear-gradient(135deg,rgba(57,231,255,.18),rgba(57,231,255,.06));border-color:rgba(57,231,255,.55);color:#dffcff}
+  .btn.danger{background:rgba(255,97,120,.08);border-color:rgba(255,97,120,.45);color:#ffdce2}
+  .btn.green{background:rgba(114,255,157,.08);border-color:rgba(114,255,157,.40);color:#dfffe9}
+  .btn.small{padding:7px 9px;min-height:34px;border-radius:9px;font-size:12px}
+  .btn:disabled{opacity:.42;cursor:not-allowed;transform:none}
+  .fallback{display:none}
+  .hint{margin-top:10px;color:var(--muted);font-size:12px;line-height:1.45}
+  .path{font:600 12px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;color:#bfd0e9;overflow-wrap:anywhere}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stat{background:#090e16;border:1px solid var(--line);border-radius:13px;padding:11px}
+  .stat .v{font:800 18px/1.1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:-.04em}
+  .stat .k{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.09em;margin-top:5px}
+  .v.good{color:var(--green)}
+  .v.hot{color:var(--amber)}
+  .controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  label.control{display:grid;gap:6px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+  select{width:100%;border:1px solid var(--line);background:#090e16;color:var(--text);border-radius:11px;padding:11px;text-transform:none;letter-spacing:0;font-weight:650}
+  .check{display:flex;align-items:center;gap:9px;border:1px solid var(--line);border-radius:11px;background:#090e16;padding:10px 11px;color:var(--text);text-transform:none;letter-spacing:0;font-size:13px;font-weight:650}
+  .check input{width:18px;height:18px;accent-color:var(--cyan)}
+  .status{display:flex;gap:10px;align-items:flex-start;margin-top:12px;padding:11px 12px;background:#090e16;border:1px solid var(--line);border-radius:12px;color:var(--muted);font-size:12px;line-height:1.45}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);margin-top:4px;flex:0 0 auto;box-shadow:0 0 0 4px rgba(143,161,187,.07)}
+  .dot.busy{background:var(--cyan);box-shadow:0 0 18px rgba(57,231,255,.65)}
+  .dot.done{background:var(--green);box-shadow:0 0 18px rgba(114,255,157,.5)}
+  .dot.bad{background:var(--red);box-shadow:0 0 18px rgba(255,97,120,.5)}
+  .progressWrap{display:none;margin-top:10px;height:6px;border-radius:999px;background:#070b11;border:1px solid #1e2939;overflow:hidden}
+  .progress{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green));transition:width .1s linear}
+  .resultsTop{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+  .resultsActions{display:flex;gap:7px;flex-wrap:wrap}
+  .empty{padding:28px 15px;text-align:center;color:var(--muted);font-size:13px}
+  .group{border:1px solid var(--line);border-radius:14px;background:#090e16;margin:10px 0;overflow:hidden}
+  .groupHead{padding:10px 11px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .groupMeta{min-width:0}
+  .groupName{font-weight:850;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .groupInfo{font:600 10px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);margin-top:3px}
+  .save{font:800 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--green);white-space:nowrap}
+  .fileRow{display:grid;grid-template-columns:30px 1fr auto;gap:9px;align-items:center;padding:10px 11px;border-top:1px solid rgba(38,50,71,.6)}
+  .fileRow:first-child{border-top:0}
+  .deleteBox{width:20px;height:20px;accent-color:var(--red)}
+  .fileMain{min-width:0}
+  .filePath{font:650 11px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+  .fileMeta{color:var(--muted);font-size:10px;margin-top:3px}
+  .keepTag{color:var(--green);border:1px solid rgba(114,255,157,.38);background:rgba(114,255,157,.06);padding:6px 7px;border-radius:8px;font:800 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.07em}
+  .keepBtn{padding:6px 7px;min-height:30px;font-size:10px}
+  .footerActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+  .dangerNote{color:#ffbec8;font-size:11px;line-height:1.4;margin-top:8px}
+  .tiny{color:var(--muted);font-size:10px;line-height:1.45}
+  .sep{height:1px;background:var(--line);margin:12px 0}
+  @media (max-width:720px){
+    .top{display:block}.badge{display:inline-block;margin-top:10px}.heroAction{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.controls{grid-template-columns:1fr}.panelBody{padding:12px}.fileRow{grid-template-columns:28px 1fr}.fileRow .rowAction{grid-column:2;justify-self:start}.footerActions{grid-template-columns:1fr}.btn{width:100%}.resultsActions .btn{width:auto;flex:1 1 auto}.groupHead{align-items:flex-start}.save{padding-top:2px}
+  }
+</style>
+</head>
+<body>
+<main class="app">
+  <div class="top">
+    <div>
+      <div class="eyebrow">KGB Tools / Local Utility</div>
+      <h1>KGB Dedupe</h1>
+      <p class="sub">Recursively scan a folder tree, find files with identical content, and reclaim the duplicate space. Size-first filtering + SHA-256 hashing. Files stay on your device.</p>
+    </div>
+    <div id="capBadge" class="badge">CHECKING BROWSER</div>
+  </div>
+
+  <section class="panel">
+    <div class="panelHead"><div class="panelTitle">01 / TARGET FOLDER</div><div class="tiny">HTTPS · LOCAL ONLY</div></div>
+    <div class="panelBody">
+      <div class="heroAction">
+        <button id="pickBtn" class="btn primary">Choose Folder & Scan</button>
+        <button id="rescanBtn" class="btn" disabled>Rescan</button>
+      </div>
+      <input id="folderFallback" class="fallback" type="file" webkitdirectory directory multiple>
+      <div class="hint" id="modeHint">Choose the highest folder you want analyzed. Subfolders are included automatically.</div>
+      <div style="margin-top:10px" id="rootPath" class="path">No folder selected.</div>
+      <div class="progressWrap" id="progressWrap"><div class="progress" id="progress"></div></div>
+      <div class="status"><span class="dot" id="statusDot"></span><span id="statusText">Ready.</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead"><div class="panelTitle">02 / SCAN POLICY</div><div class="tiny">EXACT CONTENT MATCHES</div></div>
+    <div class="panelBody">
+      <div class="controls">
+        <label class="control">Default copy to keep
+          <select id="keeperRule">
+            <option value="shallow" selected>Shallowest path</option>
+            <option value="oldest">Oldest modified</option>
+            <option value="newest">Newest modified</option>
+            <option value="first">First discovered</option>
+          </select>
+        </label>
+        <label class="control">Zero-byte files
+          <span class="check"><input id="includeZero" type="checkbox"> Include empty files as duplicates</span>
+        </label>
+      </div>
+      <div class="hint">Empty files are ignored by default because many apps deliberately use zero-byte marker/placeholder files. Changing policy after a scan recalculates keeper choices, but zero-byte inclusion requires a rescan.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead"><div class="panelTitle">03 / SUMMARY</div><div class="tiny" id="hashLabel">SHA-256</div></div>
+    <div class="panelBody">
+      <div class="stats">
+        <div class="stat"><div class="v" id="sFiles">0</div><div class="k">Files scanned</div></div>
+        <div class="stat"><div class="v hot" id="sGroups">0</div><div class="k">Duplicate groups</div></div>
+        <div class="stat"><div class="v" id="sCopies">0</div><div class="k">Extra copies</div></div>
+        <div class="stat"><div class="v good" id="sBytes">0 B</div><div class="k">Reclaimable</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panelHead resultsTop">
+      <div class="panelTitle">04 / DUPLICATES</div>
+      <div class="resultsActions">
+        <button id="markBtn" class="btn small" disabled>Mark All Extras</button>
+        <button id="clearMarksBtn" class="btn small" disabled>Clear Marks</button>
+        <button id="reportBtn" class="btn small" disabled>Export JSON</button>
+      </div>
+    </div>
+    <div class="panelBody">
+      <div id="results" class="empty">Scan a folder to see exact duplicates.</div>
+      <div class="sep"></div>
+      <div class="footerActions">
+        <button id="deleteBtn" class="btn danger" disabled>Delete Marked Copies</button>
+        <button id="copyBtn" class="btn green" disabled>Copy Duplicate Paths</button>
+      </div>
+      <div class="dangerNote" id="deleteNote">Nothing is deleted during scanning. Permanent deletion requires direct folder access and a confirmation step.</div>
+    </div>
+  </section>
+
+  <p class="tiny">KGB Dedupe compares file content, not filenames. Same name ≠ duplicate; different name can still be a duplicate. Browser permissions control whether direct deletion is available.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const els = {
+    capBadge:$('capBadge'), pickBtn:$('pickBtn'), rescanBtn:$('rescanBtn'), fallback:$('folderFallback'),
+    modeHint:$('modeHint'), rootPath:$('rootPath'), progressWrap:$('progressWrap'), progress:$('progress'),
+    statusDot:$('statusDot'), statusText:$('statusText'), keeperRule:$('keeperRule'), includeZero:$('includeZero'),
+    sFiles:$('sFiles'), sGroups:$('sGroups'), sCopies:$('sCopies'), sBytes:$('sBytes'), results:$('results'),
+    markBtn:$('markBtn'), clearMarksBtn:$('clearMarksBtn'), reportBtn:$('reportBtn'), deleteBtn:$('deleteBtn'),
+    copyBtn:$('copyBtn'), deleteNote:$('deleteNote')
+  };
+
+  const state = {
+    direct: 'showDirectoryPicker' in window,
+    rootHandle: null,
+    rootName: '',
+    files: [],
+    groups: [],
+    scanning: false,
+    scanErrors: []
+  };
+
+  function setStatus(text, kind='idle') {
+    els.statusText.textContent = text;
+    els.statusDot.className = 'dot' + (kind === 'busy' ? ' busy' : kind === 'done' ? ' done' : kind === 'bad' ? ' bad' : '');
+  }
+  function setProgress(value, show=true) {
+    els.progressWrap.style.display = show ? 'block' : 'none';
+    els.progress.style.width = Math.max(0, Math.min(100, value)) + '%';
+  }
+  function fmtBytes(n) {
+    if (!Number.isFinite(n) || n <= 0) return '0 B';
+    const u=['B','KB','MB','GB','TB']; let i=0, v=n;
+    while (v >= 1024 && i < u.length-1) { v/=1024; i++; }
+    return (i===0 ? Math.round(v) : v>=100 ? v.toFixed(0) : v>=10 ? v.toFixed(1) : v.toFixed(2)) + ' ' + u[i];
+  }
+  function fmtDate(ms) {
+    if (!ms) return 'unknown date';
+    try { return new Date(ms).toLocaleString(); } catch { return 'unknown date'; }
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+  function shallowScore(path) { return String(path).split('/').filter(Boolean).length; }
+
+  function capabilityUI() {
+    if (state.direct) {
+      els.capBadge.textContent = 'DIRECT CLEANUP';
+      els.capBadge.className = 'badge ok';
+      els.modeHint.textContent = 'Direct mode available: choose a folder, scan all subfolders, and delete reviewed duplicates in place.';
+    } else {
+      els.capBadge.textContent = 'SCAN ONLY';
+      els.capBadge.className = 'badge warn';
+      els.modeHint.textContent = 'This browser cannot grant direct folder write access. KGB Dedupe can still scan a selected folder tree and report duplicates, but cannot delete them in place.';
+      els.deleteNote.textContent = 'Scan-only browser detected. You can identify and export duplicates, but direct deletion is unavailable here.';
+    }
+  }
+
+  async function pickFolder() {
+    if (state.scanning) return;
+    if (state.direct) {
+      try {
+        const handle = await window.showDirectoryPicker({ id:'kgb-dedupe', mode:'readwrite' });
+        state.rootHandle = handle;
+        state.rootName = handle.name || 'Selected folder';
+        await scanDirect();
+      } catch (err) {
+        if (err?.name !== 'AbortError') {
+          console.error(err);
+          setStatus('Folder access failed: ' + (err?.message || err), 'bad');
+        }
+      }
+    } else {
+      els.fallback.click();
+    }
+  }
+
+  async function scanDirect() {
+    if (!state.rootHandle) return;
+    beginScan();
+    state.files = []; state.scanErrors = [];
+    els.rootPath.textContent = state.rootName;
+    setStatus('Inventorying folder tree…', 'busy'); setProgress(3);
+    await walkDirectory(state.rootHandle, '');
+    await analyzeFiles();
+  }
+
+  async function walkDirectory(dirHandle, prefix) {
+    try {
+      for await (const [name, handle] of dirHandle.entries()) {
+        const path = prefix ? prefix + '/' + name : name;
+        if (handle.kind === 'directory') {
+          await walkDirectory(handle, path);
+        } else if (handle.kind === 'file') {
+          try {
+            const file = await handle.getFile();
+            state.files.push({
+              id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
+              file, fileHandle:handle, parentHandle:dirHandle, name, path,
+              size:file.size, lastModified:file.lastModified || 0, type:file.type || '', hash:null, deleteMarked:false
+            });
+            if (state.files.length % 25 === 0) setStatus(`Inventorying… ${state.files.length.toLocaleString()} files found`, 'busy');
+          } catch (err) { state.scanErrors.push({path,error:String(err)}); }
+        }
+      }
+    } catch (err) {
+      state.scanErrors.push({path:prefix || state.rootName,error:String(err)});
+    }
+  }
+
+  function scanFallback(fileList) {
+    if (!fileList?.length) return;
+    beginScan();
+    state.rootHandle = null; state.files=[]; state.scanErrors=[];
+    const files = Array.from(fileList);
+    state.rootName = files[0]?.webkitRelativePath?.split('/')[0] || 'Selected folder';
+    els.rootPath.textContent = state.rootName + ' · scan-only mode';
+    for (const file of files) {
+      const rel = file.webkitRelativePath || file.name;
+      const path = rel.startsWith(state.rootName + '/') ? rel.slice(state.rootName.length + 1) : rel;
+      state.files.push({
+        id: crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2),
+        file, fileHandle:null, parentHandle:null, name:file.name, path,
+        size:file.size, lastModified:file.lastModified || 0, type:file.type || '', hash:null, deleteMarked:false
+      });
+    }
+    analyzeFiles();
+  }
+
+  function beginScan() {
+    state.scanning=true; state.groups=[];
+    els.pickBtn.disabled=true; els.rescanBtn.disabled=true;
+    els.results.className='empty'; els.results.textContent='Scanning…';
+    setProgress(1); updateStats(); updateActionState();
+  }
+
+  async function analyzeFiles() {
+    try {
+      const includeZero = els.includeZero.checked;
+      setStatus(`Inventory complete: ${state.files.length.toLocaleString()} files. Filtering by size…`, 'busy');
+      setProgress(8);
+
+      const bySize = new Map();
+      for (const item of state.files) {
+        if (!includeZero && item.size === 0) continue;
+        const key = item.size;
+        if (!bySize.has(key)) bySize.set(key, []);
+        bySize.get(key).push(item);
+      }
+      const candidates = [];
+      for (const arr of bySize.values()) if (arr.length > 1) candidates.push(...arr);
+
+      if (!candidates.length) {
+        state.groups=[];
+        finishScan('No exact duplicates found.', 'done');
+        return;
+      }
+
+      const totalBytes = candidates.reduce((s,x)=>s+x.size,0) || candidates.length;
+      let doneBytes=0, doneFiles=0;
+      const byHash = new Map();
+      for (const item of candidates) {
+        setStatus(`Hashing ${doneFiles+1}/${candidates.length}: ${item.path}`, 'busy');
+        const hash = await hashFile(item.file, chunkBytes => {
+          const p = 10 + 82 * ((doneBytes + chunkBytes) / totalBytes);
+          setProgress(p);
+        });
+        item.hash = hash;
+        const key = item.size + ':' + hash;
+        if (!byHash.has(key)) byHash.set(key, []);
+        byHash.get(key).push(item);
+        doneBytes += item.size; doneFiles++;
+        setProgress(10 + 82 * (doneBytes/totalBytes));
+        await nextFrame();
+      }
+
+      state.groups = [];
+      for (const [key, items] of byHash.entries()) {
+        if (items.length < 2) continue;
+        state.groups.push({ key, size:items[0].size, hash:items[0].hash, items, keepId:null });
+      }
+      state.groups.sort((a,b) => (b.size*(b.items.length-1)) - (a.size*(a.items.length-1)));
+      applyKeeperRule(true);
+      const extras = state.groups.reduce((s,g)=>s+g.items.length-1,0);
+      finishScan(state.groups.length ? `Found ${state.groups.length} duplicate group${state.groups.length===1?'':'s'} with ${extras} extra cop${extras===1?'y':'ies'}.` : 'No exact duplicates found.', 'done');
+    } catch (err) {
+      console.error(err);
+      finishScan('Scan failed: ' + (err?.message || err), 'bad');
+    }
+  }
+
+  function finishScan(message, kind) {
+    state.scanning=false;
+    setProgress(100);
+    setStatus(message + (state.scanErrors.length ? ` ${state.scanErrors.length} item(s) could not be read.` : ''), kind);
+    setTimeout(()=>setProgress(0,false), 650);
+    els.pickBtn.disabled=false;
+    els.rescanBtn.disabled = !(state.rootHandle || state.files.length);
+    renderResults(); updateStats(); updateActionState();
+  }
+
+  function chooseKeeper(group) {
+    const rule = els.keeperRule.value;
+    const arr = [...group.items];
+    if (rule === 'shallow') arr.sort((a,b)=>shallowScore(a.path)-shallowScore(b.path) || a.path.length-b.path.length || a.path.localeCompare(b.path));
+    else if (rule === 'oldest') arr.sort((a,b)=>(a.lastModified||Infinity)-(b.lastModified||Infinity) || a.path.localeCompare(b.path));
+    else if (rule === 'newest') arr.sort((a,b)=>(b.lastModified||0)-(a.lastModified||0) || a.path.localeCompare(b.path));
+    return arr[0]?.id;
+  }
+
+  function applyKeeperRule(markExtras=false) {
+    for (const g of state.groups) {
+      g.keepId = chooseKeeper(g);
+      for (const item of g.items) item.deleteMarked = markExtras ? item.id !== g.keepId : (item.id === g.keepId ? false : item.deleteMarked);
+    }
+    renderResults(); updateStats(); updateActionState();
+  }
+
+  function setKeeper(groupKey, itemId) {
+    const g = state.groups.find(x=>x.key===groupKey); if (!g) return;
+    g.keepId = itemId;
+    for (const item of g.items) {
+      if (item.id === itemId) item.deleteMarked=false;
+      else item.deleteMarked=true;
+    }
+    renderResults(); updateActionState();
+  }
+
+  function markedItems() {
+    const out=[];
+    for (const g of state.groups) for (const item of g.items) if (item.id !== g.keepId && item.deleteMarked) out.push(item);
+    return out;
+  }
+
+  function updateStats() {
+    const groups = state.groups.length;
+    const extra = state.groups.reduce((s,g)=>s+Math.max(0,g.items.length-1),0);
+    const reclaim = state.groups.reduce((s,g)=>s+g.size*Math.max(0,g.items.length-1),0);
+    els.sFiles.textContent = state.files.length.toLocaleString();
+    els.sGroups.textContent = groups.toLocaleString();
+    els.sCopies.textContent = extra.toLocaleString();
+    els.sBytes.textContent = fmtBytes(reclaim);
+  }
+
+  function updateActionState() {
+    const has = state.groups.length > 0;
+    const marked = markedItems();
+    els.markBtn.disabled=!has || state.scanning;
+    els.clearMarksBtn.disabled=!has || state.scanning;
+    els.reportBtn.disabled=!has || state.scanning;
+    els.copyBtn.disabled=!has || state.scanning;
+    els.deleteBtn.disabled=!state.direct || !state.rootHandle || marked.length===0 || state.scanning;
+    const markedBytes = marked.reduce((s,x)=>s+x.size,0);
+    els.deleteBtn.textContent = marked.length ? `Delete ${marked.length} Marked · ${fmtBytes(markedBytes)}` : 'Delete Marked Copies';
+  }
+
+  function renderResults() {
+    if (!state.groups.length) {
+      els.results.className='empty';
+      els.results.textContent = state.scanning ? 'Scanning…' : (state.files.length ? 'No exact duplicates to show.' : 'Scan a folder to see exact duplicates.');
+      return;
+    }
+    els.results.className='';
+    els.results.innerHTML = state.groups.map((g,gi) => {
+      const representative = g.items.find(x=>x.id===g.keepId) || g.items[0];
+      const save = g.size * (g.items.length-1);
+      const rows = g.items.map(item => {
+        const keep = item.id === g.keepId;
+        return `<div class="fileRow">
+          <input class="deleteBox" type="checkbox" aria-label="Mark for deletion" data-delete="${escapeHtml(g.key)}" data-item="${escapeHtml(item.id)}" ${keep?'disabled':item.deleteMarked?'checked':''}>
+          <div class="fileMain">
+            <div class="filePath">${escapeHtml(item.path)}</div>
+            <div class="fileMeta">${fmtBytes(item.size)} · modified ${escapeHtml(fmtDate(item.lastModified))}</div>
+          </div>
+          <div class="rowAction">${keep?'<span class="keepTag">KEEP</span>':`<button class="btn small keepBtn" data-keep="${escapeHtml(g.key)}" data-item="${escapeHtml(item.id)}">Keep this</button>`}</div>
+        </div>`;
+      }).join('');
+      return `<article class="group">
+        <div class="groupHead">
+          <div class="groupMeta"><div class="groupName">${escapeHtml(representative?.name || 'Duplicate group ' + (gi+1))}</div><div class="groupInfo">${g.items.length} copies · ${fmtBytes(g.size)} each · SHA-256 ${escapeHtml(g.hash.slice(0,16))}…</div></div>
+          <div class="save">+${fmtBytes(save)}</div>
+        </div>${rows}</article>`;
+    }).join('');
+
+    els.results.querySelectorAll('[data-keep]').forEach(btn => btn.addEventListener('click', () => setKeeper(btn.dataset.keep, btn.dataset.item)));
+    els.results.querySelectorAll('[data-delete]').forEach(cb => cb.addEventListener('change', () => {
+      const g=state.groups.find(x=>x.key===cb.dataset.delete); const item=g?.items.find(x=>x.id===cb.dataset.item);
+      if (item && item.id!==g.keepId) item.deleteMarked=cb.checked;
+      updateActionState();
+    }));
+  }
+
+  async function deleteMarked() {
+    const targets = markedItems();
+    if (!targets.length || !state.rootHandle) return;
+    const bytes=targets.reduce((s,x)=>s+x.size,0);
+    if (!confirm(`Permanently delete ${targets.length} exact duplicate file${targets.length===1?'':'s'} (${fmtBytes(bytes)})?\n\nThe designated KEEP copy in each group will not be deleted.`)) return;
+
+    state.scanning=true; updateActionState(); setProgress(1); setStatus('Checking write permission…','busy');
+    try {
+      if (state.rootHandle.queryPermission && state.rootHandle.requestPermission) {
+        let perm = await state.rootHandle.queryPermission({mode:'readwrite'});
+        if (perm !== 'granted') perm = await state.rootHandle.requestPermission({mode:'readwrite'});
+        if (perm !== 'granted') throw new Error('Write permission was not granted.');
+      }
+      let ok=0, failed=0;
+      const deletedIds=new Set();
+      for (let i=0;i<targets.length;i++) {
+        const item=targets[i];
+        setStatus(`Deleting ${i+1}/${targets.length}: ${item.path}`,'busy');
+        try {
+          await item.parentHandle.removeEntry(item.name);
+          ok++; deletedIds.add(item.id);
+        } catch (err) {
+          console.error('Delete failed', item.path, err); failed++;
+        }
+        setProgress(((i+1)/targets.length)*100);
+      }
+      state.files = state.files.filter(x=>!deletedIds.has(x.id));
+      for (const g of state.groups) g.items = g.items.filter(x=>!deletedIds.has(x.id));
+      state.groups = state.groups.filter(g=>g.items.length>1);
+      for (const g of state.groups) {
+        if (!g.items.some(x=>x.id===g.keepId)) g.keepId=chooseKeeper(g);
+      }
+      state.scanning=false;
+      renderResults(); updateStats(); updateActionState();
+      setStatus(`Deleted ${ok} duplicate file${ok===1?'':'s'}${failed?`; ${failed} failed`:''}.`, failed?'bad':'done');
+      setTimeout(()=>setProgress(0,false),650);
+    } catch (err) {
+      state.scanning=false; updateActionState(); setProgress(0,false);
+      setStatus('Delete failed: '+(err?.message||err),'bad');
+    }
+  }
+
+  function markAll(flag) {
+    for (const g of state.groups) for (const item of g.items) item.deleteMarked = item.id!==g.keepId ? flag : false;
+    renderResults(); updateActionState();
+  }
+
+  function exportReport() {
+    const report = {
+      tool:'KGB Dedupe', version:'1.0', generatedAt:new Date().toISOString(), root:state.rootName,
+      totalFilesScanned:state.files.length, duplicateGroups:state.groups.length,
+      reclaimableBytes:state.groups.reduce((s,g)=>s+g.size*(g.items.length-1),0),
+      groups:state.groups.map((g,i)=>({
+        group:i+1,size:g.size,sha256:g.hash,keep:g.items.find(x=>x.id===g.keepId)?.path || null,
+        files:g.items.map(x=>({path:x.path,name:x.name,size:x.size,lastModified:x.lastModified,markedForDeletion:x.id!==g.keepId&&x.deleteMarked}))
+      })),
+      scanErrors:state.scanErrors
+    };
+    const blob=new Blob([JSON.stringify(report,null,2)],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+    const safe=(state.rootName||'folder').replace(/[^a-z0-9_-]+/gi,'-').replace(/^-|-$/g,'').toLowerCase()||'folder';
+    a.download=`kgb-dedupe-${safe}.json`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  }
+
+  async function copyPaths() {
+    const lines=[];
+    state.groups.forEach((g,i)=>{
+      lines.push(`GROUP ${i+1} · ${fmtBytes(g.size)} · SHA-256 ${g.hash}`);
+      g.items.forEach(x=>lines.push(`${x.id===g.keepId?'KEEP':'DUPE'}  ${x.path}`));
+      lines.push('');
+    });
+    try { await navigator.clipboard.writeText(lines.join('\n')); setStatus('Duplicate paths copied to clipboard.','done'); }
+    catch { setStatus('Clipboard write was blocked by the browser. Use Export JSON instead.','bad'); }
+  }
+
+  function rescan() {
+    if (state.rootHandle) scanDirect();
+    else if (state.files.length) {
+      // Fallback handles cannot be re-opened automatically; ask user to choose again.
+      els.fallback.value=''; els.fallback.click();
+    }
+  }
+
+  // Incremental SHA-256: avoids loading large videos/files entirely into phone memory.
+  class Sha256 {
+    constructor(){
+      this.h=new Uint32Array([0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19]);
+      this.buf=new Uint8Array(64); this.bufLen=0; this.bytes=0; this.w=new Uint32Array(64);
+    }
+    static K=new Uint32Array([
+      0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,
+      0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,
+      0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,
+      0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,
+      0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,
+      0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,
+      0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,
+      0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2
+    ]);
+    rotr(x,n){return (x>>>n)|(x<<(32-n));}
+    process(chunk,off=0){
+      const w=this.w;
+      for(let i=0;i<16;i++){const j=off+i*4;w[i]=((chunk[j]<<24)|(chunk[j+1]<<16)|(chunk[j+2]<<8)|chunk[j+3])>>>0;}
+      for(let i=16;i<64;i++){
+        const a=w[i-15],b=w[i-2];
+        const s0=(this.rotr(a,7)^this.rotr(a,18)^(a>>>3))>>>0;
+        const s1=(this.rotr(b,17)^this.rotr(b,19)^(b>>>10))>>>0;
+        w[i]=(w[i-16]+s0+w[i-7]+s1)>>>0;
+      }
+      let [a,b,c,d,e,f,g,h]=this.h;
+      for(let i=0;i<64;i++){
+        const S1=(this.rotr(e,6)^this.rotr(e,11)^this.rotr(e,25))>>>0;
+        const ch=((e&f)^(~e&g))>>>0;
+        const t1=(h+S1+ch+Sha256.K[i]+w[i])>>>0;
+        const S0=(this.rotr(a,2)^this.rotr(a,13)^this.rotr(a,22))>>>0;
+        const maj=((a&b)^(a&c)^(b&c))>>>0;
+        const t2=(S0+maj)>>>0;
+        h=g;g=f;f=e;e=(d+t1)>>>0;d=c;c=b;b=a;a=(t1+t2)>>>0;
+      }
+      this.h[0]=(this.h[0]+a)>>>0;this.h[1]=(this.h[1]+b)>>>0;this.h[2]=(this.h[2]+c)>>>0;this.h[3]=(this.h[3]+d)>>>0;
+      this.h[4]=(this.h[4]+e)>>>0;this.h[5]=(this.h[5]+f)>>>0;this.h[6]=(this.h[6]+g)>>>0;this.h[7]=(this.h[7]+h)>>>0;
+    }
+    update(data){
+      if(!(data instanceof Uint8Array)) data=new Uint8Array(data);
+      this.bytes += data.length; let pos=0;
+      if(this.bufLen){
+        const take=Math.min(64-this.bufLen,data.length);this.buf.set(data.subarray(0,take),this.bufLen);this.bufLen+=take;pos+=take;
+        if(this.bufLen===64){this.process(this.buf);this.bufLen=0;}
+      }
+      while(pos+64<=data.length){this.process(data,pos);pos+=64;}
+      if(pos<data.length){this.buf.set(data.subarray(pos),0);this.bufLen=data.length-pos;}
+      return this;
+    }
+    digest(){
+      const b=this.buf; let n=this.bufLen; b[n++]=0x80;
+      if(n>56){while(n<64)b[n++]=0;this.process(b);n=0;}
+      while(n<56)b[n++]=0;
+      const bits=this.bytes*8;
+      const hi=Math.floor(bits/0x100000000); const lo=bits>>>0;
+      b[56]=(hi>>>24)&255;b[57]=(hi>>>16)&255;b[58]=(hi>>>8)&255;b[59]=hi&255;
+      b[60]=(lo>>>24)&255;b[61]=(lo>>>16)&255;b[62]=(lo>>>8)&255;b[63]=lo&255;
+      this.process(b);
+      const out=new Uint8Array(32);
+      for(let i=0;i<8;i++){const v=this.h[i];out[i*4]=(v>>>24)&255;out[i*4+1]=(v>>>16)&255;out[i*4+2]=(v>>>8)&255;out[i*4+3]=v&255;}
+      return out;
+    }
+    hex(){return Array.from(this.digest(),x=>x.toString(16).padStart(2,'0')).join('');}
+  }
+
+  async function hashFile(file,onProgress){
+    const sha=new Sha256(); let read=0;
+    if(file.stream){
+      const reader=file.stream().getReader();
+      try{
+        while(true){
+          const {done,value}=await reader.read(); if(done)break;
+          sha.update(value); read+=value.byteLength; onProgress?.(read); await nextFrame();
+        }
+      } finally { try{reader.releaseLock();}catch{} }
+    } else {
+      const data=new Uint8Array(await file.arrayBuffer()); sha.update(data); read=data.byteLength; onProgress?.(read);
+    }
+    return sha.hex();
+  }
+
+  function nextFrame(){return new Promise(r=>setTimeout(r,0));}
+
+  els.pickBtn.addEventListener('click',pickFolder);
+  els.rescanBtn.addEventListener('click',rescan);
+  els.fallback.addEventListener('change',e=>scanFallback(e.target.files));
+  els.keeperRule.addEventListener('change',()=>applyKeeperRule(true));
+  els.includeZero.addEventListener('change',()=>{ if(state.files.length) setStatus('Zero-byte policy changed. Rescan to apply it.','idle'); });
+  els.markBtn.addEventListener('click',()=>markAll(true));
+  els.clearMarksBtn.addEventListener('click',()=>markAll(false));
+  els.reportBtn.addEventListener('click',exportReport);
+  els.copyBtn.addEventListener('click',copyPaths);
+  els.deleteBtn.addEventListener('click',deleteMarked);
+
+  capabilityUI(); updateStats(); updateActionState();
+})();
+</script>
+</body>
+</html>
