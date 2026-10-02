@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KGB Folder Zip Tool</title>
+
+  <style>
+    :root {
+      --bg: #070b10;
+      --panel: #111a25;
+      --panel2: #172333;
+      --text: #ecf4ff;
+      --muted: #9bacbf;
+      --accent: #55ff99;
+      --accent2: #91c8ff;
+      --danger: #ff6677;
+      --border: #26384e;
+      --shadow: rgba(0, 0, 0, 0.42);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(85, 255, 153, 0.15), transparent 34%),
+        radial-gradient(circle at 82% 8%, rgba(145, 200, 255, 0.12), transparent 30%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 860px;
+      background: linear-gradient(180deg, var(--panel), #0b1119);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 26px;
+      box-shadow: 0 24px 70px var(--shadow);
+    }
+
+    .topline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 5vw, 44px);
+      letter-spacing: -0.045em;
+      line-height: 1.02;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      line-height: 1.45;
+      max-width: 660px;
+      margin: 0;
+    }
+
+    .badge {
+      border: 1px solid rgba(85, 255, 153, 0.38);
+      color: var(--accent);
+      background: rgba(85, 255, 153, 0.08);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+      margin-top: 4px;
+    }
+
+    .dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 18px;
+      padding: 28px 18px;
+      text-align: center;
+      background: var(--panel2);
+      transition: 0.18s ease;
+      margin-bottom: 16px;
+    }
+
+    .dropzone.dragover {
+      border-color: var(--accent);
+      background: rgba(85, 255, 153, 0.08);
+      transform: translateY(-1px);
+    }
+
+    .dropzone strong {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .dropzone span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .button-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    button, .download {
+      border: 0;
+      border-radius: 13px;
+      padding: 13px 14px;
+      font-weight: 900;
+      cursor: pointer;
+      color: #071008;
+      background: var(--accent);
+      transition: transform 0.12s ease, opacity 0.12s ease, background 0.12s ease;
+      text-decoration: none;
+      text-align: center;
+      font-size: 14px;
+      min-height: 46px;
+    }
+
+    button:hover, .download:hover { transform: translateY(-1px); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .secondary {
+      background: #26384e;
+      color: var(--text);
+    }
+
+    .soft {
+      background: rgba(145, 200, 255, 0.14);
+      color: var(--text);
+      border: 1px solid rgba(145, 200, 255, 0.18);
+    }
+
+    .danger {
+      background: rgba(255, 102, 119, 0.14);
+      color: #ffd7dc;
+      border: 1px solid rgba(255, 102, 119, 0.24);
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #080d13;
+      color: var(--text);
+      border-radius: 13px;
+      padding: 13px 14px;
+      font-size: 15px;
+      outline: none;
+      min-height: 46px;
+    }
+
+    input[type="file"] { display: none; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: #091019;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      padding: 12px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+
+    .stat .value {
+      font-size: 20px;
+      font-weight: 950;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .file-list {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #071018;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+
+    .file-row {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 11px 13px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .file-row:last-child { border-bottom: 0; }
+
+    .file-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+    }
+
+    .file-size {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 4px 8px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .status {
+      margin-top: 14px;
+      color: var(--muted);
+      min-height: 24px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .download {
+      display: none;
+      margin-top: 12px;
+      width: 100%;
+      background: #ffffff;
+      color: #04070b;
+    }
+
+    .download.show { display: block; }
+
+    .note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+
+    @media (max-width: 780px) {
+      .topline { display: block; }
+      .badge { display: inline-block; margin-top: 14px; }
+      .button-grid { grid-template-columns: 1fr 1fr; }
+      .stats { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 520px) {
+      body { padding: 12px; align-items: stretch; }
+      .app { padding: 18px; border-radius: 18px; }
+      .button-grid { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .file-row { grid-template-columns: 1fr auto; }
+      .file-size { display: none; }
+      .pill { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="app">
+    <div class="topline">
+      <div>
+        <h1>KGB Folder Zip Tool</h1>
+        <p class="subtitle">
+          Pick files or entire folders, preserve folder paths, generate a ZIP locally, and download it.
+          Nothing is uploaded anywhere.
+        </p>
+      </div>
+      <div class="badge" id="supportBadge">Checking support...</div>
+    </div>
+
+    <div class="dropzone" id="dropzone">
+      <strong>Drop files or folders here</strong>
+      <span>Desktop browsers usually support folder drop. On Android, use the buttons below.</span>
+    </div>
+
+    <div class="button-grid">
+      <button id="addFilesBtn" type="button">Add Files</button>
+      <button id="addFolderBtn" type="button" class="soft">Add Folder</button>
+      <button id="zipBtn" type="button" disabled>Create ZIP</button>
+      <button id="clearBtn" type="button" class="danger" disabled>Clear</button>
+    </div>
+
+    <div class="controls">
+      <input id="zipName" type="text" value="archive.zip" placeholder="archive.zip" />
+      <button id="renameBtn" type="button" class="secondary">Use Date Name</button>
+    </div>
+
+    <input id="fileInput" type="file" multiple />
+    <input id="folderInput" type="file" webkitdirectory multiple />
+
+    <div class="stats">
+      <div class="stat">
+        <div class="label">Files</div>
+        <div class="value" id="fileCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Folders</div>
+        <div class="value" id="folderCount">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Input Size</div>
+        <div class="value" id="totalSize">0 B</div>
+      </div>
+    </div>
+
+    <section class="file-list" id="fileList" hidden></section>
+
+    <div class="status" id="status">No files selected.</div>
+    <a id="downloadLink" class="download">Download ZIP</a>
+
+    <div class="note">
+      Best Android path: open this page in Chrome over HTTPS, tap <strong>Add Folder</strong>, and use Android's native file picker.
+      If folder picking is blocked by the browser, the fallback folder input will try next.
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+  <script>
+    const addFilesBtn = document.getElementById("addFilesBtn");
+    const addFolderBtn = document.getElementById("addFolderBtn");
+    const zipBtn = document.getElementById("zipBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const renameBtn = document.getElementById("renameBtn");
+    const fileInput = document.getElementById("fileInput");
+    const folderInput = document.getElementById("folderInput");
+    const zipNameInput = document.getElementById("zipName");
+    const fileList = document.getElementById("fileList");
+    const statusEl = document.getElementById("status");
+    const downloadLink = document.getElementById("downloadLink");
+    const dropzone = document.getElementById("dropzone");
+    const fileCountEl = document.getElementById("fileCount");
+    const folderCountEl = document.getElementById("folderCount");
+    const totalSizeEl = document.getElementById("totalSize");
+    const supportBadge = document.getElementById("supportBadge");
+
+    let entries = [];
+    let currentZipUrl = null;
+
+    const MAX_DISPLAY_ROWS = 300;
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function formatBytes(bytes) {
+      if (!bytes) return "0 B";
+      const units = ["B", "KB", "MB", "GB", "TB"];
+      const index = Math.min(Math.floor(Math.log(bytes) / Math.log(1024)), units.length - 1);
+      const value = bytes / Math.pow(1024, index);
+      return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[index]}`;
+    }
+
+    function cleanZipName(name) {
+      let clean = (name || "").trim();
+      if (!clean) clean = "archive.zip";
+      clean = clean.replace(/[\\/:*?"<>|]+/g, "-");
+      if (!clean.toLowerCase().endsWith(".zip")) clean += ".zip";
+      return clean;
+    }
+
+    function normalizeZipPath(path) {
+      return String(path || "")
+        .replace(/\\/g, "/")
+        .replace(/^\/+/, "")
+        .replace(/\/\.\.\//g, "/")
+        .replace(/^\.\//, "")
+        .trim();
+    }
+
+    function uniquePath(basePath, usedPaths) {
+      const clean = normalizeZipPath(basePath) || "unnamed";
+      if (!usedPaths.has(clean)) {
+        usedPaths.add(clean);
+        return clean;
+      }
+
+      const slashIndex = clean.lastIndexOf("/");
+      const folder = slashIndex >= 0 ? clean.slice(0, slashIndex + 1) : "";
+      const filename = slashIndex >= 0 ? clean.slice(slashIndex + 1) : clean;
+      const dotIndex = filename.lastIndexOf(".");
+      const stem = dotIndex > 0 ? filename.slice(0, dotIndex) : filename;
+      const ext = dotIndex > 0 ? filename.slice(dotIndex) : "";
+
+      let counter = 2;
+      let candidate;
+      do {
+        candidate = `${folder}${stem} (${counter})${ext}`;
+        counter += 1;
+      } while (usedPaths.has(candidate));
+
+      usedPaths.add(candidate);
+      return candidate;
+    }
+
+    function revokeCurrentZip() {
+      if (currentZipUrl) {
+        URL.revokeObjectURL(currentZipUrl);
+        currentZipUrl = null;
+      }
+      downloadLink.classList.remove("show");
+      downloadLink.removeAttribute("href");
+      downloadLink.removeAttribute("download");
+    }
+
+    function hasFileSystemAccess() {
+      return window.isSecureContext && "showOpenFilePicker" in window && "showDirectoryPicker" in window;
+    }
+
+    function updateSupportBadge() {
+      if (hasFileSystemAccess()) {
+        supportBadge.textContent = "Native picker ready";
+        return;
+      }
+
+      if (!window.isSecureContext) {
+        supportBadge.textContent = "Fallback mode";
+        return;
+      }
+
+      supportBadge.textContent = "Limited browser support";
+    }
+
+    function addEntries(newEntries, messagePrefix = "Added") {
+      revokeCurrentZip();
+
+      const existingPaths = new Set(entries.map((entry) => entry.path));
+      const prepared = newEntries.map((entry) => {
+        const path = uniquePath(entry.path, existingPaths);
+        return { ...entry, path };
+      });
+
+      entries.push(...prepared);
+      renderEntries();
+      setStatus(`${messagePrefix} ${prepared.filter((e) => e.kind === "file").length} file(s).`);
+    }
+
+    function addFileList(fileListObject, messagePrefix = "Added") {
+      const newEntries = Array.from(fileListObject || []).map((file) => ({
+        kind: "file",
+        file,
+        path: file.webkitRelativePath || file.name,
+        size: file.size
+      }));
+      addEntries(newEntries, messagePrefix);
+    }
+
+    async function addNativeFiles() {
+      if (window.isSecureContext && "showOpenFilePicker" in window) {
+        try {
+          const handles = await window.showOpenFilePicker({
+            multiple: true,
+            id: "kgb-zip-files"
+          });
+
+          const newEntries = [];
+          for (const handle of handles) {
+            const file = await handle.getFile();
+            newEntries.push({
+              kind: "file",
+              file,
+              path: file.name,
+              size: file.size
+            });
+          }
+
+          addEntries(newEntries, "Added");
+          return;
+        } catch (error) {
+          if (error.name === "AbortError") return;
+          console.warn("Native file picker failed, falling back to input:", error);
+        }
+      }
+
+      fileInput.click();
+    }
+
+    async function addNativeFolder() {
+      if (window.isSecureContext && "showDirectoryPicker" in window) {
+        try {
+          const dirHandle = await window.showDirectoryPicker({
+            id: "kgb-zip-folder",
+            mode: "read"
+          });
+
+          setStatus(`Scanning folder: ${dirHandle.name}...`);
+          const newEntries = [];
+          await scanDirectoryHandle(dirHandle, dirHandle.name, newEntries);
+          addEntries(newEntries, `Added folder "${dirHandle.name}" with`);
+          return;
+        } catch (error) {
+          if (error.name === "AbortError") return;
+          console.warn("Native folder picker failed, falling back to folder input:", error);
+          setStatus("Native folder picker failed. Trying fallback folder picker...");
+        }
+      }
+
+      folderInput.click();
+    }
+
+    async function scanDirectoryHandle(dirHandle, path, output) {
+      output.push({ kind: "directory", path: normalizeZipPath(path) + "/", size: 0 });
+
+      for await (const [name, handle] of dirHandle.entries()) {
+        const childPath = `${path}/${name}`;
+        if (handle.kind === "file") {
+          const file = await handle.getFile();
+          output.push({ kind: "file", file, path: childPath, size: file.size });
+        } else if (handle.kind === "directory") {
+          await scanDirectoryHandle(handle, childPath, output);
+        }
+      }
+    }
+
+    async function getAllFileEntries(dataTransferItems) {
+      const output = [];
+      const items = Array.from(dataTransferItems || []);
+
+      const entriesFromDrop = items
+        .map((item) => item.webkitGetAsEntry ? item.webkitGetAsEntry() : null)
+        .filter(Boolean);
+
+      if (entriesFromDrop.length === 0) return output;
+
+      for (const entry of entriesFromDrop) {
+        await scanDroppedEntry(entry, "", output);
+      }
+
+      return output;
+    }
+
+    async function scanDroppedEntry(entry, parentPath, output) {
+      const path = parentPath ? `${parentPath}/${entry.name}` : entry.name;
+
+      if (entry.isFile) {
+        const file = await new Promise((resolve, reject) => entry.file(resolve, reject));
+        output.push({ kind: "file", file, path, size: file.size });
+        return;
+      }
+
+      if (entry.isDirectory) {
+        output.push({ kind: "directory", path: normalizeZipPath(path) + "/", size: 0 });
+        const reader = entry.createReader();
+        const children = await readAllDirectoryEntries(reader);
+        for (const child of children) {
+          await scanDroppedEntry(child, path, output);
+        }
+      }
+    }
+
+    function readAllDirectoryEntries(reader) {
+      return new Promise((resolve, reject) => {
+        const all = [];
+
+        function readBatch() {
+          reader.readEntries((entriesBatch) => {
+            if (!entriesBatch.length) {
+              resolve(all);
+              return;
+            }
+            all.push(...entriesBatch);
+            readBatch();
+          }, reject);
+        }
+
+        readBatch();
+      });
+    }
+
+    function clearEntries() {
+      revokeCurrentZip();
+      entries = [];
+      fileInput.value = "";
+      folderInput.value = "";
+      renderEntries();
+      setStatus("No files selected.");
+    }
+
+    function removeEntry(index) {
+      revokeCurrentZip();
+      entries.splice(index, 1);
+      renderEntries();
+    }
+
+    function renderEntries() {
+      const fileEntries = entries.filter((entry) => entry.kind === "file");
+      const folderEntries = entries.filter((entry) => entry.kind === "directory");
+      const totalBytes = fileEntries.reduce((sum, entry) => sum + (entry.size || 0), 0);
+
+      fileCountEl.textContent = fileEntries.length;
+      folderCountEl.textContent = folderEntries.length;
+      totalSizeEl.textContent = formatBytes(totalBytes);
+
+      zipBtn.disabled = fileEntries.length === 0 && folderEntries.length === 0;
+      clearBtn.disabled = entries.length === 0;
+
+      fileList.innerHTML = "";
+
+      if (entries.length === 0) {
+        fileList.hidden = true;
+        return;
+      }
+
+      fileList.hidden = false;
+
+      entries.slice(0, MAX_DISPLAY_ROWS).forEach((entry, index) => {
+        const row = document.createElement("div");
+        row.className = "file-row";
+
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = entry.kind === "directory" ? `📁 ${entry.path}` : entry.path;
+
+        const size = document.createElement("div");
+        size.className = "file-size";
+        size.textContent = entry.kind === "directory" ? "folder" : formatBytes(entry.size || 0);
+
+        const pill = document.createElement("div");
+        pill.className = "pill";
+        pill.textContent = entry.kind;
+
+        row.appendChild(name);
+        row.appendChild(size);
+        row.appendChild(pill);
+
+        row.addEventListener("dblclick", () => removeEntry(index));
+        fileList.appendChild(row);
+      });
+
+      if (entries.length > MAX_DISPLAY_ROWS) {
+        const row = document.createElement("div");
+        row.className = "file-row";
+        const name = document.createElement("div");
+        name.className = "file-name";
+        name.textContent = `...and ${entries.length - MAX_DISPLAY_ROWS} more item(s)`;
+        row.appendChild(name);
+        fileList.appendChild(row);
+      }
+    }
+
+    async function createZip() {
+      if (!entries.length) return;
+
+      if (!window.JSZip) {
+        setStatus("JSZip did not load. Check your internet connection or host jszip.min.js locally.");
+        return;
+      }
+
+      revokeCurrentZip();
+      zipBtn.disabled = true;
+      addFilesBtn.disabled = true;
+      addFolderBtn.disabled = true;
+      zipBtn.textContent = "Zipping...";
+      setStatus("Creating ZIP...");
+
+      try {
+        const zip = new JSZip();
+
+        for (const entry of entries) {
+          const path = normalizeZipPath(entry.path);
+          if (!path) continue;
+
+          if (entry.kind === "directory") {
+            zip.folder(path.replace(/\/$/, ""));
+          } else {
+            zip.file(path, entry.file);
+          }
+        }
+
+        const blob = await zip.generateAsync({
+          type: "blob",
+          compression: "DEFLATE",
+          compressionOptions: { level: 6 }
+        }, (metadata) => {
+          setStatus(`Creating ZIP... ${metadata.percent.toFixed(0)}%`);
+        });
+
+        const zipName = cleanZipName(zipNameInput.value);
+        currentZipUrl = URL.createObjectURL(blob);
+
+        downloadLink.href = currentZipUrl;
+        downloadLink.download = zipName;
+        downloadLink.textContent = `Download ${zipName} (${formatBytes(blob.size)})`;
+        downloadLink.classList.add("show");
+
+        setStatus("ZIP ready. Tap the download button.");
+      } catch (error) {
+        console.error(error);
+        setStatus(`ZIP failed: ${error.message || error}`);
+      } finally {
+        zipBtn.disabled = entries.length === 0;
+        addFilesBtn.disabled = false;
+        addFolderBtn.disabled = false;
+        zipBtn.textContent = "Create ZIP";
+      }
+    }
+
+    function useDateName() {
+      const now = new Date();
+      const pad = (num) => String(num).padStart(2, "0");
+      const stamp = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+      zipNameInput.value = `kgb-archive-${stamp}.zip`;
+    }
+
+    addFilesBtn.addEventListener("click", addNativeFiles);
+    addFolderBtn.addEventListener("click", addNativeFolder);
+    zipBtn.addEventListener("click", createZip);
+    clearBtn.addEventListener("click", clearEntries);
+    renameBtn.addEventListener("click", useDateName);
+
+    fileInput.addEventListener("change", () => addFileList(fileInput.files, "Added"));
+    folderInput.addEventListener("change", () => addFileList(folderInput.files, "Added folder with"));
+
+    dropzone.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => dropzone.classList.remove("dragover"));
+
+    dropzone.addEventListener("drop", async (event) => {
+      event.preventDefault();
+      dropzone.classList.remove("dragover");
+      setStatus("Reading dropped item(s)...");
+
+      try {
+        const droppedEntries = await getAllFileEntries(event.dataTransfer.items);
+        if (droppedEntries.length > 0) {
+          addEntries(droppedEntries, "Added dropped");
+        } else {
+          addFileList(event.dataTransfer.files, "Added dropped");
+        }
+      } catch (error) {
+        console.error(error);
+        setStatus(`Drop failed: ${error.message || error}`);
+      }
+    });
+
+    updateSupportBadge();
+    renderEntries();
+  </script>
+</body>
+</html>
